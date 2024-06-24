@@ -1,4 +1,4 @@
-﻿namespace DAL
+﻿namespace DTOs
 {
     public class Class1
     {
