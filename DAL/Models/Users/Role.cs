@@ -1,9 +1,10 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using System.Collections.Generic;
+using Common.Interfaces;
+using Microsoft.AspNetCore.Identity;
 
-namespace DAL.Models.Users
+namespace DAL.Entities.Users;
+
+public class Role : IdentityRole, IIdHas<string>
 {
-    public class Role : IdentityRole
-    {
-        public ICollection<User> Users { get; set; }
-    }
+    public ICollection<UserRole> Users { get; set; }
 }

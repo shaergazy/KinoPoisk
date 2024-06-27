@@ -1,4 +1,6 @@
-﻿namespace DAL.Models.Users
+﻿namespace DAL.Entities.Users
 {
-    public class Admin : User { }
+    public class Admin : User
+    {
+    }
 }

@@ -3,11 +3,19 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.10.35013.160
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KinoPoisk", "KinoPoisk\KinoPoisk.csproj", "{323DDFD2-2B28-400C-9264-68D00004A9DB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "API", "WebApplication1\API.csproj", "{90489750-6C37-43AB-834C-B64300AD9FF3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "API", "WebApplication1\API.csproj", "{90489750-6C37-43AB-834C-B64300AD9FF3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Data", "DAL\Data.csproj", "{DF819E46-CFFD-498F-9033-F16BA739CF2A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DAL", "DAL\DAL.csproj", "{DF819E46-CFFD-498F-9033-F16BA739CF2A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DTO", "DTO\DTO.csproj", "{8EC40F36-6912-4C0B-B6A9-839B8A740F81}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common", "Common\Common.csproj", "{AC64A4C5-8527-4FCD-8964-03C2B4F8E041}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Repositories", "Repositories\Repositories.csproj", "{3AB42338-621B-4C80-9329-B300F04AE541}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Pages", "Pages", "{1545039A-C823-4905-BC8D-70C1B36E82A7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KinopoiskWeb", "KinopoiskWeb\KinopoiskWeb.csproj", "{9955B61D-FAFE-40D2-91AC-4AC77EC27928}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,10 +23,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{323DDFD2-2B28-400C-9264-68D00004A9DB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{323DDFD2-2B28-400C-9264-68D00004A9DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{323DDFD2-2B28-400C-9264-68D00004A9DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{323DDFD2-2B28-400C-9264-68D00004A9DB}.Release|Any CPU.Build.0 = Release|Any CPU
 		{90489750-6C37-43AB-834C-B64300AD9FF3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{90489750-6C37-43AB-834C-B64300AD9FF3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{90489750-6C37-43AB-834C-B64300AD9FF3}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -27,6 +31,22 @@ Global
 		{DF819E46-CFFD-498F-9033-F16BA739CF2A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DF819E46-CFFD-498F-9033-F16BA739CF2A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DF819E46-CFFD-498F-9033-F16BA739CF2A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8EC40F36-6912-4C0B-B6A9-839B8A740F81}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8EC40F36-6912-4C0B-B6A9-839B8A740F81}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8EC40F36-6912-4C0B-B6A9-839B8A740F81}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8EC40F36-6912-4C0B-B6A9-839B8A740F81}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AC64A4C5-8527-4FCD-8964-03C2B4F8E041}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AC64A4C5-8527-4FCD-8964-03C2B4F8E041}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AC64A4C5-8527-4FCD-8964-03C2B4F8E041}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AC64A4C5-8527-4FCD-8964-03C2B4F8E041}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3AB42338-621B-4C80-9329-B300F04AE541}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3AB42338-621B-4C80-9329-B300F04AE541}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3AB42338-621B-4C80-9329-B300F04AE541}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3AB42338-621B-4C80-9329-B300F04AE541}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9955B61D-FAFE-40D2-91AC-4AC77EC27928}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9955B61D-FAFE-40D2-91AC-4AC77EC27928}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9955B61D-FAFE-40D2-91AC-4AC77EC27928}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9955B61D-FAFE-40D2-91AC-4AC77EC27928}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

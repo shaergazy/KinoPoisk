@@ -1,11 +1,14 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Common.Interfaces;
+using Data.Models;
+using Microsoft.AspNetCore.Identity;
 
-namespace DAL.Models.Users
+namespace DAL.Entities.Users;
+
+public class User : IdentityUser, IIdHas<string>
 {
-    public class User : IdentityUser
-    {
-        public string FisrtName { get; set; }
-        public string LastName { get; set; }
-        public ICollection<UserRole> Roles { get; set; }
-    }
+    public string FirstName { get; set; }
+
+    public string LastName { get; set; }
+    public ICollection<UserRole> Roles { get; set; }
+    public ICollection<UserRating> Ratings { get; set; }
 }
