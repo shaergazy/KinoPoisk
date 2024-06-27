@@ -1,6 +1,6 @@
 ﻿using DAL;
 using DAL.Entities;
-using Repositories.Interfaces;
+using Data.Repositories.RepositoryInterfaces;
 
 namespace Repositories
 {
