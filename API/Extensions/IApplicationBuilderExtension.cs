@@ -1,6 +1,7 @@
 ﻿using Common.Extensions;
 using Common.Helpers;
 using DAL;
+using DAL.Seed;
 using DTO;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
@@ -48,5 +49,6 @@ internal static class IApplicationBuilderExtension
         using var scope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope();
         scope.ServiceProvider.GetRequiredService<AppDbContext>().Database.Migrate();
         var services = app.ApplicationServices.GetService<IServiceProvider>();
+        DatabaseMigrator.SeedDatabaseAsync(services).GetAwaiter().GetResult();
     }
 }
