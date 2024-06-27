@@ -16,13 +16,6 @@ public static class AppConstants
     public static byte[] Iv { get; } = "eefd2c33e23d48039d1fafcab7502257".ToBytes();
     #endregion
 
-    #region SuffixOfPaths
-    /// <summary>
-    /// Temp
-    /// </summary>
-    public static string TempSuffixOfPath { get; } = "Temp";
-    #endregion
-
     #region ContentTypes
     public static string ExcelContentType => "application/vnd.ms-excel";
 

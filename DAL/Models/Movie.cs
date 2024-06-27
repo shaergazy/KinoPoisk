@@ -16,6 +16,6 @@ namespace DAL.Entities
         public ICollection<MoviePerson> People { get; set; }
         public int Duration { get; set; }
         public float IMDBRating { get; set; }
-        public ICollection<Rating> Ratings { get; set;}
+        public ICollection<MovieRating> Ratings { get; set;}
     }
 }
