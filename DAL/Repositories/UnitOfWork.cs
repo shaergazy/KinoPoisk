@@ -6,7 +6,7 @@ namespace Repositories
     public class UnitOfWork : IUnitOdWork
     {
         private readonly AppDbContext _appDbContext;
-        public IMovieRepository MovieRepository { get; private set; }
+        public IMovieRepository MovieRepository { get; set; }
 
         public UnitOfWork(AppDbContext appDbContext)
         {

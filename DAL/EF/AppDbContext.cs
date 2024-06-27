@@ -48,7 +48,25 @@ namespace DAL
                 .IsRequired()
                 .HasMaxLength(256);
 
-                
+            builder.Entity<Person>()
+                .Property(x => x.FirstName)
+                .IsRequired()
+                .HasMaxLength(64);
+
+            builder.Entity<Person>()
+                .Property(x => x.LastName)
+                .IsRequired(false)
+                .HasMaxLength(64);
+
+            builder.Entity<Comment>()
+                .Property(x => x.Text)
+                .IsRequired()
+                .HasMaxLength(5000);
+
+            builder.Entity<Genre>()
+                .Property(x => x.Name)
+                .IsRequired()
+                .HasMaxLength(64);
 
             foreach (var x in builder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
                 x.DeleteBehavior = DeleteBehavior.ClientCascade;
