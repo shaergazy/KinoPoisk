@@ -14,7 +14,7 @@ namespace DAL.Entities
         public ICollection<Genre> Genres { get; set; }
         public ICollection<Comment> Comments { get; set; }
         public ICollection<MoviePerson> People { get; set; }
-        public int Duration { get; set; }
+        public uint Duration { get; set; }
         public float IMDBRating { get; set; }
         public ICollection<MovieRating> Ratings { get; set;}
     }

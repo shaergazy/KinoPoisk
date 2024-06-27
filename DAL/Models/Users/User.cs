@@ -10,5 +10,4 @@ public class User : IdentityUser, IIdHas<string>
 
     public string LastName { get; set; }
     public ICollection<UserRole> Roles { get; set; }
-    public ICollection<UserRating> Ratings { get; set; }
 }

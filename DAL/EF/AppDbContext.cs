@@ -19,7 +19,7 @@ namespace DAL
         public DbSet<Genre> Genres { get; set; }
         public DbSet<Comment> Comments { get; set; }
         public DbSet<Person> Persons { get; set; }
-        public DbSet<Rating> Ratings { get; set; }
+        public DbSet<MovieRating> Ratings { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -42,6 +42,13 @@ namespace DAL
                 .WithMany(x => x.Users)
                 .HasForeignKey(x => x.RoleId)
                 .IsRequired();
+
+            builder.Entity<Movie>()
+                .Property(x => x.Title)
+                .IsRequired()
+                .HasMaxLength(256);
+
+                
 
             foreach (var x in builder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
                 x.DeleteBehavior = DeleteBehavior.ClientCascade;

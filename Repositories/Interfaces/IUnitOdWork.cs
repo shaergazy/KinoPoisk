@@ -2,6 +2,6 @@
 {
     public interface IUnitOdWork : IDisposable
     {
-        Task Commit();
+        Task CommitAsync();
     }
 }

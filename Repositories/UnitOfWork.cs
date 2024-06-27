@@ -6,7 +6,7 @@ namespace Repositories
     public class UnitOfWork : IUnitOdWork
     {
         private readonly AppDbContext _appDbContext;
-        public MovieRepository MovieRepository { get; private set; }
+        public IMovieRepository MovieRepository { get; private set; }
 
         public UnitOfWork(AppDbContext appDbContext)
         {
@@ -14,7 +14,7 @@ namespace Repositories
             MovieRepository = new MovieRepository(_appDbContext);
         }
 
-        public async Task Commit()
+        public async Task CommitAsync()
         {
             await _appDbContext.SaveChangesAsync();
         }
