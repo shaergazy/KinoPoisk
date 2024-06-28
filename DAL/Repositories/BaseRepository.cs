@@ -1,32 +1,33 @@
 ﻿using DAL;
 using Data.Repositories.RepositoryInterfaces;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace Repositories
 {
-    public class BaseRepository<T, K> : IBaseRepository <T> 
-    where T : class
+    public class BaseRepository<TEntity, TKey> : IBaseRepository <TEntity, TKey> 
+    where TEntity : class
     {
-        protected readonly DbSet<T> _dbSet;
+        protected readonly DbSet<TEntity> _dbSet;
         protected readonly AppDbContext _context;
         public BaseRepository(AppDbContext context)
         {
             _context = context;
-            _dbSet = context.Set<T>();
+            _dbSet = context.Set<TEntity>();
             
         }
 
-        public IEnumerable<T> GetAll()
+        public IQueryable<TEntity> GetAll()
         {
-            return _dbSet.ToList();
+            return _dbSet.AsQueryable();
         }
 
-        public async Task<T> GetById(T id)
+        public async Task<TEntity> GetByIdAsync(TKey id)
         {
            return await _dbSet.FindAsync(id);
         }
             
-        public async Task<T> Create(T model, bool commitTransaction = true)
+        public async Task<TEntity> CreateAsync(TEntity model, bool commitTransaction = true)
         {
             var entity = (await _context.AddAsync(model)).Entity;
             if(commitTransaction) 
@@ -34,23 +35,47 @@ namespace Repositories
             return entity;
         }
 
-        public async Task<T> Delete(T model)
+        public async Task DeleteAsync(TKey id)
         {
-           var entity =  _context.Remove(model).Entity;
+            TEntity entity = await _dbSet.FindAsync(id);
+           _context.Remove(entity);
            await SaveChangesAsync();
-           return entity;
         }
 
-        public async Task<T> Update(T model)
+        public async Task UpdateAsync(TEntity model)
         {
             var entity = _dbSet.Update(model).Entity;
             await SaveChangesAsync();
-            return entity;
         }
 
         public async Task<int> SaveChangesAsync()
         {
             return await _context.SaveChangesAsync();
+        }
+
+        public IQueryable<TEntity> Where(Expression<Func<TEntity, bool>> expression = null)
+        {
+            return _dbSet.Where(expression).AsQueryable();
+        }
+
+        public async Task AddRangeAsync(ICollection<TEntity> entities)
+        {
+            await _dbSet.AddRangeAsync(entities);
+        }
+
+        public bool Any(Expression<Func<TEntity, bool>> expression = null)
+        {
+            return _dbSet.Any(expression);
+        }
+
+        public Microsoft.EntityFrameworkCore.Query.IIncludableQueryable<TEntity, TProperty> Include<TProperty>(Expression<Func<TEntity, TProperty>> expression)
+        {
+            return _dbSet.Include(expression);
+        }
+
+        public IQueryable<TEntity> AsNoTracking()
+        {
+            return _dbSet.AsNoTracking();
         }
     }
 }

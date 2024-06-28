@@ -1,8 +1,11 @@
-﻿namespace Data.Repositories.RepositoryInterfaces
+﻿using DAL.Entities;
+
+namespace Data.Repositories.RepositoryInterfaces
 {
-    public interface IUnitOdWork : IDisposable
+    public interface IUnitOfWork : IDisposable
     {
-        public IMovieRepository MovieRepository { get; set; }
-        Task CommitAsync();
+        public IMovieRepository Movies { get; }
+        public IBaseRepository<Genre, int> Genres { get; }
+        Task SaveChangesAsync();
     }
 }

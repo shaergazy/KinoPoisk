@@ -1,12 +1,30 @@
+using Microsoft.EntityFrameworkCore.Query;
+using System.Linq.Expressions;
+
 namespace Data.Repositories.RepositoryInterfaces;
 
 
-public interface IBaseRepository<T>
+public interface IBaseRepository<TEntity, TKey>
 {
-    public IEnumerable<T> GetAll();
-    public Task<T> GetById(T Id);
-    public Task<T> Create(T model, bool commitTransaction);
-    public Task<T> Delete(T model);
-    public Task<T> Update(T model);
+    public IQueryable<TEntity> GetAll();
+
+    public Task<TEntity> GetByIdAsync(TKey key);
+
+    public Task<TEntity> CreateAsync(TEntity model, bool commitTransaction);
+
+    public Task DeleteAsync(TKey id);
+
+    public Task UpdateAsync(TEntity model);
+
     public Task<int> SaveChangesAsync();
+
+    IQueryable<TEntity> Where(Expression<Func<TEntity, bool>> expression = null);
+
+    Task AddRangeAsync(ICollection<TEntity> entities);
+
+    bool Any(Expression<Func<TEntity, bool>> expression = null);
+
+    IIncludableQueryable<TEntity, TProperty> Include<TProperty>(Expression<Func<TEntity, TProperty>> expression);
+
+    public IQueryable<TEntity> AsNoTracking();
 }

@@ -1,20 +1,24 @@
 ﻿using DAL;
+using DAL.Entities;
 using Data.Repositories.RepositoryInterfaces;
 
 namespace Repositories
 {
-    public class UnitOfWork : IUnitOdWork
+    public class UnitOfWork : IUnitOfWork
     {
         private readonly AppDbContext _appDbContext;
-        public IMovieRepository MovieRepository { get; set; }
+        public IMovieRepository _movieRepository { get; set; }
+        public IBaseRepository<Genre, int> _genresRepository;
 
         public UnitOfWork(AppDbContext appDbContext)
         {
             _appDbContext = appDbContext;
-            MovieRepository = new MovieRepository(_appDbContext);
         }
 
-        public async Task CommitAsync()
+        public IMovieRepository Movies => _movieRepository ??= new MovieRepository(_appDbContext);
+        public IBaseRepository<Genre, int> Genres => _genresRepository ??= new BaseRepository<Genre, int>(_appDbContext);
+
+        public async Task SaveChangesAsync()
         {
             await _appDbContext.SaveChangesAsync();
         }

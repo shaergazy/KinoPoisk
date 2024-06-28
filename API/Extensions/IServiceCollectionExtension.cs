@@ -1,12 +1,18 @@
 ﻿using API.Infrastructure;
+using AutoMapper;
+using BLL.Infrastructure;
+using BLL.Services;
 using Common.Helpers;
 using DAL;
 using DAL.Entities.Users;
+using Data.Repositories.RepositoryInterfaces;
 using DTO;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+using Repositories;
+using System.Reflection;
 
 namespace API.Extensions;
 
@@ -71,6 +77,48 @@ internal static class IServiceCollectionExtension
     {
         services.AddScoped<AppDbContext>();
 
+        services.AddScoped<IUnitOfWork, UnitOfWork>();
+        AddServices(services);
+    }
+
+    /// <summary>
+    /// конфигурация маппера  
+    /// </summary>
+    /// <param name="services"></param>
+    public static void ConfigMapper(this IServiceCollection services)
+    {
+        services.AddSingleton(_ => new MapperConfiguration(cfg =>
+        {
+            cfg.AddProfile(new AutoMapperProfile());
+        }).CreateMapper());
+    }
+
+    public static IServiceCollection AddServices(this IServiceCollection services)
+    {
+        services.ConfigMapper();
+
+        var assembly = typeof(IService).Assembly;
+        var serviceInterfaces = assembly
+            .GetTypes()
+            .Where(t => typeof(IService).IsAssignableFrom(t) && t != typeof(IService) && t.IsInterface);
+        var servicePairs = serviceInterfaces
+            .Select(x => new
+            {
+                serviceInterface = x,
+                serviceImplementaions = assembly
+                    .GetTypes()
+                    .Where(t => x.IsAssignableFrom(t) && t.IsClass)
+                    .ToList()
+            });
+        foreach (var servicePair in servicePairs)
+        {
+            foreach (var implementation in servicePair.serviceImplementaions)
+            {
+                services.AddTransient(servicePair.serviceInterface, implementation);
+            }
+        }
+
+        return services;
     }
 
     internal static void RegisterSwagger(this IServiceCollection services)
