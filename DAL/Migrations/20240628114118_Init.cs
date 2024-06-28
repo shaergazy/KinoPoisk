@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace Data.Migrations
+namespace DAL.Migrations
 {
     /// <inheritdoc />
     public partial class Init : Migration
@@ -68,13 +68,26 @@ namespace Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Genres",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(64)", maxLength: 64, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Genres", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Persons",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    FirstName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    LastName = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    FirstName = table.Column<string>(type: "nvarchar(64)", maxLength: 64, nullable: false),
+                    LastName = table.Column<string>(type: "nvarchar(64)", maxLength: 64, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -187,13 +200,12 @@ namespace Data.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Poster = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Title = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    RealesedYear = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    CountryId = table.Column<int>(type: "int", nullable: false),
-                    Duration = table.Column<int>(type: "int", nullable: false),
-                    IMDBRating = table.Column<float>(type: "real", nullable: false),
-                    Rating = table.Column<float>(type: "real", nullable: false)
+                    RealesedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CountryId = table.Column<int>(type: "int", nullable: true),
+                    Duration = table.Column<long>(type: "bigint", nullable: true),
+                    IMDBRating = table.Column<float>(type: "real", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -211,16 +223,17 @@ namespace Data.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Text = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Text = table.Column<string>(type: "nvarchar(max)", maxLength: 5000, nullable: false),
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UserId1 = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     MovieId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Comments", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Comments_AspNetUsers_UserId",
-                        column: x => x.UserId,
+                        name: "FK_Comments_AspNetUsers_UserId1",
+                        column: x => x.UserId1,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id");
                     table.ForeignKey(
@@ -231,19 +244,24 @@ namespace Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Genres",
+                name: "MovieGenre",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    MovieId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                    MovieId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    GenreId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Genres", x => x.Id);
+                    table.PrimaryKey("PK_MovieGenre", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Genres_Movies_MovieId",
+                        name: "FK_MovieGenre_Genres_GenreId",
+                        column: x => x.GenreId,
+                        principalTable: "Genres",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_MovieGenre_Movies_MovieId",
                         column: x => x.MovieId,
                         principalTable: "Movies",
                         principalColumn: "Id");
@@ -257,7 +275,8 @@ namespace Data.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     MovieId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     PersonId = table.Column<int>(type: "int", nullable: false),
-                    PersonType = table.Column<int>(type: "int", nullable: false)
+                    PersonType = table.Column<int>(type: "int", nullable: false),
+                    PersonOrderId = table.Column<long>(type: "bigint", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -280,40 +299,23 @@ namespace Data.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    UserRating = table.Column<float>(type: "real", nullable: false),
-                    MovieId = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    MovieId1 = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    MovieId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UserId1 = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    StarCount = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Ratings", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Ratings_Movies_MovieId1",
-                        column: x => x.MovieId1,
-                        principalTable: "Movies",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "UserRating",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    RatingId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_UserRating", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_UserRating_AspNetUsers_UserId",
-                        column: x => x.UserId,
+                        name: "FK_Ratings_AspNetUsers_UserId1",
+                        column: x => x.UserId1,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_UserRating_Ratings_RatingId",
-                        column: x => x.RatingId,
-                        principalTable: "Ratings",
+                        name: "FK_Ratings_Movies_MovieId",
+                        column: x => x.MovieId,
+                        principalTable: "Movies",
                         principalColumn: "Id");
                 });
 
@@ -362,13 +364,18 @@ namespace Data.Migrations
                 column: "MovieId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Comments_UserId",
+                name: "IX_Comments_UserId1",
                 table: "Comments",
-                column: "UserId");
+                column: "UserId1");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Genres_MovieId",
-                table: "Genres",
+                name: "IX_MovieGenre_GenreId",
+                table: "MovieGenre",
+                column: "GenreId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MovieGenre_MovieId",
+                table: "MovieGenre",
                 column: "MovieId");
 
             migrationBuilder.CreateIndex(
@@ -387,19 +394,14 @@ namespace Data.Migrations
                 column: "CountryId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Ratings_MovieId1",
+                name: "IX_Ratings_MovieId",
                 table: "Ratings",
-                column: "MovieId1");
+                column: "MovieId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_UserRating_RatingId",
-                table: "UserRating",
-                column: "RatingId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_UserRating_UserId",
-                table: "UserRating",
-                column: "UserId");
+                name: "IX_Ratings_UserId1",
+                table: "Ratings",
+                column: "UserId1");
         }
 
         /// <inheritdoc />
@@ -424,25 +426,25 @@ namespace Data.Migrations
                 name: "Comments");
 
             migrationBuilder.DropTable(
-                name: "Genres");
+                name: "MovieGenre");
 
             migrationBuilder.DropTable(
                 name: "MoviePerson");
 
             migrationBuilder.DropTable(
-                name: "UserRating");
+                name: "Ratings");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
+
+            migrationBuilder.DropTable(
+                name: "Genres");
 
             migrationBuilder.DropTable(
                 name: "Persons");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
-
-            migrationBuilder.DropTable(
-                name: "Ratings");
 
             migrationBuilder.DropTable(
                 name: "Movies");

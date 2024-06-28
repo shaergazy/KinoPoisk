@@ -1,4 +1,5 @@
-﻿using Data.Models;
+﻿using DAL.Models;
+using Data.Models;
 using System.ComponentModel.DataAnnotations;
 
 namespace DAL.Entities
@@ -13,7 +14,7 @@ namespace DAL.Entities
         public DateTime RealesedDate {  get; set; }
         public int? CountryId { get; set; }
         public Country Country { get; set; }
-        public ICollection<Genre> Genres { get; set; }
+        public ICollection<MovieGenre> Genres { get; set; }
         public ICollection<Comment> Comments { get; set; }
         public ICollection<MoviePerson> People { get; set; }
         public uint? Duration { get; set; }

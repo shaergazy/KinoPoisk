@@ -1,5 +1,8 @@
-﻿using BLL.DTO;
+﻿using API.Infrastructure;
+using BLL.DTO;
 using BLL.Services.Interfaces;
+using Common.Enums;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
@@ -31,6 +34,7 @@ namespace API.Controllers
         /// <returns></returns>
         /// <exception cref="ArgumentNullException"></exception>
         [HttpPost]
+        [AuthorizeRoles(RoleType.Admin)]
         [ProducesResponseType(typeof(int), 200)]
         public async Task<int> Create([FromBody] GenreDto.Base dto)
         {
@@ -43,6 +47,7 @@ namespace API.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
+        [AllowAnonymous]
         [ProducesResponseType(typeof(List<GenreDto.IdHasBase>), 200)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<List<GenreDto.IdHasBase>> GetAll()
@@ -56,6 +61,7 @@ namespace API.Controllers
         /// <param name="dto"></param>
         /// <returns></returns>
         [HttpPut]
+        [AuthorizeRoles(RoleType.Admin)]
         [ProducesResponseType(204)]
         public async Task Edit(GenreDto.IdHasBase dto)
         {
@@ -68,6 +74,7 @@ namespace API.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpDelete]
+        [AuthorizeRoles(RoleType.Admin)]
         [ProducesResponseType(204)]
         public async Task DeleteById(int id)
         {

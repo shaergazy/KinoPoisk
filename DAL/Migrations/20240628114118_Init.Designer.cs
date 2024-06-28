@@ -9,10 +9,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace Data.Migrations
+namespace DAL.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240627061754_Init")]
+    [Migration("20240628114118_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -38,17 +38,20 @@ namespace Data.Migrations
 
                     b.Property<string>("Text")
                         .IsRequired()
+                        .HasMaxLength(5000)
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("UserId")
-                        .IsRequired()
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("UserId1")
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("MovieId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("UserId1");
 
                     b.ToTable("Comments");
                 });
@@ -86,16 +89,12 @@ namespace Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<Guid?>("MovieId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(64)
+                        .HasColumnType("nvarchar(64)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("MovieId");
 
                     b.ToTable("Genres");
                 });
@@ -106,32 +105,30 @@ namespace Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("CountryId")
+                    b.Property<int?>("CountryId")
                         .HasColumnType("int");
 
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Duration")
-                        .HasColumnType("int");
+                    b.Property<long?>("Duration")
+                        .HasColumnType("bigint");
 
-                    b.Property<float>("IMDBRating")
+                    b.Property<float?>("IMDBRating")
                         .HasColumnType("real");
 
                     b.Property<string>("Poster")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<float>("Rating")
-                        .HasColumnType("real");
-
-                    b.Property<DateTime>("RealesedYear")
+                    b.Property<DateTime>("RealesedDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
 
                     b.HasKey("Id");
 
@@ -150,11 +147,12 @@ namespace Data.Migrations
 
                     b.Property<string>("FirstName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(64)
+                        .HasColumnType("nvarchar(64)");
 
                     b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(64)
+                        .HasColumnType("nvarchar(64)");
 
                     b.HasKey("Id");
 
@@ -276,6 +274,29 @@ namespace Data.Migrations
                     b.ToTable("AspNetUserRoles", (string)null);
                 });
 
+            modelBuilder.Entity("DAL.Models.MovieGenre", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("GenreId")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("MovieId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("GenreId");
+
+                    b.HasIndex("MovieId");
+
+                    b.ToTable("MovieGenre");
+                });
+
             modelBuilder.Entity("Data.Models.MoviePerson", b =>
                 {
                     b.Property<int>("Id")
@@ -290,6 +311,9 @@ namespace Data.Migrations
                     b.Property<int>("PersonId")
                         .HasColumnType("int");
 
+                    b.Property<long>("PersonOrderId")
+                        .HasColumnType("bigint");
+
                     b.Property<int>("PersonType")
                         .HasColumnType("int");
 
@@ -302,7 +326,7 @@ namespace Data.Migrations
                     b.ToTable("MoviePerson");
                 });
 
-            modelBuilder.Entity("Data.Models.Rating", b =>
+            modelBuilder.Entity("Data.Models.MovieRating", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -310,43 +334,25 @@ namespace Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("MovieId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("MovieId1")
+                    b.Property<Guid>("MovieId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<float>("UserRating")
-                        .HasColumnType("real");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("MovieId1");
-
-                    b.ToTable("Ratings");
-                });
-
-            modelBuilder.Entity("Data.Models.UserRating", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("RatingId")
+                    b.Property<int>("StarCount")
                         .HasColumnType("int");
 
-                    b.Property<string>("UserId")
-                        .IsRequired()
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("UserId1")
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("RatingId");
+                    b.HasIndex("MovieId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("UserId1");
 
-                    b.ToTable("UserRating");
+                    b.ToTable("Ratings");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -449,19 +455,10 @@ namespace Data.Migrations
 
                     b.HasOne("DAL.Entities.Users.User", "User")
                         .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.ClientCascade)
-                        .IsRequired();
+                        .HasForeignKey("UserId1")
+                        .OnDelete(DeleteBehavior.ClientCascade);
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("DAL.Entities.Genre", b =>
-                {
-                    b.HasOne("DAL.Entities.Movie", null)
-                        .WithMany("Genres")
-                        .HasForeignKey("MovieId")
-                        .OnDelete(DeleteBehavior.ClientCascade);
                 });
 
             modelBuilder.Entity("DAL.Entities.Movie", b =>
@@ -469,8 +466,7 @@ namespace Data.Migrations
                     b.HasOne("DAL.Entities.Country", "Country")
                         .WithMany()
                         .HasForeignKey("CountryId")
-                        .OnDelete(DeleteBehavior.ClientCascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.ClientCascade);
 
                     b.Navigation("Country");
                 });
@@ -494,6 +490,25 @@ namespace Data.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("DAL.Models.MovieGenre", b =>
+                {
+                    b.HasOne("DAL.Entities.Genre", "Genre")
+                        .WithMany("Movies")
+                        .HasForeignKey("GenreId")
+                        .OnDelete(DeleteBehavior.ClientCascade)
+                        .IsRequired();
+
+                    b.HasOne("DAL.Entities.Movie", "Movie")
+                        .WithMany("Genres")
+                        .HasForeignKey("MovieId")
+                        .OnDelete(DeleteBehavior.ClientCascade)
+                        .IsRequired();
+
+                    b.Navigation("Genre");
+
+                    b.Navigation("Movie");
+                });
+
             modelBuilder.Entity("Data.Models.MoviePerson", b =>
                 {
                     b.HasOne("DAL.Entities.Movie", "Movie")
@@ -513,32 +528,20 @@ namespace Data.Migrations
                     b.Navigation("Person");
                 });
 
-            modelBuilder.Entity("Data.Models.Rating", b =>
+            modelBuilder.Entity("Data.Models.MovieRating", b =>
                 {
                     b.HasOne("DAL.Entities.Movie", "Movie")
-                        .WithMany()
-                        .HasForeignKey("MovieId1")
-                        .OnDelete(DeleteBehavior.ClientCascade)
-                        .IsRequired();
-
-                    b.Navigation("Movie");
-                });
-
-            modelBuilder.Entity("Data.Models.UserRating", b =>
-                {
-                    b.HasOne("Data.Models.Rating", "Rating")
-                        .WithMany("Users")
-                        .HasForeignKey("RatingId")
+                        .WithMany("Ratings")
+                        .HasForeignKey("MovieId")
                         .OnDelete(DeleteBehavior.ClientCascade)
                         .IsRequired();
 
                     b.HasOne("DAL.Entities.Users.User", "User")
-                        .WithMany("Ratings")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.ClientCascade)
-                        .IsRequired();
+                        .WithMany()
+                        .HasForeignKey("UserId1")
+                        .OnDelete(DeleteBehavior.ClientCascade);
 
-                    b.Navigation("Rating");
+                    b.Navigation("Movie");
 
                     b.Navigation("User");
                 });
@@ -579,6 +582,11 @@ namespace Data.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("DAL.Entities.Genre", b =>
+                {
+                    b.Navigation("Movies");
+                });
+
             modelBuilder.Entity("DAL.Entities.Movie", b =>
                 {
                     b.Navigation("Comments");
@@ -586,6 +594,8 @@ namespace Data.Migrations
                     b.Navigation("Genres");
 
                     b.Navigation("People");
+
+                    b.Navigation("Ratings");
                 });
 
             modelBuilder.Entity("DAL.Entities.Person", b =>
@@ -600,14 +610,7 @@ namespace Data.Migrations
 
             modelBuilder.Entity("DAL.Entities.Users.User", b =>
                 {
-                    b.Navigation("Ratings");
-
                     b.Navigation("Roles");
-                });
-
-            modelBuilder.Entity("Data.Models.Rating", b =>
-                {
-                    b.Navigation("Users");
                 });
 #pragma warning restore 612, 618
         }

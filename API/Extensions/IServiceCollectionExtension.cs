@@ -1,4 +1,5 @@
 ﻿using API.Infrastructure;
+using API.Services;
 using AutoMapper;
 using BLL.Infrastructure;
 using BLL.Services;
@@ -78,6 +79,9 @@ internal static class IServiceCollectionExtension
         services.AddScoped<AppDbContext>();
 
         services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+        services.AddTransient<AuthService>();
+
         AddServices(services);
     }
 
