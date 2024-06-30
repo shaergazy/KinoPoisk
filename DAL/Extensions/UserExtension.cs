@@ -1,7 +1,4 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using Common.Exceptions;
-using DAL.Entities.Users;
+﻿using DAL.Entities.Users;
 using Microsoft.EntityFrameworkCore;
 
 namespace DAL.Extensions;
@@ -12,6 +9,6 @@ public static class UserExtension
         where T : User
     {
         return await query.FirstOrDefaultAsync(x => x.UserName == userName)
-               ?? throw new InnerException($"2510. Пользователь с именем = '{userName}' не найден.");
+               ?? throw new Exception($"2510. Пользователь с именем = '{userName}' не найден.");
     }
 }

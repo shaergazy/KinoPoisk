@@ -2,7 +2,7 @@
 using Common.DTO;
 using DAL.Entities;
 
-namespace BLL.Infrastructure
+namespace Common.Infrastructure
 {
     public class AutoMapperProfile : Profile
     {

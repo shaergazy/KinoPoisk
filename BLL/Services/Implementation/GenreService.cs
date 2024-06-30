@@ -1,8 +1,7 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using BLL.DTO;
 using BLL.Services.Interfaces;
-using Common.Exceptions;
+using Common.DTO;
 using DAL.Entities;
 using Data.Repositories.RepositoryInterfaces;
 using Microsoft.EntityFrameworkCore;
@@ -25,7 +24,7 @@ namespace BLL.Services.Implementation
             if (dto == null)
                 throw new ArgumentNullException();
             if (_uow.Genres.Any(x => x.Name == dto.Name))
-                throw new InnerException("Genre already exist");
+                throw new Exception("Genre already exist");
             var genre = _mapper.Map<Genre>(dto);
             await _uow.Genres.CreateAsync(genre, true);
             return genre.Id;
@@ -34,7 +33,7 @@ namespace BLL.Services.Implementation
         public async Task DeleteById(int id)
         {
             if (_uow.Movies.Any(x => x.Genres.Any(g => g.Id == id)))
-                throw new InnerException("There are movies in this genre, so you won't be able to delete it.");
+                throw new Exception("There are movies in this genre, so you won't be able to delete it.");
             //var genre = await _uow.Genres.GetByIdAsync(id);
             //if (genre == null)
             //    throw new InnerException($"Genre with id: {id} does not exist");

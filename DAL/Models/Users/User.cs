@@ -1,5 +1,4 @@
-﻿using Common.Interfaces;
-using Data.Models;
+﻿using DAL.Interfaces;
 using Microsoft.AspNetCore.Identity;
 
 namespace DAL.Entities.Users;

@@ -1,5 +1,5 @@
-﻿using Common.Enums;
-using DAL.Entities;
+﻿using DAL.Entities;
+using DAL.Enums;
 using System.ComponentModel.DataAnnotations;
 
 namespace Data.Models

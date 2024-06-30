@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Common.Interfaces;
+﻿using DAL.Interfaces;
 using Microsoft.AspNetCore.Identity;
 
 namespace DAL.Entities.Users;

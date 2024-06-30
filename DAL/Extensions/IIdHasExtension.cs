@@ -1,8 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using Common.Exceptions;
-using Common.Interfaces;
+﻿using DAL.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace DAL.Extensions;
@@ -14,6 +10,6 @@ public static class IIdHasExtension
         where TKey : IEquatable<TKey>
     {
         return await entities.FirstOrDefaultAsync(x => x.Id.Equals(id))
-               ?? throw new InnerException($"2550. Сущность '{typeof(T).Name}' с кодом = '{id}' не найдена.", "Id");
+               ?? throw new Exception($"2550. Сущность '{typeof(T).Name}' с кодом = '{id}' не найдена.");
     }
 }

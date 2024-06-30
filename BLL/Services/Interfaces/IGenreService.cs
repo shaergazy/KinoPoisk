@@ -1,4 +1,4 @@
-﻿using BLL.DTO;
+﻿using Common.DTO;
 
 namespace BLL.Services.Interfaces
 {
