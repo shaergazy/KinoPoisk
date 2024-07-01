@@ -1,4 +1,7 @@
 using Common.CommonServices;
+using DAL;
+using Microsoft.EntityFrameworkCore;
+using System.Configuration;
 internal class Program
 {
     private static void Main(string[] args)
@@ -26,6 +29,7 @@ internal class Program
         app.UseAuthorization();
 
         app.MapRazorPages();
+        app.InitializeDatabase();
 
         app.Run();
     }

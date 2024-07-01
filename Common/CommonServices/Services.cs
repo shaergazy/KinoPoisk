@@ -57,7 +57,7 @@ namespace Common.CommonServices
 
         internal static void RegisterServices(this IServiceCollection services)
         {
-            services.AddScoped<AppDbContext>();
+            services.AddScoped<DbContext, AppDbContext>();
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
