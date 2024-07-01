@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using BLL.Services;
 using Common.Helpers;
 using Common.Infrastructure;
 using DAL;
@@ -12,8 +11,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Repositories;
-using System.Configuration;
 using System.Data;
+using BLL.Services;
 namespace Common.CommonServices
 {
     public static class Services
@@ -72,7 +71,7 @@ namespace Common.CommonServices
         {
             services.AddSingleton(_ => new MapperConfiguration(cfg =>
             {
-                cfg.AddProfile(new AutoMapperProfile());
+                cfg.AddProfile(new BLL.Infrastructure.AutoMapperProfile());
             }).CreateMapper());
         }
 

@@ -35,7 +35,7 @@ namespace Repositories
             return entity;
         }
 
-        public async Task DeleteAsync(TKey id)
+        public async Task DeleteByIdAsync(TKey id)
         {
             TEntity entity = await _dbSet.FindAsync(id);
            _context.Remove(entity);

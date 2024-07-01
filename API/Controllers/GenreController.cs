@@ -1,6 +1,6 @@
 ﻿using API.Infrastructure;
 using BLL.Services.Interfaces;
-using Common.DTO;
+using BLL.DTO;
 using Common.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -39,7 +39,7 @@ namespace API.Controllers
         public async Task<int> Create([FromBody] GenreDto.Base dto)
         {
             if (dto == null) throw new ArgumentNullException(nameof(dto));
-            return await _service.Create(dto);
+            return await _service.CreateAsync(dto);
         }
 
         /// <summary>
@@ -65,7 +65,7 @@ namespace API.Controllers
         [ProducesResponseType(204)]
         public async Task Edit(GenreDto.IdHasBase dto)
         {
-            await _service.EditById(dto);
+            await _service.UpdateAsync(dto);
         }
 
         /// <summary>

@@ -1,7 +1,7 @@
 ﻿using Common.Interfaces;
 using System.ComponentModel.DataAnnotations;
 
-namespace Common.DTO
+namespace BLL.DTO
 {
     public class GenreDto
     {
@@ -10,7 +10,7 @@ namespace Common.DTO
             [Required]
             public string Name { get; set; }
         }
-        public class IdHasBase : Base, IIdHas<int>
+        public class IdHasBase : Base, DAL.Interfaces.IIdHas<int>
         {
             public int Id {  get; set; }
         }

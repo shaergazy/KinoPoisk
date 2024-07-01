@@ -1,74 +1,54 @@
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+using BLL.Services.Interfaces;
+using BLL.DTO;
 using Microsoft.AspNetCore.Mvc;
-using DAL.Entities;
-using Data.Repositories.RepositoryInterfaces;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace KinopoiskWeb.Pages.Genres
 {
     public class IndexModel : PageModel
     {
-        private readonly IUnitOfWork _uow;
+        private readonly IGenreService _service;
 
-        public IndexModel(IUnitOfWork uow)
+        public IndexModel(IGenreService service)
         {
-            _uow = uow;
+            _service = service;
         }
 
 
         [BindProperty]
-        public IList<Genre> Genres { get; set; }
+        public IList<GenreDto.IdHasBase> Genres { get; set; }
 
         [BindProperty]
-        public Genre NewGenre { get; set; }
+        public GenreDto.IdHasBase NewGenre { get; set; }
 
         [BindProperty]
-        public Genre EditedGenre { get; set; }
+        public GenreDto.IdHasBase EditedGenre { get; set; }
 
         [BindProperty]
-        public Genre GenreToDelete { get; set; }
+        public GenreDto.IdHasBase GenreToDelete { get; set; }
 
         public async Task OnGetAsync()
         {
-            Genres = _uow.Genres.GetAll().ToList();
+            Genres = await _service.GetAll();
         }
 
         public async Task<IActionResult> OnPostCreateAsync()
         {
-            if (_uow.Genres.Any(x => x.Name == NewGenre.Name))
-            {
-                return Page();
-            }
-
-            await _uow.Genres.AddAsync(NewGenre, true);
+            await _service.CreateAsync(NewGenre);
 
             return RedirectToPage();
         }
 
         public async Task<IActionResult> OnPostEditAsync()
         {
-            if (_uow.Genres.Any(x => x.Name == EditedGenre.Name))
-            {
-                return Page();
-            }
-
-            await _uow.Genres.UpdateAsync(EditedGenre);
+            await _service.UpdateAsync(EditedGenre);
 
             return RedirectToPage();
         }
 
         public async Task<IActionResult> OnPostDeleteAsync()
         {
-            var genre = _uow.Genres.GetAll().FirstOrDefault(x => x.Id == GenreToDelete.Id);
-
-            if (genre != null)
-            {
-                await _uow.Genres.DeleteAsync(genre.Id);
-                await _uow.SaveChangesAsync();
-            }
-
+            await _service.DeleteById(GenreToDelete.Id);
             return RedirectToPage();
         }
     }

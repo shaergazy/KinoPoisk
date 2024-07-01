@@ -61,14 +61,14 @@ internal static class WebApplicationBuilderExtension
         services.AddHttpContextAccessor();
 
         services.RegisterIOptions(configuration);
-        services.RegisterConnectionString(configuration);
-        services.RegisterAuth();
-        services.RegisterJwtAuthorization(configuration);
+        //services.RegisterConnectionString(configuration);
+        //services.RegisterAuth();
+        //services.RegisterJwtAuthorization(configuration);
 
-        services.RegisterServices();
-
+        //services.RegisterServices();
+        //services.RegisterServiceUri(configuration);
         services.RegisterSwagger();
-        services.RegisterServiceUri(configuration);
+        services.AddCommonServices(configuration);
     }
 
     internal static WebApplication Configure(this WebApplicationBuilder builder)

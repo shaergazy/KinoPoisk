@@ -1,45 +1,44 @@
-using DAL.Entities;
-using Data.Repositories.RepositoryInterfaces;
+using BLL.DTO;
+using BLL.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
 
 namespace KinopoiskWeb.Pages.Countries
 {
     public class IndexModel : PageModel
     {
-        private readonly IUnitOfWork _uow;
+        private readonly ICountryService _service;
 
-        public IndexModel(IUnitOfWork uow)
+        public IndexModel(ICountryService service)
         {
-            _uow = uow;
+            _service = service;
         }
 
         [BindProperty]
-        public List<Country> Countries { get; set; }
+        public List<CountryDto.Get> Countries { get; set; }
 
         [BindProperty]
-        public Country NewCountry { get; set; }
+        public CountryDto.Add NewCountry { get; set; }
 
         [BindProperty]
-        public Country EditedCountry { get; set; }
+        public CountryDto.Edit EditedCountry { get; set; }
 
         [BindProperty]
-        public Country CountryToDelete { get; set; }
+        public CountryDto.Delete CountryToDelete { get; set; }
 
         public async Task OnGetAsync()
         {
-            Countries = await _uow.Countries.GetAll().ToListAsync();
+            Countries = await _service.GetAll();
         }
 
         public async Task<IActionResult> OnPostCreateAsync()
         {
-            if (!ModelState.IsValid)
-            {
-                return RedirectToPage("/Error");
-            }
+            //if (!ModelState.IsValid)
+            //{
+            //    return RedirectToPage("/Error");
+            //}
 
-            await _uow.Countries.AddAsync(NewCountry, true);
+            await _service.CreateAsync(NewCountry);
 
             return RedirectToPage();
         }
@@ -51,32 +50,26 @@ namespace KinopoiskWeb.Pages.Countries
                 return Page();
             }
 
-            var country = _uow.Countries.GetAll().FirstOrDefault(x => x.Id == EditedCountry.Id);
+            var country = _service.GetById(EditedCountry.Id);
             if (country == null)
             {
                 return NotFound();
             }
 
-            country.Name = EditedCountry.Name;
-            country.ShortName = EditedCountry.ShortName;
-            country.FlagLink = EditedCountry.FlagLink;
-
-            await _uow.Countries.UpdateAsync(country);
-            await _uow.SaveChangesAsync();
+            await _service.UpdateAsync(EditedCountry);
 
             return RedirectToPage();
         }
 
         public async Task<IActionResult> OnPostDeleteAsync()
         {
-            var country = _uow.Countries.GetAll().FirstOrDefault(x => x.Id == CountryToDelete.Id);
+            var country = _service.GetById(CountryToDelete.Id);
             if (country == null)
             {
                 return NotFound();
             }
 
-            await _uow.Countries.DeleteAsync(CountryToDelete.Id);
-            await _uow.SaveChangesAsync();
+            await _service.DeleteById(CountryToDelete.Id);
 
             return RedirectToPage();
         }

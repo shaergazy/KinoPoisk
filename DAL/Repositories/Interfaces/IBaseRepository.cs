@@ -12,7 +12,7 @@ public interface IBaseRepository<TEntity, TKey>
 
     public Task<TEntity> AddAsync(TEntity model, bool commitTransaction);
 
-    public Task DeleteAsync(TKey id);
+    public Task DeleteByIdAsync(TKey id);
 
     public Task UpdateAsync(TEntity model);
 
