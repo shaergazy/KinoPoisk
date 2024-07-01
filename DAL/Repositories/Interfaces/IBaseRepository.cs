@@ -10,7 +10,7 @@ public interface IBaseRepository<TEntity, TKey>
 
     public Task<TEntity> GetByIdAsync(TKey key);
 
-    public Task<TEntity> CreateAsync(TEntity model, bool commitTransaction);
+    public Task<TEntity> AddAsync(TEntity model, bool commitTransaction);
 
     public Task DeleteAsync(TKey id);
 

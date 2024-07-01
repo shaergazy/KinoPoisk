@@ -26,7 +26,7 @@ namespace BLL.Services.Implementation
             if (_uow.Genres.Any(x => x.Name == dto.Name))
                 throw new Exception("Genre already exist");
             var genre = _mapper.Map<Genre>(dto);
-            await _uow.Genres.CreateAsync(genre, true);
+            await _uow.Genres.AddAsync(genre, true);
             return genre.Id;
         }
 

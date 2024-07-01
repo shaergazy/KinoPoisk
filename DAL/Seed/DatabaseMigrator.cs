@@ -29,8 +29,8 @@ namespace DAL.Seed
                 var _appDbContext = serviceProvider.GetRequiredService<AppDbContext>();
                 var roleManager = serviceProvider.GetRequiredService<RoleManager<Role>>();
                 var userManager = serviceProvider.GetRequiredService<UserManager<User>>();
-                await SeedRolesAsync(roleManager);
-                await SeedAdminAsync(userManager);
+                //await SeedRolesAsync(roleManager);
+                //await SeedAdminAsync(userManager);
                 await SeedCountriesAsync(_appDbContext, logger);
             }
             catch (Exception ex)
@@ -41,7 +41,7 @@ namespace DAL.Seed
 
         private static async Task SeedAdminAsync(UserManager<User> userManager)
         {
-            if (await userManager.Users.AllAsync(us => us.Email != "admin@kfg.com"))
+            if (await userManager.Users.AllAsync(us => us.Email != "admin@kinopoisk.com"))
             {
                 var admin = new User
                 {
@@ -93,9 +93,11 @@ namespace DAL.Seed
                     new Country {Name = "United States", ShortName = "us", FlagLink = "https://flagpedia.net/data/flags/h80/us.png"},
                 };
 
-                if (!_appDbContext.Countries.Any())
+                foreach( var country in countries )
                 {
-                    _appDbContext.Countries.AddRange(countries);
+                    if (_appDbContext.Countries.Any(x => x.Name == country.Name))
+                        continue;
+                    _appDbContext.Countries.Add( country );
                 }
 
                 await _appDbContext.SaveChangesAsync();

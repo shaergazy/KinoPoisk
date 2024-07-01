@@ -27,7 +27,7 @@ namespace Repositories
            return await _dbSet.FindAsync(id);
         }
             
-        public async Task<TEntity> CreateAsync(TEntity model, bool commitTransaction = true)
+        public async Task<TEntity> AddAsync(TEntity model, bool commitTransaction = true)
         {
             var entity = (await _context.AddAsync(model)).Entity;
             if(commitTransaction) 
