@@ -10,6 +10,7 @@ namespace Repositories
         public IMovieRepository _movieRepository { get; set; }
         public IBaseRepository<Genre, int> _genresRepository;
         public IBaseRepository<Country, int> _countriesRepository;
+        public IBaseRepository<Person, int> _peopleRepository;
 
         public UnitOfWork(AppDbContext appDbContext)
         {
@@ -19,6 +20,7 @@ namespace Repositories
         public IMovieRepository Movies => _movieRepository ??= new MovieRepository(_appDbContext);
         public IBaseRepository<Genre, int> Genres => _genresRepository ??= new BaseRepository<Genre, int>(_appDbContext);
         public IBaseRepository<Country, int> Countries => _countriesRepository ??= new BaseRepository<Country, int>(_appDbContext);
+        public IBaseRepository<Person, int> People => _peopleRepository ??= new BaseRepository<Person, int>(_appDbContext);
 
         public async Task SaveChangesAsync()
         {

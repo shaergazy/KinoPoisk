@@ -1,7 +1,6 @@
+using AutoMapper;
 using Common.CommonServices;
-using DAL;
-using Microsoft.EntityFrameworkCore;
-using System.Configuration;
+using KinopoiskWeb.Infrastructure;
 internal class Program
 {
     private static void Main(string[] args)
@@ -11,6 +10,7 @@ internal class Program
         // Add services to the container.
         builder.Services.AddRazorPages();
         builder.Services.AddCommonServices(builder.Configuration);
+        AutoMapperConfigure.ConfigMapper(builder.Services);
         var app = builder.Build();
 
         // Configure the HTTP request pipeline.

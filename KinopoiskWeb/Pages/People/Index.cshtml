@@ -1,0 +1,137 @@
+﻿@* @page
+@model KinopoiskWeb.Pages.People.IndexModel
+@{
+    ViewData["Title"] = "People";
+}
+
+<h1>People</h1>
+
+<p>
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createPersonModal">
+        Create New Person
+    </button>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Birth Date</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.People)
+        {
+            <tr>
+                <td>@item.FirstName</td>
+                <td>@item.LastName</td>
+                <td>@item.BirthDate.ToShortDateString()</td>
+                <td>
+                    <button class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#editPersonModal" data-id="@item.Id" data-firstname="@item.FirstName" data-lastname="@item.LastName" data-birthdate="@item.BirthDate">Edit</button>
+                    <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deletePersonModal" data-id="@item.Id" data-name="@item.FirstName @item.LastName">Delete</button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<!-- Create Person Modal -->
+<div class="modal fade" id="createPersonModal" tabindex="-1" aria-labelledby="createPersonModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="createPersonModalLabel">Create New Person</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="post" asp-page-handler="Create">
+                    <div class="form-group">
+                        <label asp-for="NewPerson.FirstName" class="control-label"></label>
+                        <input asp-for="NewPerson.FirstName" class="form-control" />
+                        <span asp-validation-for="NewPerson.FirstName" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="NewPerson.LastName" class="control-label"></label>
+                        <input asp-for="NewPerson.LastName" class="form-control" />
+                        <span asp-validation-for="NewPerson.LastName" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="NewPerson.BirthDate" class="control-label"></label>
+                        <input asp-for="NewPerson.BirthDate" class="form-control" type="date" />
+                        <span asp-validation-for="NewPerson.BirthDate" class="text-danger"></span>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Person Modal -->
+<div class="modal fade" id="editPersonModal" tabindex="-1" aria-labelledby="editPersonModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editPersonModalLabel">Edit Person</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="post" asp-page-handler="Edit">
+                    <input type="hidden" asp-for="EditedPerson.Id" id="EditedPerson_Id" />
+                    <div class="form-group">
+                        <label asp-for="EditedPerson.FirstName" class="control-label"></label>
+                        <input asp-for="EditedPerson.FirstName" class="form-control" id="EditedPerson_FirstName" />
+                        <span asp-validation-for="EditedPerson.FirstName" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="EditedPerson.LastName" class="control-label"></label>
+                        <input asp-for="EditedPerson.LastName" class="form-control" id="EditedPerson_LastName" />
+                        <span asp-validation-for="EditedPerson.LastName" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="EditedPerson.BirthDate" class="control-label"></label>
+                        <input asp-for="EditedPerson.BirthDate" class="form-control" id="EditedPerson_BirthDate" type="date" />
+                        <span asp-validation-for="EditedPerson.BirthDate" class="text-danger"></span>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Person Modal -->
+<div class="modal fade" id="deletePersonModal" tabindex="-1" aria-labelledby="deletePersonModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deletePersonModalLabel">Delete Person</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="post" asp-page-handler="Delete">
+                    <input type="hidden" asp-for="PersonToDelete.Id" id="PersonToDelete_Id" />
+                    <p>Are you sure you want to delete the person "<span id="personNameToDelete"></span>"?</p>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/Person/editPerson.js" asp-append-version="true"></script>
+    <script src="~/js/Person/deletePerson.js" asp-append-version="true"></script>
+}
+ *@

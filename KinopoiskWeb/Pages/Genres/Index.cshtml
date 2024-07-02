@@ -98,7 +98,7 @@
             </div>
             <div class="modal-body">
                 <form method="post" asp-page-handler="Delete">
-                    <input type="hidden" asp-for="GenreToDelete.Id" id="GenreToDelete_Id" />
+                    <input type="hidden" asp-for="GenreId" id="GenreToDelete_Id" />
                     <p>Are you sure you want to delete the genre "<span id="genreNameToDelete"></span>"?</p>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
@@ -112,24 +112,25 @@
 
 @section Scripts {
     <script>
-        var editGenreModal = document.getElementById('editGenreModal');
-        editGenreModal.addEventListener('show.bs.modal', function (event) {
-            var button = event.relatedTarget;
-            var id = button.getAttribute('data-id');
-            var name = button.getAttribute('data-name');
-            var modal = $(this);
-            modal.find('.modal-body input#EditedGenre_Id').val(id);
-            modal.find('.modal-body input#EditedGenre_Name').val(name);
-        });
+        $(document).ready(function () {
+            $('#editGenreModal').on('show.bs.modal', function (event) {
+                var button = $(event.relatedTarget);
+                var id = button.data('id');
+                var name = button.data('name');
+                var modal = $(this);
+                modal.find('.modal-body input#EditedGenre_Id').val(id);
+                modal.find('.modal-body input#EditedGenre_Name').val(name);
+            });
 
-        var deleteGenreModal = document.getElementById('deleteGenreModal');
-        deleteGenreModal.addEventListener('show.bs.modal', function (event) {
-            var button = event.relatedTarget;
-            var id = button.getAttribute('data-id');
-            var name = button.getAttribute('data-name');
-            var modal = $(this);
-            modal.find('.modal-body input#GenreToDelete_Id').val(id);
-            modal.find('.modal-body #genreNameToDelete').text(name);
+            $('#deleteGenreModal').on('show.bs.modal', function (event) {
+                var button = $(event.relatedTarget);
+                var id = button.data('id');
+                var name = button.data('name');
+                var modal = $(this);
+                modal.find('.modal-body input#GenreToDelete_Id').val(id);
+                modal.find('.modal-body #genreNameToDelete').text(name);
+            });
         });
     </script>
+
 }

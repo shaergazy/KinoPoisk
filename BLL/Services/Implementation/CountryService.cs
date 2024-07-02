@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
-using BLL.DTO;
 using BLL.Services.Interfaces;
 using DAL.Entities;
 using Data.Repositories.RepositoryInterfaces;
 using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
+using BLL.DTO.CountryDTOs;
 
 namespace BLL.Services.Implementation
 {
@@ -19,7 +19,7 @@ namespace BLL.Services.Implementation
                 _uow = uow;
             }
 
-            public async Task<int> CreateAsync(CountryDto.Add dto)
+            public async Task<int> CreateAsync(AddCountryDto dto)
             {
                 if (dto == null)
                     throw new ArgumentNullException();
@@ -40,7 +40,7 @@ namespace BLL.Services.Implementation
                 await _uow.Countries.DeleteByIdAsync(id);
             }
 
-            public async Task UpdateAsync(CountryDto.Edit dto)
+            public async Task UpdateAsync(EditCountryDto dto)
             {
                 if (dto == null)
                     throw new ArgumentNullException();
@@ -50,14 +50,14 @@ namespace BLL.Services.Implementation
                 await _uow.Countries.UpdateAsync(CountryToUpdate);
             }
 
-            public Task<List<CountryDto.Get>> GetAll()
+            public Task<List<ListCountryDto>> GetAll()
             {
-                return _uow.Countries.GetAll().ProjectTo<CountryDto.Get>(_mapper.ConfigurationProvider).ToListAsync();
+                return _uow.Countries.GetAll().ProjectTo<ListCountryDto>(_mapper.ConfigurationProvider).ToListAsync();
             }
 
-            public async Task<CountryDto.Get> GetById(int id)
+            public async Task<GetCountryDto> GetById(int id)
             {
-                return _mapper.Map<CountryDto.Get>(await _uow.Countries.GetByIdAsync(id));
+                return _mapper.Map<GetCountryDto>(await _uow.Countries.GetByIdAsync(id));
             }
     }
 }

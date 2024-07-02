@@ -69,6 +69,7 @@ internal static class WebApplicationBuilderExtension
         //services.RegisterServiceUri(configuration);
         services.RegisterSwagger();
         services.AddCommonServices(configuration);
+        services.ConfigMapper();
     }
 
     internal static WebApplication Configure(this WebApplicationBuilder builder)

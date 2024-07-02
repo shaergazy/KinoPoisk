@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using BLL.Services.Interfaces;
-using BLL.DTO;
 using DAL.Entities;
 using Data.Repositories.RepositoryInterfaces;
 using Microsoft.EntityFrameworkCore;
+using BLL.DTO.GenreDTOs;
 
 namespace BLL.Services.Implementation
 {
@@ -19,7 +19,7 @@ namespace BLL.Services.Implementation
             _uow = uow;
         }
 
-        public async Task<int> CreateAsync(GenreDto.Base dto)
+        public async Task<int> CreateAsync(AddGenreDto dto)
         {
             if (dto == null)
                 throw new ArgumentNullException();
@@ -40,7 +40,7 @@ namespace BLL.Services.Implementation
             await _uow.Genres.DeleteByIdAsync(id);
         }
 
-        public async Task UpdateAsync(GenreDto.IdHasBase dto)
+        public async Task UpdateAsync(EditGenreDto dto)
         {
             if (dto == null)
                 throw new ArgumentNullException();
@@ -50,14 +50,14 @@ namespace BLL.Services.Implementation
             await _uow.Genres.UpdateAsync(genreToUpdate);
         }
 
-        public Task<List<GenreDto.IdHasBase>> GetAll()
+        public async Task<List<ListGenreDto>> GetAll()
         {
-            return _uow.Genres.GetAll().ProjectTo<GenreDto.IdHasBase>(_mapper.ConfigurationProvider).ToListAsync();
+            return _mapper.Map<List<ListGenreDto>>(_uow.Genres.GetAll().ToListAsync().Result);
         }
 
-        public async Task<GenreDto.IdHasBase> GetById(int id)
+        public async Task<GetGenreDto> GetById(int id)
         {
-            return _mapper.Map<GenreDto.IdHasBase>(await _uow.Genres.GetByIdAsync(id));
+            return _mapper.Map<GetGenreDto>(await _uow.Genres.GetByIdAsync(id));
         }
     }
 }

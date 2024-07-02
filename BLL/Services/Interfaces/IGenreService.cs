@@ -1,13 +1,13 @@
-﻿using BLL.DTO;
+﻿using BLL.DTO.GenreDTOs;
 
 namespace BLL.Services.Interfaces
 {
     public interface IGenreService : IService
     {
-        Task<int> CreateAsync(GenreDto.Base dto);
-        Task<List<GenreDto.IdHasBase>> GetAll();
-        Task UpdateAsync(GenreDto.IdHasBase dto);
+        Task<int> CreateAsync(AddGenreDto dto);
+        Task<List<ListGenreDto>> GetAll();
+        Task UpdateAsync(EditGenreDto dto);
         Task DeleteById(int id);
-        Task<GenreDto.IdHasBase> GetById(int id);
+        Task<GetGenreDto> GetById(int id);
     }
 }

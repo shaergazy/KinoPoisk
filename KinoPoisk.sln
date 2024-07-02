@@ -8,15 +8,15 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DTO", "DTO\DTO.csproj", "{8EC40F36-6912-4C0B-B6A9-839B8A740F81}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common", "Common\Common.csproj", "{AC64A4C5-8527-4FCD-8964-03C2B4F8E041}"
-	ProjectSection(ProjectDependencies) = postProject
-		{2B74626E-2579-4EE4-A9F9-5BD20DD576BC} = {2B74626E-2579-4EE4-A9F9-5BD20DD576BC}
-	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KinopoiskWeb", "KinopoiskWeb\KinopoiskWeb.csproj", "{9955B61D-FAFE-40D2-91AC-4AC77EC27928}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "API", "API\API.csproj", "{801E7779-F854-4CB1-8E57-D213B730A412}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BLL", "BLL\BLL.csproj", "{2B74626E-2579-4EE4-A9F9-5BD20DD576BC}"
+	ProjectSection(ProjectDependencies) = postProject
+		{AC64A4C5-8527-4FCD-8964-03C2B4F8E041} = {AC64A4C5-8527-4FCD-8964-03C2B4F8E041}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

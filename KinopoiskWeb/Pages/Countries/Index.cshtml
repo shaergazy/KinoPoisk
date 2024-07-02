@@ -118,7 +118,7 @@
             </div>
             <div class="modal-body">
                 <form method="post" asp-page-handler="Delete">
-                    <input type="hidden" asp-for="CountryToDelete.Id" id="CountryToDelete_Id" />
+                    <input type="hidden" asp-for="CountryId" id="CountryToDelete_Id" />
                     <p>Are you sure you want to delete the country "<span id="countryNameToDelete"></span>"?</p>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
@@ -132,28 +132,29 @@
 
 @section Scripts {
     <script>
-        var editCountryModal = document.getElementById('editCountryModal');
-        editCountryModal.addEventListener('show.bs.modal', function (event) {
-            var button = event.relatedTarget;
-            var id = button.getAttribute('data-id');
-            var name = button.getAttribute('data-name');
-            var shortName = button.getAttribute('data-shortname');
-            var flagUrl = button.getAttribute('data-flagurl');
-            var modal = $(this);
-            modal.find('.modal-body input#EditedCountry_Id').val(id);
-            modal.find('.modal-body input#EditedCountry_Name').val(name);
-            modal.find('.modal-body input#EditedCountry_ShortName').val(shortName);
-            modal.find('.modal-body input#EditedCountry_FlagUrl').val(flagUrl);
-        });
+        $(document).ready(function () {
+            $('#editCountryModal').on('show.bs.modal', function (event) {
+                var button = $(event.relatedTarget);
+                var id = button.data('id');
+                var name = button.data('name');
+                var shortName = button.data('shortname');
+                var flagUrl = button.data('flagurl');
+                var modal = $(this);
+                modal.find('.modal-body input#EditedCountry_Id').val(id);
+                modal.find('.modal-body input#EditedCountry_Name').val(name);
+                modal.find('.modal-body input#EditedCountry_ShortName').val(shortName);
+                modal.find('.modal-body input#EditedCountry_FlagUrl').val(flagUrl);
+            });
 
-        var deleteCountryModal = document.getElementById('deleteCountryModal');
-        deleteCountryModal.addEventListener('show.bs.modal', function (event) {
-            var button = event.relatedTarget;
-            var id = button.getAttribute('data-id');
-            var name = button.getAttribute('data-name');
-            var modal = $(this);
-            modal.find('.modal-body input#CountryToDelete_Id').val(id);
-            modal.find('.modal-body #countryNameToDelete').text(name);
+            $('#deleteCountryModal').on('show.bs.modal', function (event) {
+                var button = $(event.relatedTarget);
+                var id = button.data('id');
+                var name = button.data('name');
+                var modal = $(this);
+                modal.find('.modal-body input#CountryToDelete_Id').val(id);
+                modal.find('.modal-body #countryNameToDelete').text(name);
+            });
         });
     </script>
+
 }

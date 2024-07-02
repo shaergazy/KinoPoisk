@@ -67,13 +67,6 @@ namespace Common.CommonServices
         /// конфигурация маппера  
         /// </summary>
         /// <param name="services"></param>
-        public static void ConfigMapper(this IServiceCollection services)
-        {
-            services.AddSingleton(_ => new MapperConfiguration(cfg =>
-            {
-                cfg.AddProfile(new BLL.Infrastructure.AutoMapperProfile());
-            }).CreateMapper());
-        }
 
         public static IServiceCollection AddCommonServices(this IServiceCollection services, IConfiguration configuration)
         {
@@ -81,7 +74,6 @@ namespace Common.CommonServices
             RegisterAuth(services);
             RegisterJwtAuthorization(services, configuration);
             RegisterServiceUri(services, configuration);
-            ConfigMapper(services);
             RegisterServices(services);
 
             var assembly = typeof(IService).Assembly;

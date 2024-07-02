@@ -1,5 +1,7 @@
+using AutoMapper;
+using BLL.DTO.GenreDTOs;
 using BLL.Services.Interfaces;
-using BLL.DTO;
+using KinopoiskWeb.ViewModels.GenreVM;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -8,47 +10,49 @@ namespace KinopoiskWeb.Pages.Genres
     public class IndexModel : PageModel
     {
         private readonly IGenreService _service;
+        private readonly IMapper _mapper;
 
-        public IndexModel(IGenreService service)
+        public IndexModel(IGenreService service, IMapper mapper)
         {
             _service = service;
+            _mapper = mapper;
         }
 
 
         [BindProperty]
-        public IList<GenreDto.IdHasBase> Genres { get; set; }
+        public IList<IndexGenreVM> Genres { get; set; }
 
         [BindProperty]
-        public GenreDto.IdHasBase NewGenre { get; set; }
+        public CreateGenreVM NewGenre { get; set; }
 
         [BindProperty]
-        public GenreDto.IdHasBase EditedGenre { get; set; }
+        public EditGenreVM EditedGenre { get; set; }
 
         [BindProperty]
-        public GenreDto.IdHasBase GenreToDelete { get; set; }
+        public int GenreId { get; set; }
 
         public async Task OnGetAsync()
         {
-            Genres = await _service.GetAll();
+            Genres = _mapper.Map<List<IndexGenreVM>>(await _service.GetAll());
         }
 
         public async Task<IActionResult> OnPostCreateAsync()
         {
-            await _service.CreateAsync(NewGenre);
+            await _service.CreateAsync(_mapper.Map<AddGenreDto>(NewGenre));
 
             return RedirectToPage();
         }
 
         public async Task<IActionResult> OnPostEditAsync()
         {
-            await _service.UpdateAsync(EditedGenre);
+            await _service.UpdateAsync(_mapper.Map<EditGenreDto>(EditedGenre));
 
             return RedirectToPage();
         }
 
         public async Task<IActionResult> OnPostDeleteAsync()
         {
-            await _service.DeleteById(GenreToDelete.Id);
+            await _service.DeleteById(GenreId);
             return RedirectToPage();
         }
     }

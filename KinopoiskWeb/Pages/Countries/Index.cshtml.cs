@@ -1,5 +1,7 @@
-using BLL.DTO;
+using AutoMapper;
+using BLL.DTO.CountryDTOs;
 using BLL.Services.Interfaces;
+using KinopoiskWeb.ViewModels.CountryVM;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -8,27 +10,29 @@ namespace KinopoiskWeb.Pages.Countries
     public class IndexModel : PageModel
     {
         private readonly ICountryService _service;
+        private readonly IMapper _mapper;
 
-        public IndexModel(ICountryService service)
+        public IndexModel(ICountryService service, IMapper mapper)
         {
             _service = service;
+            _mapper = mapper;
         }
 
         [BindProperty]
-        public List<CountryDto.Get> Countries { get; set; }
+        public List<IndexCountryVM> Countries { get; set; }
 
         [BindProperty]
-        public CountryDto.Add NewCountry { get; set; }
+        public CreateCountryVM NewCountry { get; set; }
 
         [BindProperty]
-        public CountryDto.Edit EditedCountry { get; set; }
+        public EditCountryVM EditedCountry { get; set; }
 
         [BindProperty]
-        public CountryDto.Delete CountryToDelete { get; set; }
+        public int CountryId { get; set; }
 
         public async Task OnGetAsync()
         {
-            Countries = await _service.GetAll();
+            Countries = _mapper.Map<List<IndexCountryVM>>(await _service.GetAll());
         }
 
         public async Task<IActionResult> OnPostCreateAsync()
@@ -38,7 +42,7 @@ namespace KinopoiskWeb.Pages.Countries
             //    return RedirectToPage("/Error");
             //}
 
-            await _service.CreateAsync(NewCountry);
+            await _service.CreateAsync(_mapper.Map<AddCountryDto>(NewCountry));
 
             return RedirectToPage();
         }
@@ -56,20 +60,14 @@ namespace KinopoiskWeb.Pages.Countries
                 return NotFound();
             }
 
-            await _service.UpdateAsync(EditedCountry);
+            await _service.UpdateAsync(_mapper.Map<EditCountryDto>(EditedCountry));
 
             return RedirectToPage();
         }
 
         public async Task<IActionResult> OnPostDeleteAsync()
         {
-            var country = _service.GetById(CountryToDelete.Id);
-            if (country == null)
-            {
-                return NotFound();
-            }
-
-            await _service.DeleteById(CountryToDelete.Id);
+            await _service.DeleteById(CountryId);
 
             return RedirectToPage();
         }

@@ -1,4 +1,5 @@
 ﻿using API.Infrastructure;
+using AutoMapper;
 using DTO;
 using Microsoft.OpenApi.Models;
 
@@ -14,6 +15,14 @@ internal static class IServiceCollectionExtension
             .AllowAnyMethod()
             .AllowAnyHeader()
             .AllowCredentials()));
+    }
+
+    public static void ConfigMapper(this IServiceCollection services)
+    {
+        services.AddSingleton(_ => new MapperConfiguration(cfg =>
+        {
+            cfg.AddProfile(new BLL.Infrastructure.AutoMapperProfile());
+        }).CreateMapper());
     }
 
     internal static void RegisterIOptions(this IServiceCollection services, IConfiguration configuration)
