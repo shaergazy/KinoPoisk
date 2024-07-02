@@ -1,4 +1,4 @@
-﻿@* @page
+﻿@page
 @model KinopoiskWeb.Pages.People.IndexModel
 @{
     ViewData["Title"] = "People";
@@ -118,7 +118,7 @@
             </div>
             <div class="modal-body">
                 <form method="post" asp-page-handler="Delete">
-                    <input type="hidden" asp-for="PersonToDelete.Id" id="PersonToDelete_Id" />
+                    <input type="hidden" asp-for="PersonId" id="PersonToDelete_Id" />
                     <p>Are you sure you want to delete the person "<span id="personNameToDelete"></span>"?</p>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
@@ -134,4 +134,3 @@
     <script src="~/js/Person/editPerson.js" asp-append-version="true"></script>
     <script src="~/js/Person/deletePerson.js" asp-append-version="true"></script>
 }
- *@

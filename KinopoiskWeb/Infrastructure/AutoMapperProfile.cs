@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using BLL.DTO.CountryDTOs;
 using BLL.DTO.GenreDTOs;
+using BLL.DTO.PersonDTOs;
 using KinopoiskWeb.ViewModels.CountryVM;
 using KinopoiskWeb.ViewModels.GenreVM;
+using KinopoiskWeb.ViewModels.PersonVM;
 
 namespace KinopoiskWeb.Infrastructure
 {
@@ -17,6 +19,10 @@ namespace KinopoiskWeb.Infrastructure
             CreateMap<CreateCountryVM, AddCountryDto>().ReverseMap();
             CreateMap<IndexCountryVM, ListCountryDto>().ReverseMap();
             CreateMap<EditCountryVM, EditCountryDto>().ReverseMap();
+
+            CreateMap<CreatePersonVM, AddPersonDto>().ReverseMap();
+            CreateMap<IndexPersonVM, ListPersonDto>().ReverseMap();
+            CreateMap<EditPersonVM, EditPersonDto>().ReverseMap();
         }
     }
 }

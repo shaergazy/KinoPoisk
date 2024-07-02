@@ -46,7 +46,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form method="post" asp-page-handler="Create">
+                <form method="post" enctype="multipart/form-data" asp-page-handler="Create">
                     <div class="form-group">
                         <label asp-for="NewCountry.Name" class="control-label"></label>
                         <input asp-for="NewCountry.Name" class="form-control" />
@@ -58,9 +58,9 @@
                         <span asp-validation-for="NewCountry.ShortName" class="text-danger"></span>
                     </div>
                     <div class="form-group">
-                        <label asp-for="NewCountry.FlagLink" class="control-label"></label>
-                        <input asp-for="NewCountry.FlagLink" class="form-control" />
-                        <span asp-validation-for="NewCountry.FlagLink" class="text-danger"></span>
+                        <label asp-for="NewCountry.FlagFile" class="control-label"></label>
+                        <input type="file" asp-for="NewCountry.FlagFile" class="form-control" />
+                        <span asp-validation-for="NewCountry.FlagFile" class="text-danger"></span>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -81,7 +81,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form method="post" asp-page-handler="Edit">
+                <form method="post" enctype="multipart/form-data" asp-page-handler="Edit">
                     <input type="hidden" asp-for="EditedCountry.Id" id="EditedCountry_Id" />
                     <div class="form-group">
                         <label asp-for="EditedCountry.Name" class="control-label"></label>
@@ -94,9 +94,9 @@
                         <span asp-validation-for="EditedCountry.ShortName" class="text-danger"></span>
                     </div>
                     <div class="form-group">
-                        <label asp-for="EditedCountry.FlagLink" class="control-label"></label>
-                        <input asp-for="EditedCountry.FlagLink" class="form-control" id="EditedCountry_FlagUrl" />
-                        <span asp-validation-for="EditedCountry.FlagLink" class="text-danger"></span>
+                        <label asp-for="EditedCountry.FlagFile" class="control-label"></label>
+                        <input type="file" asp-for="EditedCountry.FlagFile" class="form-control" />
+                        <span asp-validation-for="EditedCountry.FlagFile" class="text-danger"></span>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -156,5 +156,4 @@
             });
         });
     </script>
-
 }

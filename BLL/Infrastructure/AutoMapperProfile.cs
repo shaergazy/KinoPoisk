@@ -23,6 +23,7 @@ namespace BLL.Infrastructure
             CreateMap<Person, EditPersonDto>().ReverseMap();
             CreateMap<Person, AddPersonDto>().ReverseMap();
             CreateMap<Person, GetPersonDto>().ReverseMap();
+            CreateMap<Person, ListPersonDto>().ReverseMap();
             CreateMap<Person, DeletePersonDto>().ReverseMap();
         }
     }
