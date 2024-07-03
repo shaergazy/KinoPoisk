@@ -4,6 +4,6 @@
     {
         public string Name { get; set; }
         public string ShortName { get; set; }
-        public IFormFile FlagFile {  get; set; }
+        public IFormFile? Flag {  get; set; }
     }
 }

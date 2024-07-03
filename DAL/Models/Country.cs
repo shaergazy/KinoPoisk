@@ -9,5 +9,6 @@ namespace DAL.Entities
         public string Name { get; set; }
         public string ShortName { get; set; }
         public string FlagLink { get; set; }
+        public bool IsOwnPicture { get; set; }
     }
 }

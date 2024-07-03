@@ -1,10 +1,24 @@
 ﻿$(document).ready(function () {
-    $('#deletePersonModal').on('show.bs.modal', function (event) {
+    $('#editPersonModal').on('show.bs.modal', function (event) {
         var button = $(event.relatedTarget);
-        var id = button.data('id');
-        var name = button.data('name');
-        var modal = $(this);
-        modal.find('.modal-body input#PersonToDelete_Id').val(id);
-        modal.find('.modal-body #personNameToDelete').text(name);
+        var PersonId = button.data('id');
+
+        $.ajax({
+            url: `/People/Index?handler=GetPerson&id=${PersonId}`,
+            method: 'GET',
+            success: function (data) {
+                $('#editPersonId').val(data.id);
+                $('#editPersonFirstName').val(data.firstName);
+                $('#editPersonLastName').val(data.lastName);
+                var birthDate = new Date(data.birthDate);
+                var formattedDate = ('0' + (birthDate.getMonth() + 1)).slice(-2) + '/' +
+                    ('0' + birthDate.getDate()).slice(-2) + '/' +
+                    birthDate.getFullYear();
+                $('#editPersonBirthDate').val(formattedDate);
+            },
+            error: function (error) {
+                console.error('Error:', error);
+            }
+        });
     });
 });

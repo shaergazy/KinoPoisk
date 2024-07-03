@@ -46,6 +46,7 @@ namespace BLL.Services.Implementation
                     throw new ArgumentNullException();
                 if (_uow.Countries.Any(x => x.Name == dto.Name && x.Id != dto.Id))
                     throw new Exception("Country already exist");
+
                 var CountryToUpdate = _mapper.Map<Country>(dto);
                 await _uow.Countries.UpdateAsync(CountryToUpdate);
             }

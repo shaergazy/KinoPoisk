@@ -13,12 +13,14 @@ namespace BLL.Infrastructure
             CreateMap<Genre, AddGenreDto>().ReverseMap();
             CreateMap<Genre, EditGenreDto>().ReverseMap();
             CreateMap<Genre, ListGenreDto>().ReverseMap();
+            CreateMap<Genre, GetGenreDto>().ReverseMap();
 
             //AutoMapperProfile for Country
             CreateMap<Country, EditCountryDto>().ReverseMap();
             CreateMap<Country, AddCountryDto>().ReverseMap();
             CreateMap<Country, ListCountryDto>().ReverseMap();
             CreateMap<Country, DeleteCountryDto>().ReverseMap();
+            CreateMap<Country, GetCountryDto>().ReverseMap();
 
             CreateMap<Person, EditPersonDto>().ReverseMap();
             CreateMap<Person, AddPersonDto>().ReverseMap();

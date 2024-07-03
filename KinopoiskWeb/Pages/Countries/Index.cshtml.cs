@@ -47,6 +47,17 @@ namespace KinopoiskWeb.Pages.Countries
             return RedirectToPage();
         }
 
+        public async Task<JsonResult> OnGetGetCountry(int id)
+        {
+            var country = await _service.GetById(id);
+            if (country == null)
+            {
+                return new JsonResult(NotFound());
+            }
+
+            return new JsonResult(country);
+        }
+
         public async Task<IActionResult> OnPostEditAsync()
         {
             if (!ModelState.IsValid)

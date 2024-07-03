@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using DAL.Interfaces;
+using Microsoft.AspNetCore.Http;
 
 
 namespace BLL.DTO.CountryDTOs
@@ -18,22 +19,28 @@ namespace BLL.DTO.CountryDTOs
         /// </summary>
         [MaxLength(2)]
         public string ShortName { get; set; }
-
-        /// <summary>
-        /// Link to flag
-        /// </summary>
-        [Required]
-        [MaxLength(256)]
-        public string FlagLink { get; set; }
     }
     public class IdHasBase : Base, IIdHas<int>
     {
         public int Id { get; set; }
     }
 
-    public class AddCountryDto : Base { }
-    public class EditCountryDto : IdHasBase { }
+    public class AddCountryDto : Base 
+    {
+        public IFormFile? Flag { get; set; }
+    }
+    public class EditCountryDto : IdHasBase 
+    {
+        public IFormFile? Flag { get; set; }
+    }
     public class DeleteCountryDto : IdHasBase { }
-    public class GetCountryDto : IdHasBase { }
-    public class ListCountryDto : IdHasBase { }
+    public class ListCountryDto : IdHasBase
+    {         /// <summary>
+              /// Link to flag
+              /// </summary>
+        [Required]
+        [MaxLength(256)]
+        public string FlagLink { get; set; }
+    }
+    public class GetCountryDto : ListCountryDto { }
 }

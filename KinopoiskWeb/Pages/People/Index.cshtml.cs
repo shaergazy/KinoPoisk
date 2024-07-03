@@ -35,6 +35,17 @@ namespace KinopoiskWeb.Pages.People
             People = _mapper.Map<List<IndexPersonVM>>(await _service.GetAll());
         }
 
+        public async Task<JsonResult> OnGetGetPerson(int id)
+        {
+            var person = await _service.GetById(id);
+            if (person == null)
+            {
+                return new JsonResult(NotFound());
+            }
+
+            return new JsonResult(person);
+        }
+
         public async Task<IActionResult> OnPostCreateAsync()
         {
             await _service.CreateAsync(_mapper.Map<AddPersonDto>(NewPerson));
