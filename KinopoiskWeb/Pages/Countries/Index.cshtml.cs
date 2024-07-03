@@ -60,10 +60,10 @@ namespace KinopoiskWeb.Pages.Countries
 
         public async Task<IActionResult> OnPostEditAsync()
         {
-            if (!ModelState.IsValid)
-            {
-                return Page();
-            }
+            //if (!ModelState.IsValid)
+            //{
+            //    return Page();
+            //}
 
             var country = _service.GetById(EditedCountry.Id);
             if (country == null)

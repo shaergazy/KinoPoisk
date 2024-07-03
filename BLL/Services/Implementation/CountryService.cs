@@ -7,6 +7,7 @@ using Common.Helpers;
 using DAL.Entities;
 using Data.Repositories.RepositoryInterfaces;
 using Microsoft.EntityFrameworkCore;
+using System.Diagnostics.Metrics;
 
 namespace BLL.Services.Implementation
 {
@@ -63,9 +64,26 @@ namespace BLL.Services.Implementation
                 throw new ArgumentNullException();
             if (_uow.Countries.Any(x => x.Name == dto.Name && x.Id != dto.Id))
                 throw new Exception("Country already exist");
+            var countryToUpdate = await _uow.Countries.GetByIdAsync(dto.Id);
 
-            var CountryToUpdate = _mapper.Map<Country>(dto);
-            await _uow.Countries.UpdateAsync(CountryToUpdate);
+            countryToUpdate.Name = dto.Name;
+            countryToUpdate.ShortName = dto.ShortName;
+
+            if (dto.Flag !=  null)
+            {
+                var file = dto.Flag;
+                var path = AppConstants.RelativeFilesPath.Combine(AppConstants.BaseDir, AppConstants.FlagDir, file.FileName);
+
+                (Stream Source, string FileName) fileStream = await file.ToStream();
+                await (path, fileStream.Source).SaveStreamByPath();
+
+
+                var relativePath = AppConstants.RelativeFilesPath.Combine(AppConstants.FlagDir, file.FileName);
+
+                countryToUpdate.FlagLink = relativePath;
+                countryToUpdate.IsOwnPicture = true;
+            }
+            await _uow.Countries.UpdateAsync(countryToUpdate);
         }
 
         public Task<List<ListCountryDto>> GetAll()
