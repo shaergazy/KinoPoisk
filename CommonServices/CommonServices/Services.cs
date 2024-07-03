@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+﻿using BLL.Services.Interfaces;
 using Common.Helpers;
 using Common.Infrastructure;
 using DAL;
@@ -12,7 +12,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Repositories;
 using System.Data;
-using BLL.Services;
 namespace Common.CommonServices
 {
     public static class Services

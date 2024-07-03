@@ -1,8 +1,6 @@
 using AutoMapper;
 using BLL.DTO.GenreDTOs;
-using BLL.Services.Implementation;
 using BLL.Services.Interfaces;
-using Data.Repositories.RepositoryInterfaces;
 using KinopoiskWeb.ViewModels.GenreVM;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -13,13 +11,10 @@ namespace KinopoiskWeb.Pages.Genres
     {
         private readonly IGenreService _service;
         private readonly IMapper _mapper;
-        private readonly IUnitOfWork _uow;
-
-        public IndexModel(IGenreService service, IMapper mapper, IUnitOfWork uow)
+        public IndexModel(IGenreService service, IMapper mapper)
         {
             _service = service;
             _mapper = mapper;
-            _uow = uow;
         }
 
 

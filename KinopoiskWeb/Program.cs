@@ -1,6 +1,8 @@
 using AutoMapper;
 using Common.CommonServices;
+using KinopoiskWeb.Extensions;
 using KinopoiskWeb.Infrastructure;
+
 internal class Program
 {
     private static void Main(string[] args)
@@ -10,7 +12,7 @@ internal class Program
         // Add services to the container.
         builder.Services.AddRazorPages();
         builder.Services.AddCommonServices(builder.Configuration);
-        AutoMapperConfigure.ConfigMapper(builder.Services);
+        builder.Services.ConfigMapper();
         var app = builder.Build();
 
         // Configure the HTTP request pipeline.
@@ -22,6 +24,7 @@ internal class Program
         }
 
         app.UseHttpsRedirection();
+        app.RegisterVirtualDir(builder.Configuration);
         app.UseStaticFiles();
 
         app.UseRouting();

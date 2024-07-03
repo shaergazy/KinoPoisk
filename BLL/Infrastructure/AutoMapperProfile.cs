@@ -2,6 +2,7 @@
 using BLL.DTO.CountryDTOs;
 using BLL.DTO.GenreDTOs;
 using BLL.DTO.PersonDTOs;
+using Common.Helpers;
 using DAL.Entities;
 
 namespace BLL.Infrastructure
@@ -19,6 +20,7 @@ namespace BLL.Infrastructure
             CreateMap<Country, EditCountryDto>().ReverseMap();
             CreateMap<Country, AddCountryDto>().ReverseMap();
             CreateMap<Country, ListCountryDto>().ReverseMap();
+
             CreateMap<Country, DeleteCountryDto>().ReverseMap();
             CreateMap<Country, GetCountryDto>().ReverseMap();
 
