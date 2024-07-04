@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
-using BLL.DTO.CountryDTOs;
-using BLL.DTO.GenreDTOs;
-using BLL.DTO.PersonDTOs;
+using BLL.DTO.Country;
+using BLL.DTO.Genre;
+using BLL.DTO.Person;
 using Common.Helpers;
-using DAL.Entities;
+using DAL.Models;
 
 namespace BLL.Infrastructure
 {

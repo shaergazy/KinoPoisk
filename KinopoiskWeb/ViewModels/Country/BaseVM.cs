@@ -1,4 +1,4 @@
-﻿namespace KinopoiskWeb.ViewModels.CountryVM
+﻿namespace KinopoiskWeb.ViewModels.Country
 {
     public class BaseVM
     {

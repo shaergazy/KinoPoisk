@@ -25,7 +25,7 @@ namespace DAL.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("DAL.Entities.Comment", b =>
+            modelBuilder.Entity("DAL.Models.Comment", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -56,7 +56,7 @@ namespace DAL.Migrations
                     b.ToTable("Comments");
                 });
 
-            modelBuilder.Entity("DAL.Entities.Country", b =>
+            modelBuilder.Entity("DAL.Models.Country", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -84,7 +84,7 @@ namespace DAL.Migrations
                     b.ToTable("Countries");
                 });
 
-            modelBuilder.Entity("DAL.Entities.Genre", b =>
+            modelBuilder.Entity("DAL.Models.Genre", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -102,7 +102,7 @@ namespace DAL.Migrations
                     b.ToTable("Genres");
                 });
 
-            modelBuilder.Entity("DAL.Entities.Movie", b =>
+            modelBuilder.Entity("DAL.Models.Movie", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -140,7 +140,7 @@ namespace DAL.Migrations
                     b.ToTable("Movies");
                 });
 
-            modelBuilder.Entity("DAL.Entities.Person", b =>
+            modelBuilder.Entity("DAL.Models.Person", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -165,7 +165,7 @@ namespace DAL.Migrations
                     b.ToTable("Persons");
                 });
 
-            modelBuilder.Entity("DAL.Entities.Users.Role", b =>
+            modelBuilder.Entity("DAL.Models.Users.Role", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -192,7 +192,7 @@ namespace DAL.Migrations
                     b.ToTable("AspNetRoles", (string)null);
                 });
 
-            modelBuilder.Entity("DAL.Entities.Users.User", b =>
+            modelBuilder.Entity("DAL.Models.Users.User", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -265,7 +265,7 @@ namespace DAL.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("DAL.Entities.Users.UserRole", b =>
+            modelBuilder.Entity("DAL.Models.Users.UserRole", b =>
                 {
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(450)");
@@ -452,14 +452,14 @@ namespace DAL.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("DAL.Entities.Comment", b =>
+            modelBuilder.Entity("DAL.Models.Comment", b =>
                 {
-                    b.HasOne("DAL.Entities.Movie", null)
+                    b.HasOne("DAL.Models.Movie", null)
                         .WithMany("Comments")
                         .HasForeignKey("MovieId")
                         .OnDelete(DeleteBehavior.ClientCascade);
 
-                    b.HasOne("DAL.Entities.Users.User", "User")
+                    b.HasOne("DAL.Models.Users.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId1")
                         .OnDelete(DeleteBehavior.ClientCascade);
@@ -467,9 +467,9 @@ namespace DAL.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("DAL.Entities.Movie", b =>
+            modelBuilder.Entity("DAL.Models.Movie", b =>
                 {
-                    b.HasOne("DAL.Entities.Country", "Country")
+                    b.HasOne("DAL.Models.Country", "Country")
                         .WithMany()
                         .HasForeignKey("CountryId")
                         .OnDelete(DeleteBehavior.ClientCascade);
@@ -477,15 +477,15 @@ namespace DAL.Migrations
                     b.Navigation("Country");
                 });
 
-            modelBuilder.Entity("DAL.Entities.Users.UserRole", b =>
+            modelBuilder.Entity("DAL.Models.Users.UserRole", b =>
                 {
-                    b.HasOne("DAL.Entities.Users.Role", "Role")
+                    b.HasOne("DAL.Models.Users.Role", "Role")
                         .WithMany("Users")
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.ClientCascade)
                         .IsRequired();
 
-                    b.HasOne("DAL.Entities.Users.User", "User")
+                    b.HasOne("DAL.Models.Users.User", "User")
                         .WithMany("Roles")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.ClientCascade)
@@ -498,13 +498,13 @@ namespace DAL.Migrations
 
             modelBuilder.Entity("DAL.Models.MovieGenre", b =>
                 {
-                    b.HasOne("DAL.Entities.Genre", "Genre")
+                    b.HasOne("DAL.Models.Genre", "Genre")
                         .WithMany("Movies")
                         .HasForeignKey("GenreId")
                         .OnDelete(DeleteBehavior.ClientCascade)
                         .IsRequired();
 
-                    b.HasOne("DAL.Entities.Movie", "Movie")
+                    b.HasOne("DAL.Models.Movie", "Movie")
                         .WithMany("Genres")
                         .HasForeignKey("MovieId")
                         .OnDelete(DeleteBehavior.ClientCascade)
@@ -517,13 +517,13 @@ namespace DAL.Migrations
 
             modelBuilder.Entity("Data.Models.MoviePerson", b =>
                 {
-                    b.HasOne("DAL.Entities.Movie", "Movie")
+                    b.HasOne("DAL.Models.Movie", "Movie")
                         .WithMany("People")
                         .HasForeignKey("MovieId")
                         .OnDelete(DeleteBehavior.ClientCascade)
                         .IsRequired();
 
-                    b.HasOne("DAL.Entities.Person", "Person")
+                    b.HasOne("DAL.Models.Person", "Person")
                         .WithMany("Movies")
                         .HasForeignKey("PersonId")
                         .OnDelete(DeleteBehavior.ClientCascade)
@@ -536,13 +536,13 @@ namespace DAL.Migrations
 
             modelBuilder.Entity("Data.Models.MovieRating", b =>
                 {
-                    b.HasOne("DAL.Entities.Movie", "Movie")
+                    b.HasOne("DAL.Models.Movie", "Movie")
                         .WithMany("Ratings")
                         .HasForeignKey("MovieId")
                         .OnDelete(DeleteBehavior.ClientCascade)
                         .IsRequired();
 
-                    b.HasOne("DAL.Entities.Users.User", "User")
+                    b.HasOne("DAL.Models.Users.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId1")
                         .OnDelete(DeleteBehavior.ClientCascade);
@@ -554,7 +554,7 @@ namespace DAL.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
-                    b.HasOne("DAL.Entities.Users.Role", null)
+                    b.HasOne("DAL.Models.Users.Role", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.ClientCascade)
@@ -563,7 +563,7 @@ namespace DAL.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("DAL.Entities.Users.User", null)
+                    b.HasOne("DAL.Models.Users.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.ClientCascade)
@@ -572,7 +572,7 @@ namespace DAL.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("DAL.Entities.Users.User", null)
+                    b.HasOne("DAL.Models.Users.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.ClientCascade)
@@ -581,19 +581,19 @@ namespace DAL.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("DAL.Entities.Users.User", null)
+                    b.HasOne("DAL.Models.Users.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.ClientCascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("DAL.Entities.Genre", b =>
+            modelBuilder.Entity("DAL.Models.Genre", b =>
                 {
                     b.Navigation("Movies");
                 });
 
-            modelBuilder.Entity("DAL.Entities.Movie", b =>
+            modelBuilder.Entity("DAL.Models.Movie", b =>
                 {
                     b.Navigation("Comments");
 
@@ -604,17 +604,17 @@ namespace DAL.Migrations
                     b.Navigation("Ratings");
                 });
 
-            modelBuilder.Entity("DAL.Entities.Person", b =>
+            modelBuilder.Entity("DAL.Models.Person", b =>
                 {
                     b.Navigation("Movies");
                 });
 
-            modelBuilder.Entity("DAL.Entities.Users.Role", b =>
+            modelBuilder.Entity("DAL.Models.Users.Role", b =>
                 {
                     b.Navigation("Users");
                 });
 
-            modelBuilder.Entity("DAL.Entities.Users.User", b =>
+            modelBuilder.Entity("DAL.Models.Users.User", b =>
                 {
                     b.Navigation("Roles");
                 });

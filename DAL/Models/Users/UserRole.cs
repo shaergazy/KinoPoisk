@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
-namespace DAL.Entities.Users;
+namespace DAL.Models.Users;
 
 public class UserRole : IdentityUserRole<string>
 {

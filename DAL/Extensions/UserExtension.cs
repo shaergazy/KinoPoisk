@@ -1,4 +1,4 @@
-﻿using DAL.Entities.Users;
+﻿using DAL.Models.Users;
 using Microsoft.EntityFrameworkCore;
 
 namespace DAL.Extensions;

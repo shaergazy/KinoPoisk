@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using BLL.DTO.PersonDTOs;
+using BLL.DTO.Person;
 using BLL.Services.Interfaces;
-using DAL.Entities;
+using DAL.Models;
 using Data.Repositories.RepositoryInterfaces;
 using Microsoft.EntityFrameworkCore;
 

@@ -1,4 +1,4 @@
-﻿namespace KinopoiskWeb.ViewModels.GenreVM
+﻿namespace KinopoiskWeb.ViewModels.Genre
 {
     public class IndexGenreVM : BaseVM<int>
     {

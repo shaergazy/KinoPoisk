@@ -1,7 +1,7 @@
 ﻿using DAL.Models;
 using System.ComponentModel.DataAnnotations;
 
-namespace DAL.Entities
+namespace DAL.Models
 {
     public class Genre
     {

@@ -2,7 +2,7 @@
 using Common.Helpers;
 using Common.Infrastructure;
 using DAL;
-using DAL.Entities.Users;
+using DAL.Models.Users;
 using Data.Repositories.RepositoryInterfaces;
 using DTO;
 using Microsoft.AspNetCore.Authentication.JwtBearer;

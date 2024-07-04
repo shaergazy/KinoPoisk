@@ -1,7 +1,7 @@
 ﻿using DAL.Interfaces;
 using Microsoft.AspNetCore.Identity;
 
-namespace DAL.Entities.Users;
+namespace DAL.Models.Users;
 
 public class User : IdentityUser, IIdHas<string>
 {

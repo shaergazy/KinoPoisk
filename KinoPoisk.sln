@@ -18,7 +18,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BLL", "BLL\BLL.csproj", "{2
 		{AC64A4C5-8527-4FCD-8964-03C2B4F8E041} = {AC64A4C5-8527-4FCD-8964-03C2B4F8E041}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommonServices", "CommonServices\CommonServices.csproj", "{EFD76EB2-31FF-45A4-B957-A9F31EC64A96}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommonServices", "CommonServices\CommonServices.csproj", "{EFD76EB2-31FF-45A4-B957-A9F31EC64A96}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

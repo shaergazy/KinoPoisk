@@ -4,7 +4,7 @@
         var countryId = button.data('id');
 
         $.ajax({
-            url: `/Countries/Index?handler=GetCountry&id=${countryId}`,
+            url: Urls.Country.GetById + `&id=${countryId}`,
             method: 'GET',
             success: function (data) {
                 $('#editCountryId').val(data.id);

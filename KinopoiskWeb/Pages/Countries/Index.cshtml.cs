@@ -1,7 +1,7 @@
 using AutoMapper;
-using BLL.DTO.CountryDTOs;
+using BLL.DTO.Country;
 using BLL.Services.Interfaces;
-using KinopoiskWeb.ViewModels.CountryVM;
+using KinopoiskWeb.ViewModels.Country;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -22,10 +22,7 @@ namespace KinopoiskWeb.Pages.Countries
         public List<IndexCountryVM> Countries { get; set; }
 
         [BindProperty]
-        public CreateCountryVM NewCountry { get; set; }
-
-        [BindProperty]
-        public EditCountryVM EditedCountry { get; set; }
+        public CountryVM Country { get; set; }
 
         [BindProperty]
         public int CountryId { get; set; }
@@ -35,19 +32,20 @@ namespace KinopoiskWeb.Pages.Countries
             Countries = _mapper.Map<List<IndexCountryVM>>(await _service.GetAll());
         }
 
-        public async Task<IActionResult> OnPostCreateAsync()
+        public async Task<IActionResult> OnPostHandleCreateOrUpdateAsync(CountryVM country)
         {
-            //if (!ModelState.IsValid)
-            //{
-            //    return RedirectToPage("/Error");
-            //}
+            if (country == null)
+                throw new ArgumentNullException(nameof(country));
 
-            await _service.CreateAsync(_mapper.Map<AddCountryDto>(NewCountry));
+            if (country.Id == 0)
+                await _service.CreateAsync(_mapper.Map<AddCountryDto>(country));
+            else
+                await _service.UpdateAsync(_mapper.Map<EditCountryDto>(country));
 
             return RedirectToPage();
         }
 
-        public async Task<JsonResult> OnGetGetCountry(int id)
+        public async Task<JsonResult> OnGetById(int id)
         {
             var country = await _service.GetById(id);
             if (country == null)
@@ -55,25 +53,7 @@ namespace KinopoiskWeb.Pages.Countries
                 return new JsonResult(NotFound());
             }
 
-            return new JsonResult(country);
-        }
-
-        public async Task<IActionResult> OnPostEditAsync()
-        {
-            //if (!ModelState.IsValid)
-            //{
-            //    return Page();
-            //}
-
-            var country = _service.GetById(EditedCountry.Id);
-            if (country == null)
-            {
-                return NotFound();
-            }
-
-            await _service.UpdateAsync(_mapper.Map<EditCountryDto>(EditedCountry));
-
-            return RedirectToPage();
+            return new JsonResult(_mapper.Map<IndexCountryVM>(country));
         }
 
         public async Task<IActionResult> OnPostDeleteAsync()

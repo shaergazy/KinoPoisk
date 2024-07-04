@@ -4,7 +4,7 @@
         var PersonId = button.data('id');
 
         $.ajax({
-            url: `/People/Index?handler=GetPerson&id=${PersonId}`,
+            url: Urls.Person.GetById + `&id=${PersonId}`,
             method: 'GET',
             success: function (data) {
                 $('#editPersonId').val(data.id);

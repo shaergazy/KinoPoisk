@@ -1,7 +1,7 @@
 ﻿using DAL.Interfaces;
 using System.ComponentModel.DataAnnotations;
 
-namespace BLL.DTO.GenreDTOs
+namespace BLL.DTO.Genre
 {
     public class Base
     {

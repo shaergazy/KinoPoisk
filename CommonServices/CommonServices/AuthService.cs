@@ -1,7 +1,7 @@
 ﻿using Common.Exceptions;
 using Common.Extensions;
 using Common.Infrastructure;
-using DAL.Entities.Users;
+using DAL.Models.Users;
 using DAL.Extensions;
 using DAL.Json;
 using DTO;

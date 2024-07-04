@@ -1,11 +1,12 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using BLL.DTO.CountryDTOs;
+using BLL.DTO.Country;
 using BLL.Services.Interfaces;
 using Common.Extensions;
 using Common.Helpers;
-using DAL.Entities;
+using DAL.Models;
 using Data.Repositories.RepositoryInterfaces;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics.Metrics;
 
@@ -25,18 +26,18 @@ namespace BLL.Services.Implementation
         public async Task<int> CreateAsync(AddCountryDto dto)
         {
             if (dto.Flag == null || dto.Name == null)
-                throw new ArgumentNullException();
+                throw new ArgumentNullException("You have to complete all properties");
             if (_uow.Countries.Any(x => x.Name == dto.Name))
                 throw new Exception("Country already exist");
             var country = _mapper.Map<Country>(dto);
             var file = dto.Flag;
-            var path = AppConstants.RelativeFilesPath.Combine(AppConstants.BaseDir, AppConstants.FlagDir, file.FileName);
+            var fileName =GenerateUniqueFileName(file);
+            var path = AppConstants.RelativeFilesPath.Combine(AppConstants.BaseDir, AppConstants.FlagDir, fileName);
                 
             (Stream Source, string FileName) fileStream = await file.ToStream();
             await (path, fileStream.Source).SaveStreamByPath();
 
-
-            var relativePath = AppConstants.RelativeFilesPath.Combine(AppConstants.FlagDir, file.FileName);
+            var relativePath = AppConstants.RelativeFilesPath.Combine(AppConstants.FlagDir, fileName);
 
             country.FlagLink = relativePath;
             country.IsOwnPicture = true;
@@ -54,7 +55,7 @@ namespace BLL.Services.Implementation
 
             await _uow.Countries.DeleteByIdAsync(id);
 
-            if(country.IsOwnPicture)
+            if (country.IsOwnPicture)
                 File.Delete(country.FlagLink);
         }
 
@@ -64,13 +65,20 @@ namespace BLL.Services.Implementation
                 throw new ArgumentNullException();
             if (_uow.Countries.Any(x => x.Name == dto.Name && x.Id != dto.Id))
                 throw new Exception("Country already exist");
+
             var countryToUpdate = await _uow.Countries.GetByIdAsync(dto.Id);
+            if (countryToUpdate == null)
+                throw new Exception($"Country with id {countryToUpdate.Id} doesnt exist");
+
 
             countryToUpdate.Name = dto.Name;
             countryToUpdate.ShortName = dto.ShortName;
 
             if (dto.Flag !=  null)
             {
+                if(countryToUpdate.IsOwnPicture)
+                    File.Delete(countryToUpdate.FlagLink);
+
                 var file = dto.Flag;
                 var path = AppConstants.RelativeFilesPath.Combine(AppConstants.BaseDir, AppConstants.FlagDir, file.FileName);
 
@@ -94,6 +102,11 @@ namespace BLL.Services.Implementation
         public async Task<GetCountryDto> GetById(int id)
         {
             return _mapper.Map<GetCountryDto>(await _uow.Countries.GetByIdAsync(id));
+        }
+
+        public string GenerateUniqueFileName(IFormFile file)
+        {
+            return $"{Path.GetFileNameWithoutExtension(file.FileName)}_{DateTime.Now.ToString("yyyyMMddHHmmss")}{Path.GetExtension(file.FileName)}";
         }
     }
 }

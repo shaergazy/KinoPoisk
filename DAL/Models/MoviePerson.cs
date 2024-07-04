@@ -1,4 +1,4 @@
-﻿using DAL.Entities;
+﻿using DAL.Models;
 using DAL.Enums;
 using System.ComponentModel.DataAnnotations;
 

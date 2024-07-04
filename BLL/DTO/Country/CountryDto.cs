@@ -3,7 +3,7 @@ using DAL.Interfaces;
 using Microsoft.AspNetCore.Http;
 
 
-namespace BLL.DTO.CountryDTOs
+namespace BLL.DTO.Country
 {
     public class Base
     {

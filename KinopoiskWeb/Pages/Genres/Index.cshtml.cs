@@ -1,7 +1,7 @@
 using AutoMapper;
-using BLL.DTO.GenreDTOs;
+using BLL.DTO.Genre;
 using BLL.Services.Interfaces;
-using KinopoiskWeb.ViewModels.GenreVM;
+using KinopoiskWeb.ViewModels.Genre;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -22,10 +22,7 @@ namespace KinopoiskWeb.Pages.Genres
         public IList<IndexGenreVM> Genres { get; set; }
 
         [BindProperty]
-        public CreateGenreVM NewGenre { get; set; }
-
-        [BindProperty]
-        public EditGenreVM EditedGenre { get; set; }
+        public GenreVM Genre { get; set; }
 
         [BindProperty]
         public int GenreId { get; set; }
@@ -35,7 +32,7 @@ namespace KinopoiskWeb.Pages.Genres
             Genres = _mapper.Map<List<IndexGenreVM>>(await _service.GetAll());
         }
 
-        public async Task<JsonResult> OnGetGetGenre(int id)
+        public async Task<JsonResult> OnGetById(int id)
         {
             var genre = await _service.GetById(id);
             if (genre == null)
@@ -43,19 +40,18 @@ namespace KinopoiskWeb.Pages.Genres
                 return new JsonResult(NotFound());
             }
 
-            return new JsonResult(genre);
+            return new JsonResult(_mapper.Map<IndexGenreVM>(genre));
         }
 
-        public async Task<IActionResult> OnPostCreateAsync()
+        public async Task<IActionResult> OnPostHandleUpdateOrCreateAsync(GenreVM genre)
         {
-            await _service.CreateAsync(_mapper.Map<AddGenreDto>(NewGenre));
+            if (genre == null)
+                throw new ArgumentNullException(nameof(genre));
 
-            return RedirectToPage();
-        }
-
-        public async Task<IActionResult> OnPostEditAsync()
-        {
-            await _service.UpdateAsync(_mapper.Map<EditGenreDto>(EditedGenre));
+            if (genre.Id == 0)
+                await _service.CreateAsync(_mapper.Map<AddGenreDto>(genre));
+            else
+                await _service.UpdateAsync(_mapper.Map<EditGenreDto>(genre));
 
             return RedirectToPage();
         }

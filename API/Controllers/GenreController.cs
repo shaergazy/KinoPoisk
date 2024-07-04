@@ -3,7 +3,7 @@
 //using Common.Enums;
 //using Microsoft.AspNetCore.Authorization;
 //using Microsoft.AspNetCore.Mvc;
-//using BLL.DTO.GenreDTOs;
+//using BLL.DTO.Genre;
 
 //namespace API.Controllers
 //{

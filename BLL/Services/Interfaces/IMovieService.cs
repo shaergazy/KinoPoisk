@@ -1,4 +1,4 @@
-﻿using BLL.DTO.PersonDTOs;
+﻿using BLL.DTO.Person;
 
 namespace BLL.Services.Interfaces
 {

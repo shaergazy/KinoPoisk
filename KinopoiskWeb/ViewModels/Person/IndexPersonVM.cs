@@ -1,4 +1,4 @@
-﻿namespace KinopoiskWeb.ViewModels.PersonVM
+﻿namespace KinopoiskWeb.ViewModels.Person
 {
     public class IndexPersonVM : BaseVM
     {

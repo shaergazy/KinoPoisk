@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
-using BLL.DTO.CountryDTOs;
-using BLL.DTO.GenreDTOs;
-using BLL.DTO.PersonDTOs;
-using KinopoiskWeb.ViewModels.CountryVM;
-using KinopoiskWeb.ViewModels.GenreVM;
-using KinopoiskWeb.ViewModels.PersonVM;
+using BLL.DTO.Country;
+using BLL.DTO.Genre;
+using BLL.DTO.Person;
+using KinopoiskWeb.ViewModels.Country;
+using KinopoiskWeb.ViewModels.Genre;
+using KinopoiskWeb.ViewModels.Person;
 
 namespace KinopoiskWeb.Infrastructure
 {
@@ -12,17 +12,20 @@ namespace KinopoiskWeb.Infrastructure
     {
         public AutoMapperProfile()
         {
-            CreateMap<CreateGenreVM, AddGenreDto>().ReverseMap();
+            CreateMap<GenreVM, AddGenreDto>().ReverseMap();
             CreateMap<IndexGenreVM, ListGenreDto>().ReverseMap();
-            CreateMap<EditGenreVM, EditGenreDto>().ReverseMap();
+            CreateMap<IndexGenreVM, GetGenreDto>().ReverseMap();
+            CreateMap<GenreVM, EditGenreDto>().ReverseMap();
 
-            CreateMap<CreateCountryVM, AddCountryDto>().ReverseMap();
+            CreateMap<CountryVM, AddCountryDto>().ReverseMap();
             CreateMap<IndexCountryVM, ListCountryDto>().ReverseMap();
-            CreateMap<EditCountryVM, EditCountryDto>().ReverseMap();
+            CreateMap<IndexCountryVM, GetCountryDto>().ReverseMap();
+            CreateMap<CountryVM, EditCountryDto>().ReverseMap();
 
-            CreateMap<CreatePersonVM, AddPersonDto>().ReverseMap();
+            CreateMap<PersonVM, AddPersonDto>().ReverseMap();
             CreateMap<IndexPersonVM, ListPersonDto>().ReverseMap();
-            CreateMap<EditPersonVM, EditPersonDto>().ReverseMap();
+            CreateMap<IndexPersonVM, GetPersonDto>().ReverseMap();
+            CreateMap<PersonVM, EditPersonDto>().ReverseMap();
         }
     }
 }

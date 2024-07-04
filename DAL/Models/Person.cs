@@ -1,7 +1,7 @@
 ﻿using Data.Models;
 using System.ComponentModel.DataAnnotations;
 
-namespace DAL.Entities
+namespace DAL.Models
 {
     public class Person
     {

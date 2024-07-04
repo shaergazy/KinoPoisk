@@ -4,7 +4,7 @@
         var genreId = button.data('id');
 
         $.ajax({
-            url: `/Genres/Index?handler=GetGenre&id=${genreId}`,
+            url: Urls.Genre.GetById + `&id=${genreId}`,
             method: 'GET',
             success: function (data) {
                 $('#editGenreId').val(data.id);

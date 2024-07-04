@@ -1,5 +1,5 @@
-﻿using DAL.Entities;
-using DAL.Entities.Users;
+﻿using DAL.Models;
+using DAL.Models.Users;
 using System.ComponentModel.DataAnnotations;
 
 namespace Data.Models

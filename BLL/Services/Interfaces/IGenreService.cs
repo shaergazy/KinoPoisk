@@ -1,4 +1,4 @@
-﻿using BLL.DTO.GenreDTOs;
+﻿using BLL.DTO.Genre;
 
 namespace BLL.Services.Interfaces
 {

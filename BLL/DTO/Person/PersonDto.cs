@@ -1,7 +1,7 @@
 ﻿using DAL.Interfaces;
 using System.ComponentModel.DataAnnotations;
 
-namespace BLL.DTO.PersonDTOs
+namespace BLL.DTO.Person
 {
     public class Base
     {

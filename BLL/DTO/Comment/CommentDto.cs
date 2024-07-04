@@ -1,6 +1,6 @@
 ﻿using DAL.Interfaces;
 
-namespace BLL.DTO.CommentDTOs
+namespace BLL.DTO.Comment
 {
     public class Base
     {

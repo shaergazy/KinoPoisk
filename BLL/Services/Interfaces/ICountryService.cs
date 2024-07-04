@@ -1,4 +1,4 @@
-﻿using BLL.DTO.CountryDTOs;
+﻿using BLL.DTO.Country;
 
 namespace BLL.Services.Interfaces
 {

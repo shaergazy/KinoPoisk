@@ -1,6 +1,6 @@
 ﻿//using AutoMapper;
 //using BLL.DTO;
-//using DAL.Entities;
+//using DAL.Models;
 //using Data.Repositories.RepositoryInterfaces;
 //using AutoMapper.QueryableExtensions;
 //using Microsoft.EntityFrameworkCore;

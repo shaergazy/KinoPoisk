@@ -1,8 +1,7 @@
-﻿using DAL.Entities;
-using DAL.Interfaces;
+﻿using DAL.Interfaces;
 using Data.Models;
 
-namespace BLL.DTO.MovieDTOs
+namespace BLL.DTO.Movie
 {
     public class Base
     {
@@ -11,7 +10,7 @@ namespace BLL.DTO.MovieDTOs
         public DateTime RealesedDate { get; set; }
         public int? CountryId { get; set; }
         public ICollection<int> MoviesIds { get; set; }
-        public ICollection<Comment> Comments { get; set; }
+        public ICollection<DAL.Models.Comment> Comments { get; set; }
         public ICollection<MoviePerson> People { get; set; }
         public uint? Duration { get; set; }
         public float? IMDBRating { get; set; }

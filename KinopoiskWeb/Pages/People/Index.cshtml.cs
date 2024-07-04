@@ -1,7 +1,7 @@
 using AutoMapper;
-using BLL.DTO.PersonDTOs;
+using BLL.DTO.Person;
 using BLL.Services.Interfaces;
-using KinopoiskWeb.ViewModels.PersonVM;
+using KinopoiskWeb.ViewModels.Person;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -22,10 +22,7 @@ namespace KinopoiskWeb.Pages.People
         public List<IndexPersonVM> People { get; set; }
 
         [BindProperty]
-        public CreatePersonVM NewPerson { get; set; }
-
-        [BindProperty]
-        public EditPersonVM EditedPerson { get; set; }
+        public PersonVM Person { get; set; }
 
         [BindProperty]
         public int PersonId { get; set; }
@@ -35,7 +32,7 @@ namespace KinopoiskWeb.Pages.People
             People = _mapper.Map<List<IndexPersonVM>>(await _service.GetAll());
         }
 
-        public async Task<JsonResult> OnGetGetPerson(int id)
+        public async Task<JsonResult> OnGetById(int id)
         {
             var person = await _service.GetById(id);
             if (person == null)
@@ -43,19 +40,17 @@ namespace KinopoiskWeb.Pages.People
                 return new JsonResult(NotFound());
             }
 
-            return new JsonResult(person);
+            return new JsonResult(_mapper.Map<IndexPersonVM>(person));
         }
 
-        public async Task<IActionResult> OnPostCreateAsync()
+        public async Task<IActionResult> OnPostHandleCreateOrUpdateAsync(PersonVM person)
         {
-            await _service.CreateAsync(_mapper.Map<AddPersonDto>(NewPerson));
-
-            return RedirectToPage();
-        }
-
-        public async Task<IActionResult> OnPostEditAsync()
-        {
-            await _service.UpdateAsync(_mapper.Map<EditPersonDto>(EditedPerson));
+            if (person == null)
+                throw new ArgumentNullException(nameof(person));
+            if(person.Id == 0)
+                await _service.CreateAsync(_mapper.Map<AddPersonDto>(person));
+            else
+                await _service.UpdateAsync(_mapper.Map<EditPersonDto>(person));
 
             return RedirectToPage();
         }

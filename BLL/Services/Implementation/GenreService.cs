@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using BLL.Services.Interfaces;
-using DAL.Entities;
+using DAL.Models;
 using Data.Repositories.RepositoryInterfaces;
 using Microsoft.EntityFrameworkCore;
-using BLL.DTO.GenreDTOs;
+using BLL.DTO.Genre;
 
 namespace BLL.Services.Implementation
 {
