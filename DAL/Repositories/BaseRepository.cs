@@ -27,11 +27,10 @@ namespace Repositories
            return await _dbSet.FindAsync(id);
         }
             
-        public async Task<TEntity> AddAsync(TEntity model, bool commitTransaction = true)
+        public async Task<TEntity> AddAsync(TEntity model)
         {
             var entity = (await _context.AddAsync(model)).Entity;
-            if(commitTransaction) 
-                await SaveChangesAsync();
+
             return entity;
         }
 
@@ -39,13 +38,11 @@ namespace Repositories
         {
             TEntity entity = await _dbSet.FindAsync(id);
            _context.Remove(entity);
-           await SaveChangesAsync();
         }
 
         public async Task UpdateAsync(TEntity model)
         {
             var entity = _dbSet.Update(model).Entity;
-            await SaveChangesAsync();
         }
 
         public async Task<int> SaveChangesAsync()
@@ -76,6 +73,11 @@ namespace Repositories
         public IQueryable<TEntity> AsNoTracking()
         {
             return _dbSet.AsNoTracking();
+        }
+
+        public async Task Remove(TEntity model)
+        {
+             _dbSet.Remove(model);
         }
     }
 }

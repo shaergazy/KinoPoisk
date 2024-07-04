@@ -1,5 +1,5 @@
-﻿using DAL.Models;
-using DAL.Models.Users;
+﻿using DAL.Entities;
+using DAL.Entities.Users;
 using DAL.Enums;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;

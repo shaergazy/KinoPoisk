@@ -3,136 +3,149 @@
 @{
     ViewData["Title"] = "Countries";
 }
-<h1>Countries</h1>
+<head>
 
-<p>
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createCountryModal">
-        Create New Country
-    </button>
-</p>
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.0.8/css/dataTables.dataTables.css" />
+</head>
+<body>
+    <h1>Countries</h1>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>Name</th>
-            <th>ShortName</th>
-            <th>Flag</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model.Countries)
-        {
+    <p>
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createCountryModal">
+            Create New Country
+        </button>
+    </p>
+
+    <table class="table table-condensed" id="MyTable">
+        <thead>
             <tr>
-                <td>@Html.DisplayFor(modelItem => item.Name)</td>
-                <td>@Html.DisplayFor(modelItem => item.ShortName)</td>
-                <td><img src="@item.FlagLink" alt="Flag" width="50" height="30" /></td>
-                <td>
-                    <button class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#editCountryModal" data-id="@item.Id">Edit</button>
-                    <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteCountryModal" data-id="@item.Id" data-name="@item.Name">Delete</button>
-                </td>
+                <th>Name</th>
+                <th>Code of Country</th>
+                <th>Flag</th>
+                <th></th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Countries)
+            {
+                <tr>
+                    <td>@Html.DisplayFor(modelItem => item.Name)</td>
+                    <td>@Html.DisplayFor(modelItem => item.ShortName)</td>
+                    <td><img src="@item.FlagLink" alt="Flag" width="50" height="30" /></td>
+                    <td>
+                        <button class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#editCountryModal" data-id="@item.Id">Edit</button>
+                        <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteCountryModal" data-id="@item.Id" data-name="@item.Name">Delete</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
 
-<!-- Create Country Modal -->
-<div class="modal fade" id="createCountryModal" tabindex="-1" aria-labelledby="createCountryModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="createCountryModalLabel">Create New Country</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form method="post" enctype="multipart/form-data" asp-page-handler="HandleCreateOrUpdate">
-                    <div class="form-group">
-                        <label asp-for="Country.Name" class="control-label"></label>
-                        <input asp-for="Country.Name" class="form-control" />
-                        <span asp-validation-for="Country.Name" class="text-danger"></span>
-                    </div>
-                    <div class="form-group">
-                        <label asp-for="Country.ShortName" class="control-label"></label>
-                        <input asp-for="Country.ShortName" class="form-control" />
-                        <span asp-validation-for="Country.ShortName" class="text-danger"></span>
-                    </div>
-                    <div class="form-group">
-                        <label asp-for="Country.Flag" class="control-label"></label>
-                        <input type="file" asp-for="Country.Flag" class="form-control" />
-                        <span asp-validation-for="Country.Flag" class="text-danger"></span>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Save</button>
-                    </div>
-                </form>
+    <!-- Create Country Modal -->
+    <div class="modal fade" id="createCountryModal" tabindex="-1" aria-labelledby="createCountryModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="createCountryModalLabel">Create New Country</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form method="post" enctype="multipart/form-data" asp-page-handler="HandleCreateOrUpdate">
+                        <div class="form-group">
+                            <label asp-for="Country.Name" class="control-label"></label>
+                            <input asp-for="Country.Name" class="form-control" />
+                            <span asp-validation-for="Country.Name" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Country.ShortName" class="control-label"></label>
+                            <input asp-for="Country.ShortName" class="form-control" />
+                            <span asp-validation-for="Country.ShortName" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Country.Flag" class="control-label"></label>
+                            <input type="file" asp-for="Country.Flag" class="form-control" />
+                            <span asp-validation-for="Country.Flag" class="text-danger"></span>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Save</button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-<!-- Edit Country Modal -->
-<div class="modal fade" id="editCountryModal" tabindex="-1" aria-labelledby="editCountryModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="editCountryModalLabel">Edit Country</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form id="editGForm" method="post" asp-page-handler="HandleCreateOrUpdate" enctype="multipart/form-data">
-                    <input type="hidden" asp-for="Country.Id" id="editCountryId" />
-                    <div class="mb-3">
-                        <label asp-for="Country.Name" class="form-label"></label>
-                        <input asp-for="Country.Name" class="form-control" id="editCountryName" required />
-                        <span asp-validation-for="Country.Name" class="text-danger"></span>
-                    </div>
-                    <div class="mb-3">
-                        <label asp-for="Country.ShortName" class="form-label"></label>
-                        <input asp-for="Country.ShortName" class="form-control" id="editCountryShortName" required />
-                        <span asp-validation-for="Country.ShortName" class="text-danger"></span>
-                    </div>
-                    <div class="form-group">
-                        <label asp-for="Country.Flag" class="control-label"></label>
-                        <input type="file" asp-for="Country.Flag" accept="image/*"  class="form-control" />
-                        <span asp-validation-for="Country.Flag" class="text-danger"></span>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-primary">Save changes</button>
-                    </div>
-                </form>
+    <!-- Edit Country Modal -->
+    <div class="modal fade" id="editCountryModal" tabindex="-1" aria-labelledby="editCountryModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editCountryModalLabel">Edit Country</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editGForm" method="post" asp-page-handler="HandleCreateOrUpdate" enctype="multipart/form-data">
+                        <input type="hidden" asp-for="Country.Id" id="editCountryId" />
+                        <div class="mb-3">
+                            <label asp-for="Country.Name" class="form-label"></label>
+                            <input asp-for="Country.Name" class="form-control" id="editCountryName" required />
+                            <span asp-validation-for="Country.Name" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="Country.ShortName" class="form-label"></label>
+                            <input asp-for="Country.ShortName" class="form-control" id="editCountryShortName" required />
+                            <span asp-validation-for="Country.ShortName" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Country.Flag" class="control-label"></label>
+                            <input type="file" asp-for="Country.Flag" accept="image/*" class="form-control" />
+                            <span asp-validation-for="Country.Flag" class="text-danger"></span>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-primary">Save changes</button>
+                        </div>
+                    </form>
 
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Delete Country Modal -->
-<div class="modal fade" id="deleteCountryModal" tabindex="-1" aria-labelledby="deleteCountryModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="deleteCountryModalLabel">Delete Country</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form method="post" asp-page-handler="Delete">
-                    <input type="hidden" asp-for="CountryId" id="CountryToDelete_Id" />
-                    <p>Are you sure you want to delete the country "<span id="countryNameToDelete"></span>"?</p>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-danger">Delete</button>
-                    </div>
-                </form>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-@section Scripts {
-    @await Html.PartialAsync("Shared/_Urls")
-    <script src="~/js/editCountry.js" asp-append-version="true"></script>
-    <script src="~/js/deleteCountry.js" asp-append-version="true"></script>
-    <partial name="_ValidationScriptsPartial" />
-}
+    <!-- Delete Country Modal -->
+    <div class="modal fade" id="deleteCountryModal" tabindex="-1" aria-labelledby="deleteCountryModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteCountryModalLabel">Delete Country</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form method="post" asp-page-handler="Delete">
+                        <input type="hidden" asp-for="CountryId" id="CountryToDelete_Id" />
+                        <p>Are you sure you want to delete the country "<span id="countryNameToDelete"></span>"?</p>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-danger">Delete</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @section Scripts {
+        @await Html.PartialAsync("Shared/_Urls")
+        <script src="~/js/editCountry.js" asp-append-version="true"></script>
+        <script src="~/js/deleteCountry.js" asp-append-version="true"></script>
+        <partial name="_ValidationScriptsPartial" />
+        <script src="https://cdn.datatables.net/2.0.8/js/dataTables.js"></script>
+        <script>
+            $(document).ready(function () {
+                $('#MyTable').DataTable();
+            });
+        </script>
+    }
+
+</body>
