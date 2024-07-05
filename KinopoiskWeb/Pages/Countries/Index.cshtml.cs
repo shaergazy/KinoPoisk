@@ -1,6 +1,9 @@
 using AutoMapper;
 using BLL.DTO.Country;
+using BLL.DTO.Genre;
+using BLL.Services.Implementation;
 using BLL.Services.Interfaces;
+using DAL.Models;
 using KinopoiskWeb.ViewModels.Country;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -9,10 +12,10 @@ namespace KinopoiskWeb.Pages.Countries
 {
     public class IndexModel : PageModel
     {
-        private readonly ICountryService _service;
+        private readonly ISearchableService<ListCountryDto, AddCountryDto, EditCountryDto, GetCountryDto, Country, int> _service;
         private readonly IMapper _mapper;
 
-        public IndexModel(ICountryService service, IMapper mapper)
+        public IndexModel(ISearchableService<ListCountryDto, AddCountryDto, EditCountryDto, GetCountryDto, Country, int> service, IMapper mapper)
         {
             _service = service;
             _mapper = mapper;
@@ -29,7 +32,7 @@ namespace KinopoiskWeb.Pages.Countries
 
         public async Task OnGetAsync()
         {
-            Countries = _mapper.Map<List<IndexCountryVM>>(await _service.GetAll());
+            Countries = _mapper.Map<List<IndexCountryVM>>(await _service.GetAllAsync());
         }
 
         public async Task<IActionResult> OnPostHandleCreateOrUpdateAsync(CountryVM country)
@@ -47,7 +50,7 @@ namespace KinopoiskWeb.Pages.Countries
 
         public async Task<JsonResult> OnGetById(int id)
         {
-            var country = await _service.GetById(id);
+            var country = await _service.GetByIdAsync(id);
             if (country == null)
             {
                 return new JsonResult(NotFound());
@@ -58,7 +61,7 @@ namespace KinopoiskWeb.Pages.Countries
 
         public async Task<IActionResult> OnPostDeleteAsync()
         {
-            await _service.DeleteById(CountryId);
+            await _service.DeleteAsync(CountryId);
 
             return RedirectToPage();
         }

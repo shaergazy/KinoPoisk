@@ -1,6 +1,7 @@
 using AutoMapper;
 using BLL.DTO.Person;
 using BLL.Services.Interfaces;
+using DAL.Models;
 using KinopoiskWeb.ViewModels.Person;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -9,10 +10,10 @@ namespace KinopoiskWeb.Pages.People
 {
     public class IndexModel : PageModel
     {
-        private readonly IPersonService _service;
+        private readonly ISearchableService<ListPersonDto, AddPersonDto, EditPersonDto, GetPersonDto, Person, int> _service;
         private readonly IMapper _mapper;
 
-        public IndexModel(IPersonService service, IMapper mapper)
+        public IndexModel(ISearchableService<ListPersonDto, AddPersonDto, EditPersonDto, GetPersonDto, Person, int> service, IMapper mapper)
         {
             _service = service;
             _mapper = mapper;
@@ -29,12 +30,12 @@ namespace KinopoiskWeb.Pages.People
 
         public async Task OnGetAsync()
         {
-            People = _mapper.Map<List<IndexPersonVM>>(await _service.GetAll());
+            People = _mapper.Map<List<IndexPersonVM>>(await _service.GetAllAsync());
         }
 
         public async Task<JsonResult> OnGetById(int id)
         {
-            var person = await _service.GetById(id);
+            var person = await _service.GetByIdAsync(id);
             if (person == null)
             {
                 return new JsonResult(NotFound());
@@ -57,7 +58,7 @@ namespace KinopoiskWeb.Pages.People
 
         public async Task<IActionResult> OnPostDeleteAsync()
         {
-            await _service.DeleteById(PersonId);
+            await _service.DeleteAsync(PersonId);
 
             return RedirectToPage();
         }

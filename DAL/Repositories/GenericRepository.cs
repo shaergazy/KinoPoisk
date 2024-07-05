@@ -5,12 +5,12 @@ using System.Linq.Expressions;
 
 namespace Repositories
 {
-    public class BaseRepository<TEntity, TKey> : IBaseRepository <TEntity, TKey> 
+    public class GenericRepository<TEntity, TKey> : IGenericRepository <TEntity, TKey> 
     where TEntity : class
     {
         protected readonly DbSet<TEntity> _dbSet;
         protected readonly AppDbContext _context;
-        public BaseRepository(AppDbContext context)
+        public GenericRepository(AppDbContext context)
         {
             _context = context;
             _dbSet = context.Set<TEntity>();

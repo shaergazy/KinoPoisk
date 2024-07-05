@@ -1,20 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace BLL.Services.Interfaces
+﻿namespace BLL.Services.Interfaces
 {
-    public interface IGenericService<TDto, TEntity, TKey>
-    where TDto : class
-    where TEntity : class
-    where TKey : class
+    public interface IGenericService<TListDto, TAddDto, TEditDto, TGetDto, TEntity, TKey> : IService
+        where TAddDto : class
+        where TEditDto : class
+        where TListDto : class
+        where TGetDto : class
+        where TEntity : class
     {
-        Task<IEnumerable<TDto>> GetAllAsync();
-        Task<TDto> GetByIdAsync(TKey id);
-        Task<TDto> CreateAsync(TDto dto);
-        Task<TDto> UpdateAsync(TDto dto);
+        Task<IEnumerable<TListDto>> GetAllAsync();
+        Task<TGetDto> GetByIdAsync(TKey id);
+        Task<TEntity> CreateAsync(TAddDto dto);
+        Task UpdateAsync(TEditDto dto);
         Task DeleteAsync(TKey id);
     }
 }

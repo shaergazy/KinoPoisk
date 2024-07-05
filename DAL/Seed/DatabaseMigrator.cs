@@ -1,6 +1,6 @@
-﻿using DAL.Entities;
-using DAL.Entities.Users;
-using DAL.Enums;
+﻿using DAL.Enums;
+using DAL.Models;
+using DAL.Models.Users;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;

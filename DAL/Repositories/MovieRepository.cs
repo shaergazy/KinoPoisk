@@ -4,7 +4,7 @@ using Data.Repositories.RepositoryInterfaces;
 
 namespace Repositories
 {
-    public class MovieRepository : BaseRepository<Movie, Guid>, IMovieRepository
+    public class MovieRepository : GenericRepository<Movie, Guid>, IMovieRepository
     {
         private readonly AppDbContext _appDbContext;
         public MovieRepository(AppDbContext context) : base(context)

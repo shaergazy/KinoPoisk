@@ -1,6 +1,7 @@
 using AutoMapper;
 using BLL.DTO.Genre;
 using BLL.Services.Interfaces;
+using DAL.Models;
 using KinopoiskWeb.ViewModels.Genre;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -9,9 +10,9 @@ namespace KinopoiskWeb.Pages.Genres
 {
     public class IndexModel : PageModel
     {
-        private readonly IGenreService _service;
+        private readonly ISearchableService<ListGenreDto, AddGenreDto, EditGenreDto, GetGenreDto, Genre, int> _service;
         private readonly IMapper _mapper;
-        public IndexModel(IGenreService service, IMapper mapper)
+        public IndexModel(ISearchableService<ListGenreDto, AddGenreDto, EditGenreDto, GetGenreDto, Genre, int> service, IMapper mapper)
         {
             _service = service;
             _mapper = mapper;
@@ -29,12 +30,12 @@ namespace KinopoiskWeb.Pages.Genres
 
         public async Task OnGetAsync()
         {
-            Genres = _mapper.Map<List<IndexGenreVM>>(await _service.GetAll());
+            Genres = _mapper.Map<List<IndexGenreVM>>(await _service.GetAllAsync());
         }
 
         public async Task<JsonResult> OnGetById(int id)
         {
-            var genre = await _service.GetById(id);
+            var genre = await _service.GetByIdAsync(id);
             if (genre == null)
             {
                 return new JsonResult(NotFound());
@@ -58,7 +59,7 @@ namespace KinopoiskWeb.Pages.Genres
 
         public async Task<IActionResult> OnPostDeleteAsync()
         {
-            await _service.DeleteById(GenreId);
+            await _service.DeleteAsync(GenreId);
             return RedirectToPage();
         }
     }

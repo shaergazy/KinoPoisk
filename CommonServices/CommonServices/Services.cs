@@ -1,7 +1,10 @@
-﻿using BLL.Services.Interfaces;
+﻿using BLL.DTO.Genre;
+using BLL.Services.Implementation;
+using BLL.Services.Interfaces;
 using Common.Helpers;
 using Common.Infrastructure;
 using DAL;
+using DAL.Models;
 using DAL.Models.Users;
 using Data.Repositories.RepositoryInterfaces;
 using DTO;
@@ -57,9 +60,12 @@ namespace Common.CommonServices
         {
             services.AddScoped<DbContext, AppDbContext>();
 
-            services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddScoped(typeof(IGenericRepository<,>), typeof(GenericRepository<,>));
+            services.AddScoped(typeof(IUnitOfWork<,>), typeof(UnitOfWork<,>));
 
             services.AddTransient<AuthService>();
+            services.AddScoped(typeof(IGenericService<,,,,,>), typeof(GenericService<,,,,,>));
+            services.AddScoped(typeof(ISearchableService<,,,,,>), typeof(SearchableService<,,,,,>));
         }
 
         /// <summary>
@@ -75,26 +81,26 @@ namespace Common.CommonServices
             RegisterServiceUri(services, configuration);
             RegisterServices(services);
 
-            var assembly = typeof(IService).Assembly;
-            var serviceInterfaces = assembly
-                .GetTypes()
-                .Where(t => typeof(IService).IsAssignableFrom(t) && t != typeof(IService) && t.IsInterface);
-            var servicePairs = serviceInterfaces
-                .Select(x => new
-                {
-                    serviceInterface = x,
-                    serviceImplementaions = assembly
-                        .GetTypes()
-                        .Where(t => x.IsAssignableFrom(t) && t.IsClass)
-                        .ToList()
-                });
-            foreach (var servicePair in servicePairs)
-            {
-                foreach (var implementation in servicePair.serviceImplementaions)
-                {
-                    services.AddTransient(servicePair.serviceInterface, implementation);
-                }
-            }
+            //var assembly = typeof(IService).Assembly;
+            //var serviceInterfaces = assembly
+            //    .GetTypes()
+            //    .Where(t => typeof(IService).IsAssignableFrom(t) && t != typeof(IService) && t.IsInterface);
+            //var servicePairs = serviceInterfaces
+            //    .Select(x => new
+            //    {
+            //        serviceInterface = x,
+            //        serviceImplementaions = assembly
+            //            .GetTypes()
+            //            .Where(t => x.IsAssignableFrom(t) && t.IsClass)
+            //            .ToList()
+            //    });
+            //foreach (var servicePair in servicePairs)
+            //{
+            //    foreach (var implementation in servicePair.serviceImplementaions)
+            //    {
+            //        services.AddTransient(servicePair.serviceInterface, implementation);
+            //    }
+            //}
 
             return services;
         }

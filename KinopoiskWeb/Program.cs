@@ -1,4 +1,3 @@
-using AutoMapper;
 using Common.CommonServices;
 using KinopoiskWeb.Extensions;
 using KinopoiskWeb.Infrastructure;

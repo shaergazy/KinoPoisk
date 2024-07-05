@@ -4,7 +4,7 @@ using System.Linq.Expressions;
 namespace Data.Repositories.RepositoryInterfaces;
 
 
-public interface IBaseRepository<TEntity, TKey>
+public interface IGenericRepository<TEntity, TKey>
 {
     public IQueryable<TEntity> GetAll();
 
