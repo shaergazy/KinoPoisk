@@ -1,5 +1,6 @@
 using AutoMapper;
 using BLL.DTO.Genre;
+using BLL.DTO;
 using BLL.Services.Interfaces;
 using DAL.Models;
 using KinopoiskWeb.ViewModels.Genre;
@@ -10,9 +11,9 @@ namespace KinopoiskWeb.Pages.Genres
 {
     public class IndexModel : PageModel
     {
-        private readonly ISearchableService<ListGenreDto, AddGenreDto, EditGenreDto, GetGenreDto, Genre, int> _service;
+        private readonly IGenreService _service;
         private readonly IMapper _mapper;
-        public IndexModel(ISearchableService<ListGenreDto, AddGenreDto, EditGenreDto, GetGenreDto, Genre, int> service, IMapper mapper)
+        public IndexModel(IGenreService service, IMapper mapper)
         {
             _service = service;
             _mapper = mapper;
@@ -30,7 +31,18 @@ namespace KinopoiskWeb.Pages.Genres
 
         public async Task OnGetAsync()
         {
+            var dataTableModel = new DataTableModel()
+            {
+                draw = Request.Form["draw"].FirstOrDefault(),
+                start = Request.Form["start"].FirstOrDefault(),
+                length = Request.Form["length"].FirstOrDefault(),
+                sortColumn = Request.Form["columns[" + Request.Form["order[0][column]"].FirstOrDefault() + "][name]"].FirstOrDefault(),
+                sortColumnDirection = Request.Form["order[0][dir]"].FirstOrDefault(),
+                searchValue = Request.Form["search[value]"].FirstOrDefault(),
+            };
+
             Genres = _mapper.Map<List<IndexGenreVM>>(await _service.GetAllAsync());
+            return Json(result);
         }
 
         public async Task<JsonResult> OnGetById(int id)

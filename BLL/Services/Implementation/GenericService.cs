@@ -20,7 +20,7 @@ namespace BLL.Services.Implementation
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<IEnumerable<TListDto>> GetAllAsync()
+        public virtual IEnumerable<TListDto> GetAll()
         {
             var entities =  _unitOfWork.Repository.GetAll();
             return _mapper.Map<IEnumerable<TListDto>>(entities);

@@ -7,7 +7,7 @@
         where TGetDto : class
         where TEntity : class
     {
-        Task<IEnumerable<TListDto>> GetAllAsync();
+        IEnumerable<TListDto> GetAll();
         Task<TGetDto> GetByIdAsync(TKey id);
         Task<TEntity> CreateAsync(TAddDto dto);
         Task UpdateAsync(TEditDto dto);

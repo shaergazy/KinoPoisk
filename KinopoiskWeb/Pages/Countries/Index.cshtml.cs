@@ -1,9 +1,6 @@
 using AutoMapper;
 using BLL.DTO.Country;
-using BLL.DTO.Genre;
-using BLL.Services.Implementation;
 using BLL.Services.Interfaces;
-using DAL.Models;
 using KinopoiskWeb.ViewModels.Country;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;

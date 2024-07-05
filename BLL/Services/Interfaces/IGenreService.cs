@@ -1,13 +1,9 @@
-﻿using BLL.DTO.Genre;
+﻿using BLL.DTO.Country;
+using BLL.DTO.Genre;
+using DAL.Models;
 
 namespace BLL.Services.Interfaces
 {
-    public interface IGenreService : IService
-    {
-        Task<int> CreateAsync(AddGenreDto dto);
-        Task<List<ListGenreDto>> GetAll();
-        Task UpdateAsync(EditGenreDto dto);
-        Task DeleteById(int id);
-        Task<GetGenreDto> GetById(int id);
-    }
+    public interface IGenreService : ISearchableService<ListGenreDto, AddGenreDto, EditGenreDto, GetGenreDto, Genre, int>, IService
+    { }
 }
