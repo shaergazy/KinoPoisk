@@ -1,13 +1,9 @@
 ﻿using BLL.DTO.Country;
+using DAL.Models;
 
 namespace BLL.Services.Interfaces
 {
-    public interface ICountryService : IService
+    public interface ICountryService : ISearchableService<ListCountryDto, AddCountryDto, EditCountryDto, GetCountryDto, Country, int>, IService
     {
-        Task<int> CreateAsync(AddCountryDto dto);
-        Task<List<ListCountryDto>> GetAll();
-        Task UpdateAsync(EditCountryDto dto);
-        Task DeleteById(int id);
-        Task<GetCountryDto> GetById(int id);
     }
 }

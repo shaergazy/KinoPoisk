@@ -12,10 +12,10 @@ namespace KinopoiskWeb.Pages.Countries
 {
     public class IndexModel : PageModel
     {
-        private readonly ISearchableService<ListCountryDto, AddCountryDto, EditCountryDto, GetCountryDto, Country, int> _service;
+        private readonly ICountryService _service;
         private readonly IMapper _mapper;
 
-        public IndexModel(ISearchableService<ListCountryDto, AddCountryDto, EditCountryDto, GetCountryDto, Country, int> service, IMapper mapper)
+        public IndexModel(ICountryService service, IMapper mapper)
         {
             _service = service;
             _mapper = mapper;

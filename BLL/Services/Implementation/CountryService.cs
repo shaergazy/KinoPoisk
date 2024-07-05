@@ -1,112 +1,96 @@
-﻿//using AutoMapper;
-//using AutoMapper.QueryableExtensions;
-//using BLL.DTO.Country;
-//using BLL.Services.Interfaces;
-//using Common.Extensions;
-//using Common.Helpers;
-//using DAL.Models;
-//using Data.Repositories.RepositoryInterfaces;
-//using Microsoft.AspNetCore.Http;
-//using Microsoft.EntityFrameworkCore;
-//using System.Diagnostics.Metrics;
+﻿using AutoMapper;
+using BLL.DTO.Country;
+using BLL.Services.Interfaces;
+using Common.Extensions;
+using Common.Helpers;
+using DAL.Models;
+using Data.Repositories.RepositoryInterfaces;
+using Microsoft.AspNetCore.Http;
 
-//namespace BLL.Services.Implementation
-//{
-//    public class CountryService : ICountryService
-//    {
-//        private readonly IMapper _mapper;
-//        private readonly IUnitOfWork _uow;
+namespace BLL.Services.Implementation
+{
+    public class CountryService : SearchableService<ListCountryDto, AddCountryDto, EditCountryDto, GetCountryDto, Country, int>, ICountryService
+    {
+        private readonly IMapper _mapper;
+        private readonly IUnitOfWork<Country, int> _uow;
 
-//        public CountryService(IMapper mapper, IUnitOfWork uow)
-//        {
-//            _mapper = mapper;
-//            _uow = uow;
-//        }
+        public CountryService(IMapper mapper, IUnitOfWork<Country, int> unitOfWork) : base(mapper, unitOfWork)
+        {
+            _mapper = mapper;
+            _uow = unitOfWork;
+        }
 
-//        public async Task<int> CreateAsync(AddCountryDto dto)
-//        {
-//            if (dto.Flag == null || dto.Name == null)
-//                throw new ArgumentNullException("You have to complete all properties");
-//            if (_uow.Countries.Any(x => x.Name == dto.Name))
-//                throw new Exception("Country already exist");
-//            var country = _mapper.Map<Country>(dto);
-//            var file = dto.Flag;
-//            var fileName =GenerateUniqueFileName(file);
-//            var path = AppConstants.RelativeFilesPath.Combine(AppConstants.BaseDir, AppConstants.FlagDir, fileName);
-                
-//            (Stream Source, string FileName) fileStream = await file.ToStream();
-//            await (path, fileStream.Source).SaveStreamByPath();
+        public override async Task<Country> BuildEntityForCreate(AddCountryDto dto)
+        {
+            if (dto.Flag == null || dto.Name == null)
+                throw new ArgumentNullException("You have to complete all properties");
+            if (_uow.Repository.Any(x => x.Name == dto.Name))
+                throw new Exception("Country already exist");
+            var country = _mapper.Map<Country>(dto);
+            var file = dto.Flag;
+            var fileName = GenerateUniqueFileName(file);
+            var path = AppConstants.RelativeFilesPath.Combine(AppConstants.BaseDir, AppConstants.FlagDir, fileName);
 
-//            var relativePath = AppConstants.RelativeFilesPath.Combine(AppConstants.FlagDir, fileName);
+            (Stream Source, string FileName) fileStream = await file.ToStream();
+            await (path, fileStream.Source).SaveStreamByPath();
 
-//            country.FlagLink = relativePath;
-//            country.IsOwnPicture = true;
-//            await _uow.Countries.AddAsync(country, true);
-//            return country.Id;
-//        }
+            var relativePath = AppConstants.RelativeFilesPath.Combine(AppConstants.FlagDir, fileName);
 
-//        public async Task DeleteById(int id)
-//        {
-//            if (_uow.Movies.Any(x => x.CountryId == id))
-//                throw new Exception("There are movies in this Country, so you won't be able to delete it.");
-//            var country = await _uow.Countries.GetByIdAsync(id);
-//            if (country == null)
-//                throw new Exception($"Country with id: {id} does not exist");
+            country.FlagLink = relativePath;
+            country.IsOwnPicture = true;
+            return country;
+        }
 
-//            await _uow.Countries.DeleteByIdAsync(id);
+        public override async Task<Country> BuildEntityForDelete(int id)
+        {
+            if (_uow.Movies.Any(x => x.CountryId == id))
+                throw new Exception("There are movies in this Country, so you won't be able to delete it.");
+            var country = await _uow.Repository.GetByIdAsync(id);
+            if (country == null)
+                throw new Exception($"Country with id: {id} does not exist");
 
-//            if (country.IsOwnPicture)
-//                File.Delete(country.FlagLink);
-//        }
+            if (country.IsOwnPicture)
+                File.Delete(country.FlagLink);
+            return country;
+        }
 
-//        public async Task UpdateAsync(EditCountryDto dto)
-//        {
-//            if (dto == null)
-//                throw new ArgumentNullException();
-//            if (_uow.Countries.Any(x => x.Name == dto.Name && x.Id != dto.Id))
-//                throw new Exception("Country already exist");
+        public override async Task<Country> BuildEntityForUpdate(EditCountryDto dto)
+        {
+            if (dto == null)
+                throw new ArgumentNullException();
+            if (_uow.Repository.Any(x => x.Name == dto.Name && x.Id != dto.Id))
+                throw new Exception("Country already exist");
 
-//            var countryToUpdate = await _uow.Countries.GetByIdAsync(dto.Id);
-//            if (countryToUpdate == null)
-//                throw new Exception($"Country with id {countryToUpdate.Id} doesnt exist");
+            var countryToUpdate = await _uow.Repository.GetByIdAsync(dto.Id);
+            if (countryToUpdate == null)
+                throw new Exception($"Country with id {countryToUpdate.Id} doesnt exist");
 
+            countryToUpdate.Name = dto.Name;
+            countryToUpdate.ShortName = dto.ShortName;
 
-//            countryToUpdate.Name = dto.Name;
-//            countryToUpdate.ShortName = dto.ShortName;
+            if (dto.Flag != null)
+            {
+                if (countryToUpdate.IsOwnPicture)
+                    File.Delete(countryToUpdate.FlagLink);
 
-//            if (dto.Flag !=  null)
-//            {
-//                if(countryToUpdate.IsOwnPicture)
-//                    File.Delete(countryToUpdate.FlagLink);
+                var file = dto.Flag;
+                var path = AppConstants.RelativeFilesPath.Combine(AppConstants.BaseDir, AppConstants.FlagDir, file.FileName);
 
-//                var file = dto.Flag;
-//                var path = AppConstants.RelativeFilesPath.Combine(AppConstants.BaseDir, AppConstants.FlagDir, file.FileName);
-
-//                (Stream Source, string FileName) fileStream = await file.ToStream();
-//                await (path, fileStream.Source).SaveStreamByPath();
+                (Stream Source, string FileName) fileStream = await file.ToStream();
+                await (path, fileStream.Source).SaveStreamByPath();
 
 
-//                var relativePath = AppConstants.RelativeFilesPath.Combine(AppConstants.FlagDir, file.FileName);
+                var relativePath = AppConstants.RelativeFilesPath.Combine(AppConstants.FlagDir, file.FileName);
 
-//                countryToUpdate.FlagLink = relativePath;
-//                countryToUpdate.IsOwnPicture = true;
-//            }
-//            await _uow.Countries.UpdateAsync(countryToUpdate);
-//        }
+                countryToUpdate.FlagLink = relativePath;
+                countryToUpdate.IsOwnPicture = true;
+            }
+            return countryToUpdate;
+        }
 
-//        public Task<List<ListCountryDto>> GetAll()
-//        {
-//            return _uow.Countries.GetAll().ProjectTo<ListCountryDto>(_mapper.ConfigurationProvider).ToListAsync();
-//        }
-
-//        public async Task<GetCountryDto> GetById(int id)
-//        {
-//            return _mapper.Map<GetCountryDto>(await _uow.Countries.GetByIdAsync(id));
-//        }
-
-//        public string GenerateUniqueFileName(IFormFile file)
-//        {
-//            return $"{Path.GetFileNameWithoutExtension(file.FileName)}_{DateTime.Now.ToString("yyyyMMddHHmmss")}{Path.GetExtension(file.FileName)}";
-//        }
-//    }
-//}
+        public string GenerateUniqueFileName(IFormFile file)
+        {
+            return $"{Path.GetFileNameWithoutExtension(file.FileName)}_{DateTime.Now.ToString("yyyyMMddHHmmss")}{Path.GetExtension(file.FileName)}";
+        }
+    }
+}

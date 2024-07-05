@@ -4,9 +4,9 @@ using Data.Repositories.RepositoryInterfaces;
 
 namespace BLL.Services.Implementation
 {
-    public class GenericService<TListDto, TAddDto, TEditDTo, TGetDto, TEntity, TKey> : IGenericService<TListDto, TAddDto, TEditDTo, TGetDto, TEntity, TKey>
+    public class GenericService<TListDto, TAddDto, TEditDto, TGetDto, TEntity, TKey> : IGenericService<TListDto, TAddDto, TEditDto, TGetDto, TEntity, TKey>
     where TAddDto : class
-    where TEditDTo : class
+    where TEditDto : class
     where TListDto : class
     where TGetDto : class
     where TEntity : class
@@ -34,27 +34,39 @@ namespace BLL.Services.Implementation
 
         public async Task<TEntity> CreateAsync(TAddDto dto)
         {
-            var entity = _mapper.Map<TEntity>(dto);
+            var entity = await BuildEntityForCreate(dto);
             await _unitOfWork.Repository.AddAsync(entity);
             await _unitOfWork.SaveChangesAsync();
             return entity;
         }
 
-        public async Task UpdateAsync(TEditDTo dto)
+        public async Task UpdateAsync(TEditDto dto)
         {
-            var entity = _mapper.Map<TEntity>(dto);
+            var entity = await BuildEntityForUpdate(dto);
             await _unitOfWork.Repository.UpdateAsync(entity);
             await _unitOfWork.SaveChangesAsync();
         }
 
         public async Task DeleteAsync(TKey id)
         {
+            var entity = await BuildEntityForDelete(id);
+            await _unitOfWork.Repository.Remove(entity);
+            await _unitOfWork.SaveChangesAsync();
+        }
+
+        public virtual async Task<TEntity> BuildEntityForDelete(TKey id)
+        {
             var entity = await _unitOfWork.Repository.GetByIdAsync(id);
-            if (entity != null)
-            {
-                await _unitOfWork.Repository.Remove(entity);
-                await _unitOfWork.SaveChangesAsync();
-            }
+            return entity;
+        }
+        public virtual async Task<TEntity> BuildEntityForCreate(TAddDto dto)
+        {
+            return _mapper.Map<TEntity>(dto);
+        }
+
+        public virtual async Task<TEntity> BuildEntityForUpdate(TEditDto dto)
+        {
+            return _mapper.Map<TEntity>(dto);
         }
     }
 }

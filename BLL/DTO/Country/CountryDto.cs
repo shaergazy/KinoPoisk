@@ -35,9 +35,10 @@ namespace BLL.DTO.Country
     }
     public class DeleteCountryDto : IdHasBase { }
     public class ListCountryDto : IdHasBase
-    {         /// <summary>
-              /// Link to flag
-              /// </summary>
+    {       
+        /// <summary>
+        /// Link to flag
+        /// </summary>
         [Required]
         [MaxLength(256)]
         public string FlagLink { get; set; }
