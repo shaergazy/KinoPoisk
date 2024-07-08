@@ -11,7 +11,13 @@
             { "name": "Id", "data": "id", "visible": false },
             { "name": "Name", "data": "name" },
             { "name": "ShortName", "data": "shortName" },
-            { "name": "FlagLink", "data": "flagLink" },
+            {
+                "name": "FlagLink",
+                "data": "flagLink",
+                "render": function (data, type, row, meta) {
+                    return `<img src="${data}" alt="Flag" style="width: 50px; height: auto;" />`;
+                }
+            },
             {
                 "data": null,
                 "render": function (data, type, row, meta) {
