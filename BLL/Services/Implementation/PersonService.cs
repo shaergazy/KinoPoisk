@@ -1,61 +1,62 @@
-﻿//using AutoMapper;
-//using AutoMapper.QueryableExtensions;
-//using BLL.DTO.Person;
-//using BLL.Services.Interfaces;
-//using DAL.Models;
-//using Data.Repositories.RepositoryInterfaces;
-//using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using BLL.DataTables;
+using BLL.DTO;
+using BLL.DTO.Person;
+using BLL.Services.Interfaces;
+using DAL.Models;
+using Data.Repositories.RepositoryInterfaces;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System.Linq.Dynamic.Core;
 
-//namespace BLL.Services.Implementation
-//{
-//    public class PersonService : IPersonService
-//    {
-//        private readonly IMapper _mapper;
-//        private readonly IUnitOfWork<Person, int> _uow;
+namespace BLL.Services.Implementation
+{
+    public class PersonService : SearchableService<ListPersonDto, AddPersonDto, EditPersonDto, GetPersonDto, Person, int>,
+        IPersonService
+    {
+        private readonly IMapper _mapper;
+        private readonly IUnitOfWork<Person, int> _uow;
 
-//        public PersonService(IMapper mapper, IUnitOfWork<Person, int> uow)
-//        {
-//            _mapper = mapper;
-//            _uow = uow;
-//        }
+        public PersonService(IMapper mapper, IUnitOfWork<Person, int> unitOfWork) : base(mapper, unitOfWork)
+        {
+            _mapper = mapper;
+            _uow = unitOfWork;
+        }
 
-//        public async Task<int> CreateAsync(AddPersonDto dto)
-//        {
-//            if (dto == null)
-//                throw new ArgumentNullException();
+        public async Task<JsonResult> GetSortedAsync(DataTablesRequest request)
+        {
+            var persons = _uow.Repository.GetAll();
 
-//            var person = _mapper.Map<Person>(dto);
-//            await _uow.repository.AddAsync(person);
-//            return person.Id;
-//        }
+            var recordsTotal = persons.Count();
 
-//        public async Task DeleteById(int id)
-//        {
-//            if (_uow.Movies.Any(x => x.People.Any(p => p.PersonId == id)))
-//                throw new Exception("There are movies in this Person, so you won't be able to delete it.");
-//            var person = await _uow.People.GetByIdAsync(id);
-//            if (person == null)
-//                throw new Exception($"Person with id: {id} does not exist");
-//            await _uow.People.DeleteByIdAsync(id);
-//        }
+            var searchText = request.Search.Value?.ToUpper();
+            if (!string.IsNullOrWhiteSpace(searchText))
+            {
+                persons = persons.Where(m => m.FirstName.Contains(searchText) ||
+                                              m.LastName.Contains(searchText));
+            }
 
-//        public async Task UpdateAsync(EditPersonDto dto)
-//        {
-//            if (dto == null)
-//                throw new ArgumentNullException();
+            var recordsFiltered = persons.Count();
 
-//            var personToUpdate = _mapper.Map<Person>(dto);
-//            await _uow.People.UpdateAsync(personToUpdate);
-//        }
+            var sortColumnName = request.Columns.ElementAt(request.Order.ElementAt(0).Column).Name;
+            var sortDirection = request.Order.ElementAt(0).Dir.ToLower();
 
-//        public Task<List<ListPersonDto>> GetAll()
-//        {
-//            return _uow.People.GetAll().ProjectTo<ListPersonDto>(_mapper.ConfigurationProvider).ToListAsync();
-//        }
+            persons = persons.OrderBy($"{sortColumnName} {sortDirection}");
 
-//        public async Task<GetPersonDto> GetById(int id)
-//        {
-//            return _mapper.Map<GetPersonDto>(await _uow.People.GetByIdAsync(id));
-//        }
-//    }
-//}
+            var skip = request.Start;
+            var take = request.Length;
+            var data = await persons
+                .Skip(skip)
+                .Take(take)
+                .ToListAsync();
+
+            return new JsonResult(new
+            {
+                Draw = request.Draw,
+                RecordsTotal = recordsTotal,
+                RecordsFiltered = recordsFiltered,
+                Data = data
+            });
+        }
+    }
+}

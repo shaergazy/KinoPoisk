@@ -69,6 +69,7 @@ namespace Common.CommonServices
             services.AddTransient(typeof(ISearchableService<,,,,,>), typeof(SearchableService<,,,,,>));
             services.AddTransient<ICountryService, CountryService>();
             services.AddTransient<IGenreService, GenreService>();
+            services.AddTransient<IPersonService, PersonService>();
         }
 
         /// <summary>

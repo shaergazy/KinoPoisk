@@ -1,4 +1,5 @@
 using AutoMapper;
+using BLL.DataTables;
 using BLL.DTO.Person;
 using BLL.Services.Interfaces;
 using DAL.Models;
@@ -10,10 +11,10 @@ namespace KinopoiskWeb.Pages.People
 {
     public class IndexModel : PageModel
     {
-        private readonly ISearchableService<ListPersonDto, AddPersonDto, EditPersonDto, GetPersonDto, Person, int> _service;
+        private readonly IPersonService _service;
         private readonly IMapper _mapper;
 
-        public IndexModel(ISearchableService<ListPersonDto, AddPersonDto, EditPersonDto, GetPersonDto, Person, int> service, IMapper mapper)
+        public IndexModel(IPersonService service, IMapper mapper)
         {
             _service = service;
             _mapper = mapper;
@@ -30,7 +31,15 @@ namespace KinopoiskWeb.Pages.People
 
         public async Task OnGetAsync()
         {
-            People = _mapper.Map<List<IndexPersonVM>>(await _service.GetAllAsync());
+            People = _mapper.Map<List<IndexPersonVM>>(_service.GetAll());
+        }
+
+        [BindProperty]
+        public DataTablesRequest DataTablesRequest { get; set; }
+
+        public async Task<IActionResult> OnPostAsync()
+        {
+            return await _service.GetSortedAsync(DataTablesRequest);
         }
 
         public async Task<JsonResult> OnGetById(int id)

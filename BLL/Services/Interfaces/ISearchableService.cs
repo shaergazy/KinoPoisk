@@ -10,6 +10,6 @@ namespace BLL.Services.Interfaces
             where TGetDto : class
             where TEntity : class
     {
-        Task<IEnumerable<TListDto>> SearchAsync(string searchTerm, params Expression<Func<TEntity, string>>[] properties);
+        Task<IQueryable<TEntity>> SearchAsync(string searchTerm, params Expression<Func<TEntity, object>>[] properties);
     }
 }

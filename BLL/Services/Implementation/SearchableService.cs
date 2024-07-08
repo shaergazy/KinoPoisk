@@ -24,43 +24,35 @@ namespace BLL.Services.Implementation
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<IEnumerable<TListDto>> SearchAsync(string searchTerm, params Expression<Func<TEntity, string>>[] properties)
+        public async Task<IQueryable<TEntity>> SearchAsync(string searchTerm, params Expression<Func<TEntity, object>>[] properties)
         {
             var query = _unitOfWork.Repository.GetAll();
 
-            if (!string.IsNullOrWhiteSpace(searchTerm) && properties.Any())
+            if (!string.IsNullOrWhiteSpace(searchTerm) && properties != null && properties.Length > 0)
             {
-                var searchExpression = BuildSearchExpression(searchTerm, properties);
-                query = query.Where(searchExpression);
+                var parameter = Expression.Parameter(typeof(TEntity), "x");
+
+                var searchExpressions = properties
+                    .Select(property =>
+                    {
+                        var propertyExpression = Expression.Convert(Expression.Invoke(property, parameter), typeof(string));
+                        var toUpper = Expression.Call(propertyExpression, "ToUpper", Type.EmptyTypes);
+                        var contains = Expression.Call(toUpper, "Contains", null, Expression.Constant(searchTerm.ToUpper()));
+                        return contains;
+                    })
+                    .Aggregate<Expression>((current, next) => Expression.OrElse(current, next));
+
+                var lambda = Expression.Lambda<Func<TEntity, bool>>(searchExpressions, parameter);
+                query = query.Where(lambda);
             }
 
-            var entities = await query.ToListAsync();
-            return _mapper.Map<IEnumerable<TListDto>>(entities);
+            return query;
         }
 
-        private static Expression<Func<TEntity, bool>> BuildSearchExpression(string searchTerm, params Expression<Func<TEntity, string>>[] properties)
+        public async Task<IEnumerable<TListDto>> SearchByConditionAsync(Expression<Func<TEntity, bool>> condition)
         {
-            var parameter = Expression.Parameter(typeof(TEntity), "t");
-            var searchTermExpression = Expression.Constant(searchTerm, typeof(string));
-
-            Expression searchExpression = null;
-            foreach (var property in properties)
-            {
-                var propertyExpression = Expression.Invoke(property, parameter);
-                var containsMethod = typeof(string).GetMethod("Contains", new[] { typeof(string) });
-                var containsExpression = Expression.Call(propertyExpression, containsMethod, searchTermExpression);
-
-                if (searchExpression == null)
-                {
-                    searchExpression = containsExpression;
-                }
-                else
-                {
-                    searchExpression = Expression.OrElse(searchExpression, containsExpression);
-                }
-            }
-
-            return Expression.Lambda<Func<TEntity, bool>>(searchExpression, parameter);
+            var entities = await _unitOfWork.Repository.Where(condition).ToListAsync();
+            return _mapper.Map<IEnumerable<TListDto>>(entities);
         }
     }
 }

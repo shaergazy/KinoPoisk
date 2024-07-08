@@ -1,13 +1,12 @@
-﻿using BLL.DTO.Person;
+﻿using BLL.DataTables;
+using BLL.DTO.Person;
+using DAL.Models;
+using Microsoft.AspNetCore.Mvc;
 
 namespace BLL.Services.Interfaces
 {
-    public interface IPersonService : IService
+    public interface IPersonService : ISearchableService<ListPersonDto, AddPersonDto, EditPersonDto, GetPersonDto, Person, int>, IService
     {
-        Task<int> CreateAsync(AddPersonDto dto);
-        Task<List<ListPersonDto>> GetAll();
-        Task UpdateAsync(EditPersonDto dto);
-        Task DeleteById(int id);
-        Task<GetPersonDto> GetById(int id);
+        public Task<JsonResult> GetSortedAsync(DataTablesRequest model);
     }
 }

@@ -16,7 +16,7 @@
         </button>
     </p>
 
-    <table class="table table-condensed" id="MyTable">
+    <table class="table table-condensed" id="CountryTable">
         <thead>
             <tr>
                 <th>Name</th>
@@ -24,21 +24,7 @@
                 <th>Flag</th>
                 <th></th>
             </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model.Countries)
-            {
-                <tr>
-                    <td>@Html.DisplayFor(modelItem => item.Name)</td>
-                    <td>@Html.DisplayFor(modelItem => item.ShortName)</td>
-                    <td><img src="@item.FlagLink" alt="Flag" width="50" height="30" /></td>
-                    <td>
-                        <button class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#editCountryModal" data-id="@item.Id">Edit</button>
-                        <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteCountryModal" data-id="@item.Id" data-name="@item.Name">Delete</button>
-                    </td>
-                </tr>
-            }
-        </tbody>
+        </thead> 
     </table>
 
     <!-- Create Country Modal -->

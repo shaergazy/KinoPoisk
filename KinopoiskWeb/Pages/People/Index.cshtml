@@ -4,6 +4,10 @@
     ViewData["Title"] = "People";
 }
 
+<head>
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.0.8/css/dataTables.dataTables.css" />
+</head>
+
 <h1>People</h1>
 
 <p>
@@ -12,7 +16,7 @@
     </button>
 </p>
 
-<table class="table">
+<table class="table" id="PersonTable">
     <thead>
         <tr>
             <th>First Name</th>
@@ -21,20 +25,6 @@
             <th></th>
         </tr>
     </thead>
-    <tbody>
-        @foreach (var item in Model.People)
-        {
-            <tr>
-                <td>@item.FirstName</td>
-                <td>@item.LastName</td>
-                <td>@item.BirthDate.ToShortDateString()</td>
-                <td>
-                    <button class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#editPersonModal" data-id="@item.Id">Edit</button>
-                    <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deletePersonModal" data-id="@item.Id" data-name="@item.FirstName @item.LastName">Delete</button>
-                </td>
-            </tr>
-        }
-    </tbody>
 </table>
 
 <!-- Create Person Modal -->
@@ -130,5 +120,6 @@
 
 @section Scripts {
     @await Html.PartialAsync("Shared/_Urls")
+    <script src="https://cdn.datatables.net/2.0.8/js/dataTables.js"></script>
     <script src="~/js/person.js" asp-append-version="true"></script>
 }

@@ -5,7 +5,7 @@ var Urls = Urls || {};
 
 // Person
     Urls.Person = {
-        GetById: '@Url.Action("Index", "dtwertgfg", new { handler = "ById" })'
+        GetById: '@Url.Action("Index", "People", new { handler = "ById" })'
     };
 
     Urls.Country = {
@@ -13,6 +13,7 @@ var Urls = Urls || {};
     };
     
     Urls.Genre = {
-        GetById: '@Url.Action("Index", "People", new { handler = "ById" })'
+        GetById: '@Url.Action("Index", "Genres", new { handler = "ById" })',
+        GetAll: '@Url.Action("Index", "Genres")'
     };
 </script>

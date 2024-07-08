@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using BLL.DataTables;
 using BLL.DTO.Country;
 using BLL.Services.Interfaces;
 using Common.Extensions;
@@ -6,6 +7,9 @@ using Common.Helpers;
 using DAL.Models;
 using Data.Repositories.RepositoryInterfaces;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System.Linq.Dynamic.Core;
 
 namespace BLL.Services.Implementation
 {
@@ -18,6 +22,43 @@ namespace BLL.Services.Implementation
         {
             _mapper = mapper;
             _uow = unitOfWork;
+        }
+
+        public async Task<JsonResult> GetSortedAsync(DataTablesRequest request)
+        {
+            var entities = _uow.Repository.GetAll();
+
+            var recordsTotal = entities.Count();
+
+            var searchText = request.Search.Value?.ToUpper();
+            if (!string.IsNullOrWhiteSpace(searchText))
+            {
+                entities = entities.Where(s =>
+                    s.Name.ToUpper().Contains(searchText)
+                );
+            }
+
+            var recordsFiltered = entities.Count();
+
+            var sortColumnName = request.Columns.ElementAt(request.Order.ElementAt(0).Column).Name;
+            var sortDirection = request.Order.ElementAt(0).Dir.ToLower();
+
+            entities = entities.OrderBy($"{sortColumnName} {sortDirection}");
+
+            var skip = request.Start;
+            var take = request.Length;
+            var data = await entities
+                .Skip(skip)
+                .Take(take)
+                .ToListAsync();
+
+            return new JsonResult(new
+            {
+                Draw = request.Draw,
+                RecordsTotal = recordsTotal,
+                RecordsFiltered = recordsFiltered,
+                Data = data
+            });
         }
 
         public override async Task<Country> BuildEntityForCreate(AddCountryDto dto)

@@ -1,4 +1,28 @@
 ﻿$(document).ready(function () {
+    $('#GenreTable').DataTable({
+        "processing": true,
+        "serverSide": true,
+        "ajax": {
+            url: Urls.Genre.GetAll,
+            type: 'POST',
+            headers: { 'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val() }
+        },
+        "columns": [
+            { "name": "Id", "data": "id", "visible": false },
+            { "name": "Name", "data": "name" },
+            {
+                "data": null,
+                "render": function (data, type, row, meta) {
+                    return `
+                        <button class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#editGenreModal" data-id="${row.id}">Edit</button>
+                        <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteGenreModal" data-id="${row.id}" data-name="${row.name}">Delete</button>
+                    `;
+                },
+                "sortable": false
+            }
+        ],
+        "order": [[0, "desc"]]
+    });
 
     $('#editGenreModal').on('show.bs.modal', function (event) {
         var button = $(event.relatedTarget);

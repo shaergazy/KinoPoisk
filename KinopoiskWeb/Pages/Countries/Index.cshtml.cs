@@ -1,4 +1,5 @@
 using AutoMapper;
+using BLL.DataTables;
 using BLL.DTO.Country;
 using BLL.Services.Interfaces;
 using KinopoiskWeb.ViewModels.Country;
@@ -29,7 +30,15 @@ namespace KinopoiskWeb.Pages.Countries
 
         public async Task OnGetAsync()
         {
-            Countries = _mapper.Map<List<IndexCountryVM>>(await _service.GetAllAsync());
+            Countries = _mapper.Map<List<IndexCountryVM>>(_service.GetAll());
+        }
+
+        [BindProperty]
+        public DataTablesRequest DataTablesRequest { get; set; }
+
+        public async Task<IActionResult> OnPostAsync()
+        {
+            return await _service.GetSortedAsync(DataTablesRequest);
         }
 
         public async Task<IActionResult> OnPostHandleCreateOrUpdateAsync(CountryVM country)

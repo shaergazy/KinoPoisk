@@ -6,6 +6,7 @@ using DAL.Models;
 using KinopoiskWeb.ViewModels.Genre;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using BLL.DataTables;
 
 namespace KinopoiskWeb.Pages.Genres
 {
@@ -31,18 +32,15 @@ namespace KinopoiskWeb.Pages.Genres
 
         public async Task OnGetAsync()
         {
-            var dataTableModel = new DataTableModel()
-            {
-                draw = Request.Form["draw"].FirstOrDefault(),
-                start = Request.Form["start"].FirstOrDefault(),
-                length = Request.Form["length"].FirstOrDefault(),
-                sortColumn = Request.Form["columns[" + Request.Form["order[0][column]"].FirstOrDefault() + "][name]"].FirstOrDefault(),
-                sortColumnDirection = Request.Form["order[0][dir]"].FirstOrDefault(),
-                searchValue = Request.Form["search[value]"].FirstOrDefault(),
-            };
+            //Genres = _mapper.Map<List<IndexGenreVM>>(_service.GetAll());
+        }
 
-            Genres = _mapper.Map<List<IndexGenreVM>>(await _service.GetAllAsync());
-            return Json(result);
+        [BindProperty]
+        public DataTablesRequest DataTablesRequest { get; set; }
+
+        public async Task<IActionResult> OnPostAsync()
+        {
+            return await _service.GetSortedAsync(DataTablesRequest);
         }
 
         public async Task<JsonResult> OnGetById(int id)
