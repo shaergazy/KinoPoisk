@@ -9,6 +9,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Pages\Countries\Index.html" />
+    <None Remove="Pages\Index1.html" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Pages\Index1.html" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.4">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

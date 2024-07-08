@@ -1,4 +1,6 @@
-﻿$(document).ready(function () {
+﻿const DATE_FORMAT = 'DD/MM/YYYY';
+
+$(document).ready(function () {
 
     $('#PersonTable').DataTable({
         "processing": true,
@@ -12,7 +14,12 @@
             { "name": "Id", "data": "id", "visible": false },
             { "name": "FirstName", "data": "firstName" },
             { "name": "LastName", "data": "lastName" },
-            { "name": "BirthDate", "data": "birthDate" },
+            {
+                "name": "BirthDate", "data": "birthDate",
+                "render": function (data, type, row) {
+                    return moment(data).format(DATE_FORMAT);
+                }
+            },
             {
                 "data": null,
                 "render": function (data, type, row, meta) {
@@ -37,10 +44,8 @@
                 $('#editPersonId').val(data.id);
                 $('#editPersonFirstName').val(data.firstName);
                 $('#editPersonLastName').val(data.lastName);
-                var birthDate = new Date(data.birthDate);
-                var formattedDate = ('0' + (birthDate.getMonth() + 1)).slice(-2) + '/' +
-                    ('0' + birthDate.getDate()).slice(-2) + '/' +
-                    birthDate.getFullYear();
+                var birthDate = moment(data.birthDate);
+                var formattedDate = birthDate.format(DATE_FORMAT);
                 $('#editPersonBirthDate').val(formattedDate);
             },
             error: function (error) {

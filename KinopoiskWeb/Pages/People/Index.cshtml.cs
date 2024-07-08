@@ -1,8 +1,9 @@
 using AutoMapper;
-using BLL.DataTables;
+using BLL.DTO;
 using BLL.DTO.Person;
 using BLL.Services.Interfaces;
 using DAL.Models;
+using KinopoiskWeb.DataTables;
 using KinopoiskWeb.ViewModels.Person;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -31,7 +32,7 @@ namespace KinopoiskWeb.Pages.People
 
         public async Task OnGetAsync()
         {
-            People = _mapper.Map<List<IndexPersonVM>>(_service.GetAll());
+            //People = _mapper.Map<List<IndexPersonVM>>(_service.GetAll());
         }
 
         [BindProperty]
@@ -39,7 +40,7 @@ namespace KinopoiskWeb.Pages.People
 
         public async Task<IActionResult> OnPostAsync()
         {
-            return await _service.GetSortedAsync(DataTablesRequest);
+            return await _service.GetSortedAsync(_mapper.Map<DataTablesRequestDto>(DataTablesRequest));
         }
 
         public async Task<JsonResult> OnGetById(int id)

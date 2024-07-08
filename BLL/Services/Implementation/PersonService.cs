@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using BLL.DataTables;
 using BLL.DTO;
 using BLL.DTO.Person;
 using BLL.Services.Interfaces;
@@ -23,29 +22,29 @@ namespace BLL.Services.Implementation
             _uow = unitOfWork;
         }
 
-        public async Task<JsonResult> GetSortedAsync(DataTablesRequest request)
+        public async Task<JsonResult> GetSortedAsync(DataTablesRequestDto request)
         {
-            var persons = _uow.Repository.GetAll();
+            var entities = _uow.Repository.GetAll();
 
-            var recordsTotal = persons.Count();
+            var recordsTotal = entities.Count();
 
-            var searchText = request.Search.Value?.ToUpper();
+            var searchText = request.SearchTerm?.ToUpper();
             if (!string.IsNullOrWhiteSpace(searchText))
             {
-                persons = persons.Where(m => m.FirstName.Contains(searchText) ||
-                                              m.LastName.Contains(searchText));
+                entities = entities.Where(m => (m.FirstName + " " + m.LastName).Contains(searchText)
+                                            || (m.LastName + " " + m.FirstName).Contains(searchText));
             }
 
-            var recordsFiltered = persons.Count();
+            var recordsFiltered = entities.Count();
 
-            var sortColumnName = request.Columns.ElementAt(request.Order.ElementAt(0).Column).Name;
-            var sortDirection = request.Order.ElementAt(0).Dir.ToLower();
+            var sortColumnName = request.Column;
+            var sortDirection = request.Order;
 
-            persons = persons.OrderBy($"{sortColumnName} {sortDirection}");
+            entities = entities.OrderBy($"{sortColumnName} {sortDirection}");
 
             var skip = request.Start;
             var take = request.Length;
-            var data = await persons
+            var data = await entities
                 .Skip(skip)
                 .Take(take)
                 .ToListAsync();

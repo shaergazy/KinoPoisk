@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using BLL.DataTables;
+using BLL.DTO;
 using BLL.DTO.Country;
 using BLL.Services.Interfaces;
 using Common.Extensions;
@@ -24,13 +24,13 @@ namespace BLL.Services.Implementation
             _uow = unitOfWork;
         }
 
-        public async Task<JsonResult> GetSortedAsync(DataTablesRequest request)
+        public async Task<JsonResult> GetSortedAsync(DataTablesRequestDto request)
         {
             var entities = _uow.Repository.GetAll();
 
             var recordsTotal = entities.Count();
 
-            var searchText = request.Search.Value?.ToUpper();
+            var searchText = request.SearchTerm?.ToUpper();
             if (!string.IsNullOrWhiteSpace(searchText))
             {
                 entities = entities.Where(s =>
@@ -40,8 +40,8 @@ namespace BLL.Services.Implementation
 
             var recordsFiltered = entities.Count();
 
-            var sortColumnName = request.Columns.ElementAt(request.Order.ElementAt(0).Column).Name;
-            var sortDirection = request.Order.ElementAt(0).Dir.ToLower();
+            var sortColumnName = request.Column;
+            var sortDirection = request.Order;
 
             entities = entities.OrderBy($"{sortColumnName} {sortDirection}");
 

@@ -1,7 +1,8 @@
 using AutoMapper;
-using BLL.DataTables;
+using BLL.DTO;
 using BLL.DTO.Country;
 using BLL.Services.Interfaces;
+using KinopoiskWeb.DataTables;
 using KinopoiskWeb.ViewModels.Country;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -38,7 +39,7 @@ namespace KinopoiskWeb.Pages.Countries
 
         public async Task<IActionResult> OnPostAsync()
         {
-            return await _service.GetSortedAsync(DataTablesRequest);
+            return await _service.GetSortedAsync(_mapper.Map<DataTablesRequestDto>(DataTablesRequest));
         }
 
         public async Task<IActionResult> OnPostHandleCreateOrUpdateAsync(CountryVM country)

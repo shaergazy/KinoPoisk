@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using BLL.DataTables;
 using BLL.DTO;
 using BLL.DTO.Genre;
 using BLL.Services.Interfaces;
@@ -23,30 +22,30 @@ namespace BLL.Services.Implementation
             _uow = unitOfWork;
         }
 
-        public async Task<JsonResult> GetSortedAsync(DataTablesRequest request)
+        public async Task<JsonResult> GetSortedAsync(DataTablesRequestDto request)
         {
-            var genres = _uow.Repository.GetAll();
+            var entities = _uow.Repository.GetAll();
 
-            var recordsTotal = genres.Count();
+            var recordsTotal = entities.Count();
 
-            var searchText = request.Search.Value?.ToUpper();
+            var searchText = request.SearchTerm?.ToUpper();
             if (!string.IsNullOrWhiteSpace(searchText))
             {
-                genres = genres.Where(s =>
+                entities = entities.Where(s =>
                     s.Name.ToUpper().Contains(searchText)
                 );
             }
 
-            var recordsFiltered = genres.Count();
+            var recordsFiltered = entities.Count();
 
-            var sortColumnName = request.Columns.ElementAt(request.Order.ElementAt(0).Column).Name;
-            var sortDirection = request.Order.ElementAt(0).Dir.ToLower();
+            var sortColumnName = request.Column;
+            var sortDirection = request.Order;
 
-            genres = genres.OrderBy($"{sortColumnName} {sortDirection}");
+            entities = entities.OrderBy($"{sortColumnName} {sortDirection}");
 
             var skip = request.Start;
             var take = request.Length;
-            var data = await genres
+            var data = await entities
                 .Skip(skip)
                 .Take(take)
                 .ToListAsync();

@@ -26,6 +26,11 @@ namespace KinopoiskWeb.Infrastructure
             CreateMap<IndexPersonVM, ListPersonDto>().ReverseMap();
             CreateMap<IndexPersonVM, GetPersonDto>().ReverseMap();
             CreateMap<PersonVM, EditPersonDto>().ReverseMap();
+
+            CreateMap<DataTables.DataTablesRequest, BLL.DTO.DataTablesRequestDto>()
+            .ForMember(dest => dest.Column, opt => opt.MapFrom(src => src.Columns.ElementAt(src.Order.ElementAt(0).Column).Name))
+            .ForMember(dest => dest.Order, opt => opt.MapFrom(src => src.Order.ElementAt(0).Dir.ToLower()))
+            .ForMember(dest => dest.SearchTerm, opt => opt.MapFrom(src => src.Search.Value)).ReverseMap();
         }
     }
 }

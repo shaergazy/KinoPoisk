@@ -6,7 +6,7 @@ using DAL.Models;
 using KinopoiskWeb.ViewModels.Genre;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using BLL.DataTables;
+using KinopoiskWeb.DataTables;
 
 namespace KinopoiskWeb.Pages.Genres
 {
@@ -40,7 +40,7 @@ namespace KinopoiskWeb.Pages.Genres
 
         public async Task<IActionResult> OnPostAsync()
         {
-            return await _service.GetSortedAsync(DataTablesRequest);
+            return await _service.GetSortedAsync(_mapper.Map<DataTablesRequestDto>(DataTablesRequest));
         }
 
         public async Task<JsonResult> OnGetById(int id)

@@ -1,4 +1,4 @@
-﻿namespace BLL.DataTables
+﻿namespace KinopoiskWeb.DataTables
 {
     public class Column
     {
