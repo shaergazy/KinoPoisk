@@ -1,14 +1,14 @@
 ﻿using AutoMapper;
 using BLL.Services.Interfaces;
 using Data.Repositories.RepositoryInterfaces;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Linq.Expressions;
 
 namespace BLL.Services.Implementation
 {
-    public class SearchableService<TListDto, TAddDto, TEditDTo, TGetDto, TEntity, TKey>
+    public class SearchableService<TListDto, TAddDto, TEditDTo, TGetDto, TEntity, TKey, TRequestDto>
         : GenericService<TListDto, TAddDto, TEditDTo, TGetDto, TEntity, TKey> , 
-        ISearchableService<TListDto, TAddDto, TEditDTo, TGetDto, TEntity, TKey>
+        ISearchableService<TListDto, TAddDto, TEditDTo, TGetDto, TEntity, TKey, TRequestDto>
             where TAddDto : class
             where TEditDTo : class
             where TListDto : class
@@ -24,35 +24,34 @@ namespace BLL.Services.Implementation
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<IQueryable<TEntity>> SearchAsync(string searchTerm, params Expression<Func<TEntity, object>>[] properties)
+        public virtual async Task<JsonResult> SearchAsync(TRequestDto request)
         {
-            var query = _unitOfWork.Repository.GetAll();
+            var entities = _unitOfWork.Repository.GetAll();
+            entities = FilterEntities(entities, request);
+            entities = OrderByColumn(entities, request);
+            var data = GetPagedData(request, entities);
 
-            if (!string.IsNullOrWhiteSpace(searchTerm) && properties != null && properties.Length > 0)
-            {
-                var parameter = Expression.Parameter(typeof(TEntity), "x");
-
-                var searchExpressions = properties
-                    .Select(property =>
-                    {
-                        var propertyExpression = Expression.Convert(Expression.Invoke(property, parameter), typeof(string));
-                        var toUpper = Expression.Call(propertyExpression, "ToUpper", Type.EmptyTypes);
-                        var contains = Expression.Call(toUpper, "Contains", null, Expression.Constant(searchTerm.ToUpper()));
-                        return contains;
-                    })
-                    .Aggregate<Expression>((current, next) => Expression.OrElse(current, next));
-
-                var lambda = Expression.Lambda<Func<TEntity, bool>>(searchExpressions, parameter);
-                query = query.Where(lambda);
-            }
-
-            return query;
+            return new JsonResult(new { Data = data });
         }
 
-        public async Task<IEnumerable<TListDto>> SearchByConditionAsync(Expression<Func<TEntity, bool>> condition)
+        public virtual IQueryable<TEntity> FilterEntities(IQueryable<TEntity> entities, TRequestDto searchTerm)
         {
-            var entities = await _unitOfWork.Repository.Where(condition).ToListAsync();
-            return _mapper.Map<IEnumerable<TListDto>>(entities);
+            return entities;
+        }
+
+        public IQueryable<TEntity> FilterEntities(IQueryable<TEntity> entities, string searchTerm)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async virtual Task<IList<TEntity>> GetPagedData(TRequestDto request, IQueryable<TEntity> entities)
+        {
+            return await entities.ToListAsync();
+        }
+
+        public virtual IQueryable<TEntity> OrderByColumn(IQueryable<TEntity> entities, TRequestDto request)
+        {
+            return entities;
         }
     }
 }

@@ -57,5 +57,56 @@ namespace BLL.Services.Implementation
                 Data = data
             });
         }
+
+        public async override Task<JsonResult> SearchAsync(DataTablesRequestDto request)
+        {
+            var entities = _uow.Repository.GetAll();
+
+            var recordsTotal = entities.Count();
+
+            entities = FilterEntities(entities, request);
+
+            var recordsFiltered = entities.Count();
+
+            entities = OrderByColumn(entities, request);
+
+            var data = GetPagedData(request, entities);
+
+            return new JsonResult(new
+            {
+                Draw = request.Draw,
+                RecordsTotal = recordsTotal,
+                RecordsFiltered = recordsFiltered,
+                Data = data
+            });
+        }
+        public async override Task<IList<Person>> GetPagedData(DataTablesRequestDto request, IQueryable<Person> entities)
+        {
+            var data = await entities
+                .Skip(request.Start)
+                .Take(request.Length)
+                .ToListAsync();
+            return data;
+        }
+
+        public override IQueryable<Person> OrderByColumn(IQueryable<Person> entities, DataTablesRequestDto request)
+        {
+            var sortColumnName = request.Column;
+            var sortDirection = request.Order;
+
+            entities = entities.OrderBy($"{sortColumnName} {sortDirection}");
+            return entities;
+        }
+
+        public override IQueryable<Person> FilterEntities(IQueryable<Person> entities, DataTablesRequestDto request)
+        {
+            var searchTerm = request.SearchTerm?.ToUpper();
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                entities = entities.Where(m => (m.FirstName + " " + m.LastName).Contains(searchTerm)
+                                            || (m.LastName + " " + m.FirstName).Contains(searchTerm));
+            }
+            return entities;
+        }
     }
 }
