@@ -40,7 +40,7 @@ namespace KinopoiskWeb.Pages.People
 
         public async Task<IActionResult> OnPostAsync()
         {
-            return await _service.GetSortedAsync(_mapper.Map<DataTablesRequestDto>(DataTablesRequest));
+            return await _service.SearchAsync(_mapper.Map<DataTablesRequestDto>(DataTablesRequest));
         }
 
         public async Task<JsonResult> OnGetById(int id)

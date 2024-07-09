@@ -24,41 +24,15 @@ namespace BLL.Services.Implementation
             _uow = unitOfWork;
         }
 
-        public async Task<JsonResult> GetSortedAsync(DataTablesRequestDto request)
+        public override IQueryable<Country> FilterEntities(IQueryable<Country> entities, string searchTerm)
         {
-            var entities = _uow.Repository.GetAll();
-
-            var recordsTotal = entities.Count();
-
-            var searchText = request.SearchTerm?.ToUpper();
-            if (!string.IsNullOrWhiteSpace(searchText))
+            if (!string.IsNullOrWhiteSpace(searchTerm))
             {
                 entities = entities.Where(s =>
-                    s.Name.ToUpper().Contains(searchText)
-                );
+                    s.Name.ToUpper().Contains(searchTerm));
             }
 
-            var recordsFiltered = entities.Count();
-
-            var sortColumnName = request.Column;
-            var sortDirection = request.Order;
-
-            entities = entities.OrderBy($"{sortColumnName} {sortDirection}");
-
-            var skip = request.Start;
-            var take = request.Length;
-            var data = await entities
-                .Skip(skip)
-                .Take(take)
-                .ToListAsync();
-
-            return new JsonResult(new
-            {
-                Draw = request.Draw,
-                RecordsTotal = recordsTotal,
-                RecordsFiltered = recordsFiltered,
-                Data = data
-            });
+            return entities;
         }
 
         public override async Task<Country> BuildEntityForCreate(AddCountryDto dto)

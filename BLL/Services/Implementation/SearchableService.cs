@@ -1,14 +1,16 @@
 ﻿using AutoMapper;
+using BLL.DTO;
 using BLL.Services.Interfaces;
 using Data.Repositories.RepositoryInterfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Dynamic.Core;
 
 namespace BLL.Services.Implementation
 {
-    public class SearchableService<TListDto, TAddDto, TEditDTo, TGetDto, TEntity, TKey, TRequestDto>
+    public class SearchableService<TListDto, TAddDto, TEditDTo, TGetDto, TEntity, TKey>
         : GenericService<TListDto, TAddDto, TEditDTo, TGetDto, TEntity, TKey> , 
-        ISearchableService<TListDto, TAddDto, TEditDTo, TGetDto, TEntity, TKey, TRequestDto>
+        ISearchableService<TListDto, TAddDto, TEditDTo, TGetDto, TEntity, TKey>
             where TAddDto : class
             where TEditDTo : class
             where TListDto : class
@@ -24,33 +26,50 @@ namespace BLL.Services.Implementation
             _unitOfWork = unitOfWork;
         }
 
-        public virtual async Task<JsonResult> SearchAsync(TRequestDto request)
+        public virtual async Task<JsonResult> SearchAsync(DataTablesRequestDto request)
         {
             var entities = _unitOfWork.Repository.GetAll();
-            entities = FilterEntities(entities, request);
-            entities = OrderByColumn(entities, request);
-            var data = GetPagedData(request, entities);
 
-            return new JsonResult(new { Data = data });
+            var recordsTotal = entities.Count();
+
+            entities = FilterEntities(entities, request.SearchTerm?.ToUpper());
+
+            var recordsFiltered = entities.Count();
+
+            entities = OrderByColumn(entities, request);
+
+            var data = await GetPagedData(request, entities);
+
+            return new JsonResult(new
+            {
+                Draw = request.Draw,
+                RecordsTotal = recordsTotal,
+                RecordsFiltered = recordsFiltered,
+                Data = data
+            });
         }
 
-        public virtual IQueryable<TEntity> FilterEntities(IQueryable<TEntity> entities, TRequestDto searchTerm)
+        public virtual IQueryable<TEntity> FilterEntities(IQueryable<TEntity> entities, string searchTerm)
         {
             return entities;
         }
 
-        public IQueryable<TEntity> FilterEntities(IQueryable<TEntity> entities, string searchTerm)
+        public async virtual Task<IList<TEntity>> GetPagedData(DataTablesRequestDto request, IQueryable<TEntity> entities)
         {
-            throw new NotImplementedException();
+            var data = await entities
+                .Skip(request.Start)
+                .Take(request.Length)
+                .ToListAsync();
+
+            return data;
         }
 
-        public async virtual Task<IList<TEntity>> GetPagedData(TRequestDto request, IQueryable<TEntity> entities)
+        public virtual IQueryable<TEntity> OrderByColumn(IQueryable<TEntity> entities, DataTablesRequestDto request)
         {
-            return await entities.ToListAsync();
-        }
+            var sortColumnName = request.Column;
+            var sortDirection = request.Order;
 
-        public virtual IQueryable<TEntity> OrderByColumn(IQueryable<TEntity> entities, TRequestDto request)
-        {
+            entities = entities.OrderBy($"{sortColumnName} {sortDirection}");
             return entities;
         }
     }

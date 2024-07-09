@@ -1,16 +1,13 @@
 ﻿using AutoMapper;
-using BLL.DTO;
 using BLL.DTO.Genre;
 using BLL.Services.Interfaces;
 using DAL.Models;
 using Data.Repositories.RepositoryInterfaces;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using System.Linq.Dynamic.Core;
 
 namespace BLL.Services.Implementation
 {
-    public class GenreService : SearchableService<ListGenreDto, AddGenreDto, EditGenreDto, GetGenreDto, Genre, int, DataTablesRequestDto>,
+    public class GenreService : SearchableService<ListGenreDto, AddGenreDto, EditGenreDto, GetGenreDto, Genre, int>,
         IGenreService
     {
         private readonly IMapper _mapper;
@@ -22,53 +19,12 @@ namespace BLL.Services.Implementation
             _uow = unitOfWork;
         }
 
-        public async override Task<JsonResult> SearchAsync(DataTablesRequestDto request)
+        public override IQueryable<Genre> FilterEntities(IQueryable<Genre> entities, string searchTerm)
         {
-            var entities = _uow.Repository.GetAll();
-
-            var recordsTotal = entities.Count();
-
-            entities = FilterEntities(entities, request.SearchTerm?.ToUpper());
-
-            var recordsFiltered = entities.Count();
-
-            entities = OrderByColumn(entities, request);
-
-            var data = GetPagedData(request, entities);
-
-            return new JsonResult(new
-            {
-                Draw = request.Draw,
-                RecordsTotal = recordsTotal,
-                RecordsFiltered = recordsFiltered,
-                Data = data
-            });
-        }
-        public async override Task<IList<Genre>> GetPagedData(DataTablesRequestDto request, IQueryable<Genre> entities)
-        {
-            var data = await entities
-                .Skip(request.Start)
-                .Take(request.Length)
-                .ToListAsync();
-            return data;
-        }
-
-        public override IQueryable<Genre> OrderByColumn(IQueryable<Genre> entities, DataTablesRequestDto request)
-        {
-            var sortColumnName = request.Column;
-            var sortDirection = request.Order;
-
-            entities = entities.OrderBy($"{sortColumnName} {sortDirection}");
-            return entities;
-        }
-
-        public override IQueryable<Genre> FilterEntities(IQueryable<Genre> entities, DataTablesRequestDto searchTerm)
-        {
-            if (!string.IsNullOrWhiteSpace(searchTerm.SearchTerm))
+            if (!string.IsNullOrWhiteSpace(searchTerm))
             {
                 entities = entities.Where(s =>
-                    s.Name.ToUpper().Contains(searchTerm.SearchTerm)
-                );
+                    s.Name.ToUpper().Contains(searchTerm));
             }
             return entities;
         }

@@ -39,7 +39,7 @@ namespace KinopoiskWeb.Pages.Countries
 
         public async Task<IActionResult> OnPostAsync()
         {
-            return await _service.GetSortedAsync(_mapper.Map<DataTablesRequestDto>(DataTablesRequest));
+            return await _service.SearchAsync(_mapper.Map<DataTablesRequestDto>(DataTablesRequest));
         }
 
         public async Task<IActionResult> OnPostHandleCreateOrUpdateAsync(CountryVM country)

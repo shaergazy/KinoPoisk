@@ -1,11 +1,9 @@
 ﻿using BLL.DTO;
-using DAL.Models;
 using Microsoft.AspNetCore.Mvc;
-using System.Linq.Expressions;
 
 namespace BLL.Services.Interfaces
 {
-    public interface ISearchableService<TListDto, TAddDto, TEditDto, TGetDto, TEntity, TKey, TRequestDto> 
+    public interface ISearchableService<TListDto, TAddDto, TEditDto, TGetDto, TEntity, TKey> 
         : IGenericService<TListDto, TAddDto, TEditDto, TGetDto, TEntity, TKey>
             where TAddDto : class
             where TEditDto : class
@@ -13,11 +11,11 @@ namespace BLL.Services.Interfaces
             where TGetDto : class
             where TEntity : class
     {
-        Task<JsonResult> SearchAsync(TRequestDto request);
+        Task<JsonResult> SearchAsync(DataTablesRequestDto request);
 
-        Task<IList<TEntity>> GetPagedData(TRequestDto request, IQueryable<TEntity> entities);
+        Task<IList<TEntity>> GetPagedData(DataTablesRequestDto request, IQueryable<TEntity> entities);
 
-        public IQueryable<TEntity> OrderByColumn(IQueryable<TEntity> entities, TRequestDto request);
+        public IQueryable<TEntity> OrderByColumn(IQueryable<TEntity> entities, DataTablesRequestDto request);
 
         public IQueryable<TEntity> FilterEntities(IQueryable<TEntity> entities, string searchTerm);
     }
