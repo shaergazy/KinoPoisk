@@ -11,7 +11,7 @@ namespace DAL.Models
         public string Poster { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
-        public DateTime RealesedDate {  get; set; }
+        public DateTime ReleasedDate {  get; set; }
         public int? CountryId { get; set; }
         public Country Country { get; set; }
         public ICollection<MovieGenre> Genres { get; set; }

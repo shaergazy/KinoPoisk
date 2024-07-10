@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
 using BLL.DTO.Country;
 using BLL.DTO.Genre;
+using BLL.DTO.Movie;
 using BLL.DTO.Person;
 using Common.Helpers;
 using DAL.Models;
+using Data.Models;
 
 namespace BLL.Infrastructure
 {
@@ -29,6 +31,11 @@ namespace BLL.Infrastructure
             CreateMap<Person, GetPersonDto>().ReverseMap();
             CreateMap<Person, ListPersonDto>().ReverseMap();
             CreateMap<Person, DeletePersonDto>().ReverseMap();
+
+            CreateMap<Comment, AddCommentDo>().ReverseMap();
+
+            CreateMap<MovieRating, AddMovieRating>().ReverseMap();
+            CreateMap<AddMovieDto, Movie>().ReverseMap();
         }
     }
 }

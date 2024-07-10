@@ -4,9 +4,9 @@
     {
         public int Draw { get; set; }
 
-        public string Column { get; set; }
+        public string SortColumn { get; set; }
 
-        public string Order { get; set; }
+        public string SortDirection { get; set; }
 
         public int Start { get; set; }
 

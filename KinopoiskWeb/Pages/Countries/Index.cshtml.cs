@@ -2,6 +2,7 @@ using AutoMapper;
 using BLL.DTO;
 using BLL.DTO.Country;
 using BLL.Services.Interfaces;
+using DAL.Models;
 using KinopoiskWeb.DataTables;
 using KinopoiskWeb.ViewModels.Country;
 using Microsoft.AspNetCore.Mvc;
@@ -39,7 +40,9 @@ namespace KinopoiskWeb.Pages.Countries
 
         public async Task<IActionResult> OnPostAsync()
         {
-            return await _service.SearchAsync(_mapper.Map<DataTablesRequestDto>(DataTablesRequest));
+            var response = _mapper.Map<DataTablesResponseVM<Country>>( await _service.SearchAsync(_mapper
+                                  .Map<DataTablesRequestDto>(DataTablesRequest)));
+            return new JsonResult(response);
         }
 
         public async Task<IActionResult> OnPostHandleCreateOrUpdateAsync(CountryVM country)

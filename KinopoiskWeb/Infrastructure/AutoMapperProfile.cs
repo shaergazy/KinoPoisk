@@ -1,10 +1,13 @@
 ﻿using AutoMapper;
 using BLL.DTO.Country;
 using BLL.DTO.Genre;
+using BLL.DTO.Movie;
 using BLL.DTO.Person;
 using KinopoiskWeb.ViewModels.Country;
 using KinopoiskWeb.ViewModels.Genre;
+using KinopoiskWeb.ViewModels.Movie;
 using KinopoiskWeb.ViewModels.Person;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.Blazor;
 
 namespace KinopoiskWeb.Infrastructure
 {
@@ -28,9 +31,15 @@ namespace KinopoiskWeb.Infrastructure
             CreateMap<PersonVM, EditPersonDto>().ReverseMap();
 
             CreateMap<DataTables.DataTablesRequest, BLL.DTO.DataTablesRequestDto>()
-            .ForMember(dest => dest.Column, opt => opt.MapFrom(src => src.Columns.ElementAt(src.Order.ElementAt(0).Column).Name))
-            .ForMember(dest => dest.Order, opt => opt.MapFrom(src => src.Order.ElementAt(0).Dir.ToLower()))
+            .ForMember(dest => dest.SortColumn, opt => opt.MapFrom(src => src.Columns.ElementAt(src.Order.ElementAt(0).Column).Name))
+            .ForMember(dest => dest.SortDirection, opt => opt.MapFrom(src => src.Order.ElementAt(0).Dir.ToLower()))
             .ForMember(dest => dest.SearchTerm, opt => opt.MapFrom(src => src.Search.Value)).ReverseMap();
+
+            CreateMap(typeof(DataTables.DataTablesResponseVM<>), typeof(BLL.DTO.DataTablesResponse<>)).ReverseMap();
+
+            CreateMap<CreateMovieVM, AddMovieDto>()
+            .ForMember(dest => dest.SelectedCountry, opt => opt.MapFrom(src => src.CountryId))
+            .ForMember(dest => dest.SelectedGenres, opt => opt.MapFrom(src => src.GenreIds != null ? src.GenreIds.ToList() : new List<int>()));
         }
     }
 }

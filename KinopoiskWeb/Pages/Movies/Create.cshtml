@@ -1,0 +1,126 @@
+﻿@page
+@model CreateModel
+@{
+    ViewData["Title"] = "Create Movie";
+}
+<head>
+</head>
+<body>
+    <h1>Create Movie</h1>
+
+    <form method="post" enctype="multipart/form-data">
+        <div class="form-group">
+            <label asp-for="Movie.Poster" class="control-label"></label>
+            <input asp-for="Movie.Poster" type="file" class="form-control" />
+            <span asp-validation-for="Movie.Poster" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Movie.Title" class="control-label"></label>
+            <input asp-for="Movie.Title" class="form-control" />
+            <span asp-validation-for="Movie.Title" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Movie.Description" class="control-label"></label>
+            <textarea asp-for="Movie.Description" class="form-control"></textarea>
+            <span asp-validation-for="Movie.Description" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Movie.ReleasedDate" class="control-label"></label>
+            <input asp-for="Movie.ReleasedDate" class="form-control" />
+            <span asp-validation-for="Movie.ReleasedDate" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Movie.CountryId" class="control-label"></label>
+            <select asp-for="Movie.CountryId" class="form-control" id="countrySelect"></select>
+            <span asp-validation-for="Movie.CountryId" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Movie.GenreIds" class="control-label"></label>
+            <select asp-for="Movie.GenreIds" class="form-control" id="genreSelect" multiple="multiple"></select>
+            <span asp-validation-for="Movie.GenreIds" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Movie.Duration" class="control-label"></label>
+            <input asp-for="Movie.Duration" class="form-control" />
+            <span asp-validation-for="Movie.Duration" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Movie.IMDBRating" class="control-label"></label>
+            <input asp-for="Movie.IMDBRating" class="form-control" />
+            <span asp-validation-for="Movie.IMDBRating" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Movie.DirectorId" class="control-label"></label>
+            <select asp-for="Movie.DirectorId" class="form-control" id="directorSelect"></select>
+            <span asp-validation-for="Movie.DirectorId" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addActorModal">
+                Add actor
+            </button>
+        </div>
+
+        <div id="actorsContainer"></div>
+        <br />
+        <button type="submit" class="btn btn-primary">Create</button>
+    </form>
+
+    <!-- Added Actors List -->
+    <div id="actorsList" class="mt-3">
+        @if (Model.Movie.Actors != null)
+        {
+            @foreach (var actor in Model.Movie.Actors)
+            {
+                <div class="card mt-2" data-person-id="@actor.PersonId">
+                    <div class="card-body">
+                        <h5 class="card-title">@actor.PersonName</h5>
+                        <p class="card-text">Order: @actor.Order</p>
+                        <button type="button" class="btn btn-danger btn-sm delete-actor">Удалить</button>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+
+    <div class="modal fade" id="addActorModal" tabindex="-1" aria-labelledby="addActorModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addActorModalLabel">Add Actor</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form method="post" asp-page-handler="AddActor">
+                        <div class="form-group">
+                            <label asp-for="Actor.PersonId" class="control-label" style="width: 100%;"></label>
+                            <select asp-for="Actor.PersonId" class="form-control" id="actorSelect" style="width: 100%;"></select>
+                            <span asp-validation-for="Actor.PersonId" class="text-danger" style="width: 100%;"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Actor.Order" class="control-label">Order</label>
+                            <input asp-for="Actor.Order" class="form-control" style="width: 100%;" />
+                            <span asp-validation-for="Actor.Order" class="text-danger"></span>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Save</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @section Scripts {
+        @await Html.PartialAsync("Shared/_Urls")
+        <script src="~/js/Movie/CreateMovie.js" asp-append-version="true"></script>
+        <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+        <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" />
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+        <script>
+            var successMessage = '@TempData["SuccessMessage"]';
+            var errorMessage = '@TempData["ErrorMessage"]';
+        </script>
+    }
+</body>

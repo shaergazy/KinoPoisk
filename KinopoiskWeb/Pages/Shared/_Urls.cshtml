@@ -16,4 +16,11 @@ var Urls = Urls || {};
         GetById: '@Url.Action("Index", "Genres", new { handler = "ById" })',
         GetAll: '@Url.Action("Index", "Genres")'
     };
+
+    Urls.Movie = {
+        GetCountries: '@Url.Action("Create", "Movies", new { handler = "Countries" })',
+        GetGenres: '@Url.Action("Create", "Movies", new { handler = "Genres" })',
+        GetPeople: '@Url.Action("Create", "Movies", new { handler = "People" })',
+        // GetAll: '@Url.Action("Index", "Genres")'
+    };
 </script>

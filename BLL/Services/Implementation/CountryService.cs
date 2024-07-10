@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using BLL.DTO;
 using BLL.DTO.Country;
 using BLL.Services.Interfaces;
 using Common.Extensions;
@@ -7,8 +6,6 @@ using Common.Helpers;
 using DAL.Models;
 using Data.Repositories.RepositoryInterfaces;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using System.Linq.Dynamic.Core;
 
 namespace BLL.Services.Implementation

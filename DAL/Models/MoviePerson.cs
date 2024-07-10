@@ -12,8 +12,8 @@ namespace Data.Models
         public Movie Movie { get; set; }
         public int PersonId { get; set; }
         public Person Person { get; set; }
-        public PersonType PersonType { get; set; }
-        public uint PersonOrderId { get; set; }
+        public PersonType PersonType { get; set; } 
+        public uint PersonOrder { get; set; }
 
     }
 }

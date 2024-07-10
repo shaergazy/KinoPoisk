@@ -29,4 +29,11 @@ public interface IGenericRepository<TEntity, TKey>
     IIncludableQueryable<TEntity, TProperty> Include<TProperty>(Expression<Func<TEntity, TProperty>> expression);
 
     public IQueryable<TEntity> AsNoTracking();
+
+    /// <summary>
+    /// Return TEntity
+    /// </summary>
+    /// <param name="expression"></param>
+    /// <returns></returns>
+    public Task<TEntity> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> expression = null);
 }

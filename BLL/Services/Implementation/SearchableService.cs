@@ -26,7 +26,7 @@ namespace BLL.Services.Implementation
             _unitOfWork = unitOfWork;
         }
 
-        public virtual async Task<JsonResult> SearchAsync(DataTablesRequestDto request)
+        public virtual async Task<DataTablesResponse<TEntity>> SearchAsync(DataTablesRequestDto request)
         {
             var entities = _unitOfWork.Repository.GetAll();
 
@@ -40,13 +40,14 @@ namespace BLL.Services.Implementation
 
             var data = await GetPagedData(request, entities);
 
-            return new JsonResult(new
+            var s = new DataTablesResponse<TEntity>()
             {
                 Draw = request.Draw,
                 RecordsTotal = recordsTotal,
                 RecordsFiltered = recordsFiltered,
                 Data = data
-            });
+            };
+            return s;
         }
 
         public virtual IQueryable<TEntity> FilterEntities(IQueryable<TEntity> entities, string searchTerm)
@@ -66,8 +67,8 @@ namespace BLL.Services.Implementation
 
         public virtual IQueryable<TEntity> OrderByColumn(IQueryable<TEntity> entities, DataTablesRequestDto request)
         {
-            var sortColumnName = request.Column;
-            var sortDirection = request.Order;
+            var sortColumnName = request.SortColumn;
+            var sortDirection = request.SortDirection;
 
             entities = entities.OrderBy($"{sortColumnName} {sortDirection}");
             return entities;

@@ -11,7 +11,7 @@ namespace BLL.Services.Interfaces
             where TGetDto : class
             where TEntity : class
     {
-        Task<JsonResult> SearchAsync(DataTablesRequestDto request);
+        Task<DataTablesResponse<TEntity>> SearchAsync(DataTablesRequestDto request);
 
         Task<IList<TEntity>> GetPagedData(DataTablesRequestDto request, IQueryable<TEntity> entities);
 

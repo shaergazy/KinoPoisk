@@ -40,7 +40,9 @@ namespace KinopoiskWeb.Pages.People
 
         public async Task<IActionResult> OnPostAsync()
         {
-            return await _service.SearchAsync(_mapper.Map<DataTablesRequestDto>(DataTablesRequest));
+            var response = _mapper.Map<DataTablesResponseVM<Person>>(await _service.SearchAsync(_mapper
+                                  .Map<DataTablesRequestDto>(DataTablesRequest)));
+            return new JsonResult(response);
         }
 
         public async Task<JsonResult> OnGetById(int id)

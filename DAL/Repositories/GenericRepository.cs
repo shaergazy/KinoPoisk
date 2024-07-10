@@ -79,5 +79,10 @@ namespace Repositories
         {
              _dbSet.Remove(model);
         }
+
+        public async Task<TEntity> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> expression = null)
+        {
+            return await _dbSet.FirstOrDefaultAsync(expression);
+        }
     }
 }

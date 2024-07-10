@@ -27,4 +27,5 @@ public static class AppConstants
     public static string FullFilesPath { get; set; }
     public static string BaseDir { get; set; }
     public static string FlagDir = "Flags";
+    public static string PosterDir = "Posters";
 }
