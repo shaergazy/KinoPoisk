@@ -12,12 +12,12 @@
         public float? IMDBRating { get; set; }
         public int DirectorId { get; set; }
         public List<ActorVM>? Actors { get; set; }
+        public string ActorsJson { get; set; }
     }
 
     public class ActorVM
     {
         public int PersonId { get; set; }
-        public int Order { get; set; }
-        public string PersonName { get; set; }
+        public uint Order { get; set; }
     }
 }

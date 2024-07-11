@@ -30,6 +30,8 @@ public interface IGenericRepository<TEntity, TKey>
 
     public IQueryable<TEntity> AsNoTracking();
 
+    public void AddRange(IEnumerable<TEntity> entities);
+
     /// <summary>
     /// Return TEntity
     /// </summary>

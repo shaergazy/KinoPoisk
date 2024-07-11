@@ -38,13 +38,14 @@ namespace KinopoiskWeb.Pages.Movies
 
         public async Task<IActionResult> OnPostAsync()
         {
-            if (!ModelState.IsValid)
-            {
-                return Page();
-            }
+            Movie.Actors = string.IsNullOrEmpty(Movie.ActorsJson)
+                           ? new List<ActorVM>()
+                           : Newtonsoft.Json.JsonConvert.DeserializeObject<List<ActorVM>>(Movie.ActorsJson);
+
             try
             {
-                await _movieService.CreateAsync(_mapper.Map<AddMovieDto>(Movie));
+                var ds = _mapper.Map<AddMovieDto>(Movie);
+                await _movieService.CreateAsync(ds);
                 TempData["SuccessMessage"] = "Movie created successfully!";
                 return RedirectToPage("Create");
             }
@@ -75,34 +76,33 @@ namespace KinopoiskWeb.Pages.Movies
             return new JsonResult(people);
         }
 
-        public async Task<IActionResult> OnPostAddActor()
-        {
-            if (Movie == null)
-            {
-                Movie = new CreateMovieVM();
-            }
+        //public async Task<IActionResult> OnPostAddActor()
+        //{
+        //    if (Movie == null)
+        //    {
+        //        Movie = new CreateMovieVM();
+        //    }
 
-            if (Movie.Actors == null)
-            {
-                Movie.Actors = new List<ActorVM>();
-            }
+        //    if (Movie.Actors == null)
+        //    {
+        //        Movie.Actors = new List<ActorVM>();
+        //    }
 
-            if (Actor != null && Actor.PersonId != 0)
-            {
-                var person = await _movieService.GetPeople().FirstOrDefaultAsync(p => p.Id == Actor.PersonId);
-                if (person != null)
-                {
-                    Movie.Actors.Add(new ActorVM
-                    {
-                        PersonId = Actor.PersonId,
-                        Order = Actor.Order,
-                        PersonName = $"{person.FirstName} {person.LastName}"
-                    });
-                }
-            }
+        //    if (Actor != null && Actor.PersonId != 0)
+        //    {
+        //        var person =  _movieService.GetPeople().FirstOrDefault(x => x.Id == Actor.PersonId);
+        //        if (person != null)
+        //        {
+        //            Movie.Actors.Add(new ActorVM
+        //            {
+        //                PersonId = Actor.PersonId,
+        //                Order = Actor.Order,
+        //                PersonName = $"{person.FirstName} {person.LastName}"
+        //            });
+        //        }
+        //    }
 
-            // Возвращаем JSON результат для AJAX вызова
-            return Page();/*new JsonResult(new { success = true, personName = Actor.PersonName });*/
-        }
+        //    return Page();
+        //}
     }
 }

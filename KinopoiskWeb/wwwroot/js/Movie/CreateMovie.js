@@ -40,7 +40,7 @@
     $('#addActorModal').on('shown.bs.modal', function () {
         $('#actorSelect').select2({
             ajax: {
-                url: Urls.Movie.GetPeople,  // Замените на ваш URL для получения данных
+                url: Urls.Movie.GetPeople,
                 dataType: 'json',
                 processResults: function (data) {
                     return {
@@ -55,6 +55,37 @@
             },
             dropdownParent: $('#addActorModal') 
         });
+    });
+
+    $('#saveActorButton').click(function () {
+        var personId = $('#actorSelect').val();
+        var personName = $('#actorSelect option:selected').text();
+        var order = $('#actorOrder').val();
+
+        if (personId && order) {
+            var actors = JSON.parse($('#Movie_ActorsJson').val() || '[]');
+            actors.push({ PersonId: personId, PersonName: personName, Order: order });
+            $('#Movie_ActorsJson').val(JSON.stringify(actors));
+
+            console.log("Updated Actors JSON:", $('#Movie_ActorsJson').val());
+
+            var actorCard = `<div class="card mt-2" data-person-id="${personId}">
+                                <div class="card-body">
+                                    <h5 class="card-title">${personName}</h5>
+                                    <p class="card-text">Order: ${order}</p>
+                                    <button type="button" class="btn btn-danger btn-sm delete-actor">Удалить</button>
+                                </div>
+                             </div>`;
+            $('#actorsList').append(actorCard);
+            $('#addActorModal').modal('hide');
+        } else {
+            if (!personId) {
+                $('#actorSelectError').text('Выберите актера');
+            }
+            if (!order) {
+                $('#actorOrderError').text('Введите порядок');
+            }
+        }
     });
 
     function formatCountry(country) {

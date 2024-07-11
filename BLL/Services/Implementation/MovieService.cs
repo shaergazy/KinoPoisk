@@ -4,7 +4,6 @@ using BLL.DTO.Genre;
 using BLL.DTO.Movie;
 using BLL.DTO.Person;
 using BLL.Services.Interfaces;
-using Common.Extensions;
 using Common.Helpers;
 using DAL.Models;
 using Data.Models;
@@ -14,8 +13,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BLL.Services.Implementation
 {
-    public class MovieService : SearchableService<ListMovieDto, AddMovieDto, EditMovieDto, GetMovieDto, Movie, Guid>,
-        IMovieService
+    public class MovieService : SearchableService<ListMovieDto, AddMovieDto, EditMovieDto, GetMovieDto, Movie, Guid>, IMovieService
     {
         private readonly IMapper _mapper;
         private readonly IUnitOfWork<Movie, Guid> _uow;
@@ -42,17 +40,7 @@ namespace BLL.Services.Implementation
 
         public async Task DeleteCommentAsync(int commentId)
         {
-           await _uow.Comments.DeleteByIdAsync(commentId);
-        }
-
-        public override IQueryable<Movie> FilterEntities(IQueryable<Movie> entities, string searchTerm)
-        {
-            if (!string.IsNullOrWhiteSpace(searchTerm))
-            {
-                //entities = entities.Where(s =>
-                //    s.Name.ToUpper().Contains(searchTerm));
-            }
-            return entities;
+            await _uow.Comments.DeleteByIdAsync(commentId);
         }
 
         public Task<IEnumerable<Comment>> GetCommentsAsync(Guid id)
@@ -60,92 +48,68 @@ namespace BLL.Services.Implementation
             throw new NotImplementedException();
         }
 
-        //public Task<IEnumerable<Comment>> GetCommentsAsync(Guid id)
-        //{
-        //    var comments = _uow.Movies.GetAll().Where(x => x.Id == id).Include(p => p.Comments);
-        //    var d = comments.
-        //}
-
-        public async Task<IEnumerable<Movie>> GetNewestMoviesAsync(int count)
-        {
-            return await _uow.Movies.GetAll().OrderBy(x => x.ReleasedDate).Take(count).ToListAsync();
-        }
-
-        public async Task<IEnumerable<Movie>> GetTopRatedMoviesAsync(int count)
-        {
-            return await _uow.Movies.GetAll().Select(movie => new
-            {
-                Movie = movie,
-                AverageRating = movie.Ratings.Average(r => (int?)r.StarCount) ?? 0
-            })
-            .OrderByDescending(x => x.AverageRating)
-            .Select(x => x.Movie)
-            .Take(count)
-            .ToListAsync();
-        }
-
         public override async Task<Movie> BuildEntityForCreate(AddMovieDto dto)
         {
             if (dto.Poster == null || dto.Title == null)
-                throw new ArgumentNullException("You have to complete all properties");
+                throw new ArgumentNullException(nameof(dto), "You have to complete all properties");
 
             var movie = _mapper.Map<Movie>(dto);
-            var file = dto.Poster;
-            var fileName = GenerateUniqueFileName(file);
-            var path = AppConstants.RelativeFilesPath.Combine(AppConstants.BaseDir, AppConstants.PosterDir, fileName);
+            movie.Poster = await SaveFileAsync(dto.Poster);
 
-            (Stream Source, string FileName) fileStream = await file.ToStream();
-            await (path, fileStream.Source).SaveStreamByPath();
-
-            var relativePath = AppConstants.RelativeFilesPath.Combine(AppConstants.PosterDir, fileName);
-
-            var country = await _uow.Countries.FirstOrDefaultAsync(x => x.Id == dto.SelectedCountry);
+            var country = await _uow.Countries.FirstOrDefaultAsync(x => x.Id == dto.CountryId);
             if (country != null)
                 movie.Country = country;
 
-            var genres = dto.SelectedGenres ?? new List<int>();
-            if (movie.Genres == null)
-            {
-                movie.Genres = new List<MovieGenre>();
-            }
+            var genres = await _uow.Genres.GetAll()
+                            .Where(g => dto.GenreIds.Contains(g.Id))
+                            .ToListAsync();
+            movie.Genres = genres.Select(g => new MovieGenre { Movie = movie, Genre = g }).ToList();
 
-            foreach (var genreId in genres)
+            movie.People = new List<MoviePerson>
             {
-                var genre = await _uow.Genres.FirstOrDefaultAsync(x => x.Id == genreId);
-                if (genre != null)
+                new MoviePerson { Movie = movie, PersonId = dto.DirectorId, PersonType = DAL.Enums.PersonType.Director }
+            };
+
+            if (dto.Actors != null)
+            {
+                foreach (var actor in dto.Actors)
                 {
-                    movie.Genres.Add(new MovieGenre
+                    movie.People.Add(new MoviePerson
                     {
                         Movie = movie,
-                        Genre = genre,
+                        PersonId = actor.PersonId,
+                        PersonType = DAL.Enums.PersonType.Actor
                     });
                 }
-                else
-                {
-                   //TODO Logging
-                }
             }
-            movie.Poster = relativePath;
+
             return movie;
         }
 
         public override async Task<Movie> BuildEntityForDelete(Guid id)
         {
             var movie = await _uow.Repository.GetByIdAsync(id);
-
+            try
+            {
                 File.Delete(movie.Poster);
+            }
+            catch (Exception)
+            {
+                // TODO: Add logging
+            }
             return movie;
         }
 
         public override async Task<Movie> BuildEntityForUpdate(EditMovieDto dto)
         {
             if (dto == null)
-                throw new ArgumentNullException();
+                throw new ArgumentNullException(nameof(dto));
 
             var movieToUpdate = await _uow.Repository.GetByIdAsync(dto.Id);
             if (movieToUpdate == null)
-                throw new Exception($"Movie with id {movieToUpdate.Id} doesnt exist");
-            var country = await _uow.Countries.FirstOrDefaultAsync(x => x.Id == dto.SelectedCountry);
+                throw new Exception($"Movie with id {dto.Id} doesn't exist");
+
+            var country = await _uow.Countries.FirstOrDefaultAsync(x => x.Id == dto.CountryId);
             if (country != null)
                 movieToUpdate.Country = country;
 
@@ -153,48 +117,75 @@ namespace BLL.Services.Implementation
             movieToUpdate.Description = dto.Description;
             movieToUpdate.ReleasedDate = dto.ReleasedDate;
 
-
             if (dto.Poster != null)
             {
-                if (movieToUpdate.Poster != null)
+                if (!string.IsNullOrEmpty(movieToUpdate.Poster))
+                {
                     File.Delete(movieToUpdate.Poster);
+                }
 
-                var file = dto.Poster;
-                var path = AppConstants.RelativeFilesPath.Combine(AppConstants.BaseDir, AppConstants.PosterDir, file.FileName);
-
-                (Stream Source, string FileName) fileStream = await file.ToStream();
-                await (path, fileStream.Source).SaveStreamByPath();
-
-
-                var relativePath = AppConstants.RelativeFilesPath.Combine(AppConstants.PosterDir, file.FileName);
-
-                movieToUpdate.Poster = relativePath;
+                movieToUpdate.Poster = await SaveFileAsync(dto.Poster);
             }
+
             return movieToUpdate;
         }
 
         public string GenerateUniqueFileName(IFormFile file)
         {
-            return $"{Path.GetFileNameWithoutExtension(file.FileName)}_{DateTime.Now.ToString("yyyyMMddHHmmss")}{Path.GetExtension(file.FileName)}";
+            return $"{Path.GetFileNameWithoutExtension(file.FileName)}_{DateTime.Now:yyyyMMddHHmmss}{Path.GetExtension(file.FileName)}";
         }
 
-        public IQueryable<ListCountryDto> GetCountries()
+        public IEnumerable<ListCountryDto> GetCountries()
         {
             var countries = _uow.Countries.GetAll();
-            return _mapper.Map<IQueryable<ListCountryDto>>(countries);
+            return _mapper.Map<List<ListCountryDto>>(countries);
         }
 
-        public IQueryable<ListGenreDto> GetGenres()
+        public IEnumerable<ListGenreDto> GetGenres()
         {
-            var countries = _uow.Genres.GetAll();
-            return _mapper.Map<IQueryable<ListGenreDto>>(countries);
+            var genres = _uow.Genres.GetAll();
+            return _mapper.Map<List<ListGenreDto>>(genres);
         }
 
-        public IQueryable<ListPersonDto> GetPeople()
+        public IEnumerable<ListPersonDto> GetPeople()
         {
-            var countries = _uow.People.GetAll();
-            return _mapper.Map<IQueryable<ListPersonDto>>(countries);
+            var people = _uow.People.GetAll().ToList();
+            return _mapper.Map<List<ListPersonDto>>(people);
+        }
+
+        public async Task<string> SaveFileAsync(IFormFile file)
+        {
+            var fileName = GenerateUniqueFileName(file);
+            var path = Path.Combine(AppConstants.BaseDir, AppConstants.PosterDir, fileName);
+
+            using (var stream = new FileStream(path, FileMode.Create))
+            {
+                await file.CopyToAsync(stream);
+            }
+
+            return Path.Combine(AppConstants.PosterDir, fileName);
+        }
+
+        public async Task<IEnumerable<Movie>> GetNewestMoviesAsync(int count)
+        {
+            return await _uow.Movies.GetAll()
+                .OrderByDescending(x => x.ReleasedDate)
+                .Take(count)
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<Movie>> GetTopRatedMoviesAsync(int count)
+        {
+            return await _uow.Movies.GetAll()
+                .Select(movie => new
+                {
+                    Movie = movie,
+                    AverageRating = movie.Ratings.Average(r => (int?)r.StarCount) ?? 0
+                })
+                .OrderByDescending(x => x.AverageRating)
+                .Select(x => x.Movie)
+                .Take(count)
+                .ToListAsync();
         }
     }
 }
-

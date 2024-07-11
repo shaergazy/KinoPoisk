@@ -28,12 +28,20 @@ namespace BLL.DTO.Movie
         public string Description { get; set; }
         public DateTime Released { get; set; }
         public DateTime ReleasedDate { get; set; }
-        public int? SelectedCountry { get; set; }
-        public ICollection<int>? SelectedGenres { get; set; }
+        public int? CountryId { get; set; }
+        public ICollection<int>? GenreIds { get; set; }
         public uint? Duration { get; set; }
         public float? IMDBRating { get; set; }
-        //public ICollection<MoviePerson>? People { get; set; }
+        public int DirectorId { get; set; }
+        public List<MoviePersonDto>? Actors { get; set; }
     }
+
+    public class MoviePersonDto
+    {
+        public int PersonId { get; set; }
+        public uint Order { get; set; }
+    }
+
     public class EditMovieDto : AddMovieDto
     {
         public Guid Id { get; set; }
@@ -55,14 +63,6 @@ namespace BLL.DTO.Movie
         public string Description { get; set; }
         public MoviePersonDto? Direcror { get; set; }
         public ICollection<MoviePersonDto>? Actors { get; set; }
-    }
-    public class MoviePersonDto
-    {
-        public int Id { get; set; }
-        public Guid MovieId { get; set; }
-        public int PersonId { get; set; }
-        public PersonType PersonType { get; set; }
-        public uint PersonOrderId { get; set; }
     }
 
 

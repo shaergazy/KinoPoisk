@@ -13,7 +13,7 @@ namespace Data.Models
         public int PersonId { get; set; }
         public Person Person { get; set; }
         public PersonType PersonType { get; set; } 
-        public uint PersonOrder { get; set; }
+        public uint Order { get; set; }
 
     }
 }

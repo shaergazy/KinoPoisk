@@ -80,6 +80,11 @@ namespace Repositories
              _dbSet.Remove(model);
         }
 
+        public virtual void AddRange(IEnumerable<TEntity> entities)
+        {
+            _dbSet.AddRange(entities);
+        }
+
         public async Task<TEntity> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> expression = null)
         {
             return await _dbSet.FirstOrDefaultAsync(expression);

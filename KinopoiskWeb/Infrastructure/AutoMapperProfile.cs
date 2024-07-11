@@ -3,11 +3,13 @@ using BLL.DTO.Country;
 using BLL.DTO.Genre;
 using BLL.DTO.Movie;
 using BLL.DTO.Person;
+using Data.Models;
 using KinopoiskWeb.ViewModels.Country;
 using KinopoiskWeb.ViewModels.Genre;
 using KinopoiskWeb.ViewModels.Movie;
 using KinopoiskWeb.ViewModels.Person;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.Blazor;
+using Newtonsoft.Json;
 
 namespace KinopoiskWeb.Infrastructure
 {
@@ -38,8 +40,12 @@ namespace KinopoiskWeb.Infrastructure
             CreateMap(typeof(DataTables.DataTablesResponseVM<>), typeof(BLL.DTO.DataTablesResponse<>)).ReverseMap();
 
             CreateMap<CreateMovieVM, AddMovieDto>()
-            .ForMember(dest => dest.SelectedCountry, opt => opt.MapFrom(src => src.CountryId))
-            .ForMember(dest => dest.SelectedGenres, opt => opt.MapFrom(src => src.GenreIds != null ? src.GenreIds.ToList() : new List<int>()));
+            .ForMember(dest => dest.Actors, opt => opt.MapFrom(src => src.Actors))
+            .ForMember(dest => dest.GenreIds, opt => opt.MapFrom(src => src.GenreIds ?? new List<int>()));
+
+            CreateMap<ActorVM, MoviePersonDto>()
+            .ForMember(dest => dest.PersonId, opt => opt.MapFrom(src => src.PersonId))
+            .ForMember(dest => dest.Order, opt => opt.MapFrom(src => src.Order));
         }
     }
 }
