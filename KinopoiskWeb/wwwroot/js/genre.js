@@ -49,4 +49,10 @@
         modal.find('.modal-body input#GenreToDelete_Id').val(id);
         modal.find('.modal-body #genreNameToDelete').text(name);
     });
+    if (successMessage) {
+        toastr.success(successMessage);
+    }
+    if (errorMessage) {
+        toastr.error(errorMessage);
+    }
 });

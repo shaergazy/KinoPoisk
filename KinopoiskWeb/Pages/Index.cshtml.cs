@@ -1,20 +1,26 @@
-using Microsoft.AspNetCore.Mvc;
+using AutoMapper;
+using BLL.Services.Interfaces;
+using KinopoiskWeb.ViewModels.Movie;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace KinopoiskWeb.Pages
+public class IndexModel : PageModel
 {
-    public class IndexModel : PageModel
+    private readonly IMovieService _movieService;
+    private readonly IMapper _mapper;
+
+    public IndexModel(IMovieService movieService, IMapper mapper)
     {
-        private readonly ILogger<IndexModel> _logger;
+        _movieService = movieService;
+        _mapper = mapper;
+    }
 
-        public IndexModel(ILogger<IndexModel> logger)
-        {
-            _logger = logger;
-        }
+    public List<IndexMovieVM> NewestMovies { get; set; }
+    public List<IndexMovieVM> HighRatedMovies { get; set; }
 
-        public void OnGet()
-        {
 
-        }
+    public async Task OnGetAsync()
+    {
+        NewestMovies = _mapper.Map<List<IndexMovieVM>>((await _movieService.GetNewestMoviesAsync(10)).ToList()); 
+        HighRatedMovies = _mapper.Map<List<IndexMovieVM>>((await _movieService.GetTopRatedMoviesAsync(10)).ToList());
     }
 }

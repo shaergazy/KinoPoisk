@@ -4,6 +4,7 @@ using BLL.DTO.Genre;
 using BLL.DTO.Movie;
 using BLL.DTO.Person;
 using BLL.Services.Interfaces;
+using Common.Extensions;
 using Common.Helpers;
 using DAL.Models;
 using Data.Models;
@@ -78,7 +79,8 @@ namespace BLL.Services.Implementation
                     {
                         Movie = movie,
                         PersonId = actor.PersonId,
-                        PersonType = DAL.Enums.PersonType.Actor
+                        PersonType = DAL.Enums.PersonType.Actor,
+                        Order = actor.Order,
                     });
                 }
             }
@@ -163,20 +165,31 @@ namespace BLL.Services.Implementation
                 await file.CopyToAsync(stream);
             }
 
-            return Path.Combine(AppConstants.PosterDir, fileName);
+            return AppConstants.RelativeFilesPath.Combine(AppConstants.PosterDir, fileName);
         }
 
-        public async Task<IEnumerable<Movie>> GetNewestMoviesAsync(int count)
+        public async Task<IEnumerable<ListMovieDto>> GetNewestMoviesAsync(int count)
         {
-            return await _uow.Movies.GetAll()
+            var movies = await _uow.Movies.GetAll()
+                .Include(x => x.People)
+                .ThenInclude(m => m.Person)
                 .OrderByDescending(x => x.ReleasedDate)
                 .Take(count)
                 .ToListAsync();
+
+            foreach (var movie in movies)
+            {
+               movie.People = movie.People.OrderBy(p => p.Order).ToList();
+            }
+
+            return _mapper.Map<List<ListMovieDto>>(movies);
         }
 
-        public async Task<IEnumerable<Movie>> GetTopRatedMoviesAsync(int count)
+        public async Task<IEnumerable<ListMovieDto>> GetTopRatedMoviesAsync(int count)
         {
-            return await _uow.Movies.GetAll()
+            var movies = await _uow.Movies.GetAll()
+                .Include(x => x.People)
+                .ThenInclude(m => m.Person)
                 .Select(movie => new
                 {
                     Movie = movie,
@@ -186,6 +199,13 @@ namespace BLL.Services.Implementation
                 .Select(x => x.Movie)
                 .Take(count)
                 .ToListAsync();
+
+            foreach (var movie in movies)
+            {
+                movie.People.OrderBy(p => p.Order);
+            }
+
+            return _mapper.Map<List<ListMovieDto>>(movies);
         }
     }
 }

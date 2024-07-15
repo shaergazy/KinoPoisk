@@ -7,6 +7,9 @@ using KinopoiskWeb.ViewModels.Genre;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using KinopoiskWeb.DataTables;
+using Microsoft.Data.SqlClient;
+using Common.Exceptions;
+using Microsoft.EntityFrameworkCore;
 
 namespace KinopoiskWeb.Pages.Genres
 {
@@ -71,8 +74,17 @@ namespace KinopoiskWeb.Pages.Genres
 
         public async Task<IActionResult> OnPostDeleteAsync()
         {
-            await _service.DeleteAsync(GenreId);
-            return RedirectToPage();
+            try
+            {
+                await _service.DeleteAsync(GenreId);
+                TempData["SuccessMessage"] = "Deleted";
+                return RedirectToPage();
+            }
+            catch (DbUpdateException)
+            {
+                TempData["ErrorMessage"] = "Some movie has contain this genre, thatswhy you are not able to remove";
+                return RedirectToPage();
+            }
         }
     }
 

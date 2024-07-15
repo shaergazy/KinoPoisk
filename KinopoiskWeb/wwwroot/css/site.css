@@ -20,3 +20,40 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+.movie-card {
+    display: flex;
+    align-items: flex-start;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    margin: 20px 0;
+}
+
+    .movie-card .poster {
+        flex: 0 0 150px;
+    }
+
+        .movie-card .poster img {
+            width: 100%;
+            height: auto;
+        }
+
+    .movie-card .details {
+        padding: 15px;
+        flex: 1;
+    }
+
+    .movie-card .title {
+        font-size: 1.5em;
+        margin: 0 0 10px;
+    }
+
+    .movie-card .meta, .movie-card .director, .movie-card .actors {
+        margin: 5px 0;
+    }
+
+    .movie-card .description {
+        margin-top: 10px;
+    }

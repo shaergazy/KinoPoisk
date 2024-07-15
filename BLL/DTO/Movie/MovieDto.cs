@@ -1,5 +1,6 @@
 ﻿using BLL.DTO.Country;
 using BLL.DTO.Genre;
+using BLL.DTO.Person;
 using Common.Enums;
 using Data.Models;
 using Microsoft.AspNetCore.Http;
@@ -61,8 +62,9 @@ namespace BLL.DTO.Movie
         public string Poster { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
-        public MoviePersonDto? Direcror { get; set; }
-        public ICollection<MoviePersonDto>? Actors { get; set; }
+        public uint Duration { get; set; }
+        public GetPersonDto? Director { get; set; }
+        public ICollection<GetPersonDto>? Actors { get; set; }
     }
 
 

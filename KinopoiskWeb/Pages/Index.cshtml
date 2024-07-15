@@ -1,10 +1,61 @@
 ﻿@page
 @model IndexModel
 @{
-    ViewData["Title"] = "Home page";
+    ViewData["Title"] = "Home Page";
 }
-
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<h1>Top 10 newest movies </h1>
+@foreach (var movie in Model.NewestMovies)
+{
+    <div class="movie-card">
+        <div class="poster">
+            <img src="@movie.Poster" alt="@movie.Title" />
+        </div>
+        <div class="details">
+            <h2 class="title">@movie.Title</h2>
+            <div class="meta">
+                <span class="duration">@movie.Duration мин</span>
+            </div>
+            <div class="director">
+                Режиссер: @movie.Director
+            </div>
+            <div class="actors">
+                В ролях: 
+                @foreach (var actor in movie.Actors)
+                {
+                    <span>@actor</span>@(actor != movie.Actors.Last() ? ", " : "")
+                }
+            </div>
+            <div class="description">
+                @movie.Description
+            </div>
+        </div>
+    </div>
+}
+<h1>Top 10 high rated movies </h1>
+@foreach (var movie in Model.NewestMovies)
+{
+    <div class="movie-card">
+        <div class="poster">
+            <img src="@movie.Poster" alt="@movie.Title" />
+        </div>
+        <div class="details">
+            <h2 class="title">@movie.Title</h2>
+            <div class="meta">
+                <span class="duration">@movie.Duration мин</span>
+            </div>
+            <div class="director">
+                Режиссер: @movie.Director
+            </div>
+            <div class="actors">
+                В ролях: 
+                @foreach (var actor in movie.Actors)
+                {
+                    <span>@actor</span>@(actor != movie.Actors.Last() ? ", " : "")
+                }
+            </div>
+            <div class="description">
+                @movie.Description
+            </div>
+        </div>
+    </div>
+}

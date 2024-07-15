@@ -25,17 +25,17 @@
             <span asp-validation-for="Movie.Description" class="text-danger"></span>
         </div>
         <div class="form-group">
-            <label asp-for="Movie.ReleasedDate" class="control-label"></label>
-            <input asp-for="Movie.ReleasedDate" class="form-control" />
+            <label asp-for="Movie.ReleasedDate" class="control-label">Date released</label>
+            <input asp-for="Movie.ReleasedDate" class="form-control" type="date" />
             <span asp-validation-for="Movie.ReleasedDate" class="text-danger"></span>
         </div>
         <div class="form-group">
-            <label asp-for="Movie.CountryId" class="control-label"></label>
+            <label asp-for="Movie.CountryId" class="control-label">Country</label>
             <select asp-for="Movie.CountryId" class="form-control" id="countrySelect"></select>
             <span asp-validation-for="Movie.CountryId" class="text-danger"></span>
         </div>
         <div class="form-group">
-            <label asp-for="Movie.GenreIds" class="control-label"></label>
+            <label asp-for="Movie.GenreIds" class="control-label">Genres</label>
             <select asp-for="Movie.GenreIds" class="form-control" id="genreSelect" multiple="multiple"></select>
             <span asp-validation-for="Movie.GenreIds" class="text-danger"></span>
         </div>
@@ -45,30 +45,28 @@
             <span asp-validation-for="Movie.Duration" class="text-danger"></span>
         </div>
         <div class="form-group">
-            <label asp-for="Movie.IMDBRating" class="control-label"></label>
+            <label asp-for="Movie.IMDBRating" class="control-label">IMDB rating</label>
             <input asp-for="Movie.IMDBRating" class="form-control" />
             <span asp-validation-for="Movie.IMDBRating" class="text-danger"></span>
         </div>
+        
+        <div class="form-group" width="100%">
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addActorModal" width ="100%">
+            Add actor
+        </button>
+        </div>
+        <div id="actorsList" class="d-flex flex-wrap gap-3">
+        </div>
         <div class="form-group">
-            <label asp-for="Movie.DirectorId" class="control-label"></label>
+            <label asp-for="Movie.DirectorId" class="control-label">Director</label>
             <select asp-for="Movie.DirectorId" class="form-control" id="directorSelect"></select>
             <span asp-validation-for="Movie.DirectorId" class="text-danger"></span>
         </div>
-        <div id="actorsContainer"></div>
         <br />
+
         <button type="submit" class="btn btn-primary">Create</button>
 
-        <div class="form-group">
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addActorModal">
-                Add actor
-            </button>
-        </div>
-
-        <input type="hidden" asp-for="Movie.ActorsJson" id="Movie_ActorsJson" />    
     </form>
-
-    <!-- Actors List -->
-    <div id="actorsList" class="mt-3"> </div>
 
     <div class="modal fade" id="addActorModal" tabindex="-1" aria-labelledby="addActorModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
@@ -79,19 +77,19 @@
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
-                        <label asp-for="Actor.PersonId" class="control-label" style="width: 100%;"></label>
-                        <select asp-for="Actor.PersonId" class="form-control" id="actorSelect" style="width: 100%;"></select>
-                        <span asp-validation-for="Actor.PersonId" class="text-danger" style="width: 100%;"></span>
+                        <label for="actorSelect" class="control-label" style="width: 100%;">Actor</label>
+                        <select id="actorSelect" class="form-control" style="width: 100%;"></select>
+                        <span id="actorSelectError" class="text-danger" style="width: 100%;"></span>
                     </div>
                     <div class="form-group">
-                        <label asp-for="Actor.Order" class="control-label">Order</label>
-                        <input asp-for="Actor.Order" class="form-control" id="actorOrder" style="width: 100%;" />
-                        <span asp-validation-for="Actor.Order" class="text-danger"></span>
+                        <label for="actorOrder" class="control-label">Order</label>
+                        <input type="number" id="actorOrder" class="form-control" style="width: 100%;" />
+                        <span id="actorOrderError" class="text-danger"></span>
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" id="saveActorButton" class="btn btn-primary">Save</button>
-                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" id="saveActorButton" class="btn btn-primary">Save</button>
                 </div>
             </div>
         </div>

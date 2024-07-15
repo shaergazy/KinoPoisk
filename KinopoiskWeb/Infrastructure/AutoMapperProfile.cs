@@ -46,6 +46,9 @@ namespace KinopoiskWeb.Infrastructure
             CreateMap<ActorVM, MoviePersonDto>()
             .ForMember(dest => dest.PersonId, opt => opt.MapFrom(src => src.PersonId))
             .ForMember(dest => dest.Order, opt => opt.MapFrom(src => src.Order));
+            CreateMap<ListMovieDto, IndexMovieVM>()
+           .ForMember(dest => dest.Director, opt => opt.MapFrom(src => src.Director != null ? $"{src.Director.FirstName} {src.Director.LastName}" : string.Empty))
+           .ForMember(dest => dest.Actors, opt => opt.MapFrom(src => src.Actors != null ? src.Actors.Select(a => $"{a.FirstName} {a.LastName}").ToArray() : new string[0]));
         }
     }
 }

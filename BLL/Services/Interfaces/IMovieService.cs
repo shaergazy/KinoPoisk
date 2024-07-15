@@ -17,8 +17,8 @@ namespace BLL.Services.Interfaces
         //Task<IEnumerable<Movie>> GetMoviesFromExternalSourceAsync(string titleOrIMDBId);
         //Task ImportMovieFromExternalSourceAsync(Movie movie);
 
-        Task<IEnumerable<Movie>> GetTopRatedMoviesAsync(int count);
-        Task<IEnumerable<Movie>> GetNewestMoviesAsync(int count);
+        Task<IEnumerable<ListMovieDto>> GetTopRatedMoviesAsync(int count);
+        Task<IEnumerable<ListMovieDto>> GetNewestMoviesAsync(int count);
         IEnumerable<ListCountryDto> GetCountries();
         IEnumerable<ListGenreDto> GetGenres();
         IEnumerable<ListPersonDto> GetPeople();
