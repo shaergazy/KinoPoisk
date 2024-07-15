@@ -19,17 +19,21 @@
                 Режиссер: @movie.Director
             </div>
             <div class="actors">
-                В ролях: 
+                В ролях:
                 @foreach (var actor in movie.Actors)
                 {
-                    <span>@actor</span>@(actor != movie.Actors.Last() ? ", " : "")
+                    <span>@actor</span>
+
+                    @(actor != movie.Actors.Last() ? ", " : "")
                 }
             </div>
-            <div class="description">
+            <div class="description" id="description-@movie.Id">
                 @movie.Description
             </div>
         </div>
     </div>
+    
+
 }
 <h1>Top 10 high rated movies </h1>
 @foreach (var movie in Model.NewestMovies)
@@ -47,15 +51,22 @@
                 Режиссер: @movie.Director
             </div>
             <div class="actors">
-                В ролях: 
+                В ролях:
                 @foreach (var actor in movie.Actors)
                 {
-                    <span>@actor</span>@(actor != movie.Actors.Last() ? ", " : "")
+                    <span>@actor</span>
+
+                    @(actor != movie.Actors.Last() ? ", " : "")
                 }
             </div>
-            <div class="description">
+            <div class="description" id="description-@movie.Id">
                 @movie.Description
             </div>
         </div>
     </div>
+}
+
+@section Scripts {
+        @await Html.PartialAsync("Shared/_Urls")
+        <script src="~/js/index.js" asp-append-version="true"></script>
 }

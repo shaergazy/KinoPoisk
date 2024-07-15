@@ -57,3 +57,14 @@ body {
     .movie-card .description {
         margin-top: 10px;
     }
+
+.full-description {
+    display: none;
+}
+
+.more, .less {
+    cursor: pointer;
+    color: blue;
+    text-decoration: underline;
+}
+
