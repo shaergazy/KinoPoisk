@@ -75,6 +75,17 @@ namespace KinopoiskWeb.Pages.Countries
 
             return RedirectToPage();
         }
+
+        public JsonResult OnGetCountries(string searchTerm)
+        {
+            var entities = _service.GetAll();
+            if (!string.IsNullOrWhiteSpace(searchTerm) && searchTerm.Length >= 3)
+            {
+                entities = entities.Where(s => s.Name.ToUpper()
+                                   .Contains(searchTerm.ToUpper()));
+            }
+            return new JsonResult(entities);
+        }
     }
 
 }

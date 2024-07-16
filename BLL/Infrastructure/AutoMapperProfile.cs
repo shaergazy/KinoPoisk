@@ -48,6 +48,16 @@ namespace BLL.Infrastructure
                     FirstName = a.Person.FirstName,
                     LastName = a.Person.LastName
                 }).ToList()));
+
+            CreateMap<Movie, GetMovieDto>()
+           .ForMember(dest => dest.Director, opt => opt.MapFrom(src => src.People.FirstOrDefault(p => p.PersonType.ToString() == "Director")))
+           .ForMember(dest => dest.Actors, opt => opt.MapFrom(src => src.People.Where(p => p.PersonType.ToString() == "Actor").Select(p =>
+                new GetPersonDto { Id = p.PersonId, FirstName = p.Person.FirstName, LastName = p.Person.LastName, BirthDate = p.Person.BirthDate }).ToList()))
+           .ForMember(dest => dest.Country, opt => opt.MapFrom(src => src.Country))
+           .ForMember(dest => dest.Genres, opt => opt.MapFrom(src => src.Genres))
+           .ForMember(dest => dest.Comments, opt => opt.MapFrom(src => src.Comments.Select(c => new GetCommentDto { Id = c.Id, Text = c.Text }).ToList()))
+           .ForMember(dest => dest.Rating, opt => opt.MapFrom(src => src.Ratings.Average(r => r.StarCount)))
+           .ForMember(dest => dest.DateRealesed, opt => opt.MapFrom(src => src.ReleasedDate)).ReverseMap();
         }
     }
 }

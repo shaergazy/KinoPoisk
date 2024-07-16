@@ -19,17 +19,18 @@ namespace KinopoiskWeb.Pages.Movies
             _service = service;
         }
 
-        [BindProperty]
-        public DataTablesRequest DataTablesRequest { get; set; }
         public void OnGet()
         {
         }
 
-        public async Task<IActionResult> OnPost() 
+        [BindProperty]
+        public DataTablesRequest DataTablesRequest { get; set; }
+
+        public async Task<IActionResult> OnPostAsync()
         {
-            var response = _mapper.Map<DataTablesResponseVM<Genre>>(await _service.SearchAsync(_mapper
+            var response = _mapper.Map<DataTablesResponseVM<Movie>>(await _service.SearchAsync(_mapper
                                   .Map<DataTablesRequestDto>(DataTablesRequest)));
-            return new JsonResult(null);
+            return new JsonResult(response);
         }
     }
 }

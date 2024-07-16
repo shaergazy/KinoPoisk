@@ -77,10 +77,15 @@ namespace KinopoiskWeb.Pages.People
             return RedirectToPage();
         }
 
-        public JsonResult OnPostPeople(string searchTerm)
+        public JsonResult OnGetPeople(string searchTerm)
         {
-            var people = _service.FilterEntities(searchTerm);
-            return new JsonResult(people);
+            var entities = _service.GetAll();
+            if (!string.IsNullOrWhiteSpace(searchTerm) && searchTerm.Length >= 3)
+            {
+                entities = entities.Where(m => (m.FirstName + " " + m.LastName).Contains(searchTerm)
+                                            || (m.LastName + " " + m.FirstName).Contains(searchTerm));
+            }
+            return new JsonResult(entities);
         }
     }
 }

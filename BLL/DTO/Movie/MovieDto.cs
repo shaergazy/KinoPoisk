@@ -49,7 +49,6 @@ namespace BLL.DTO.Movie
     }
     public class GetMovieDto : ListMovieDto
     {
-        public uint? Duration { get; set; }
         public DateTime DateRealesed { get; set; }
         public float Rating { get; set; }
         public GetCountryDto? Country { get; set; }
@@ -71,9 +70,19 @@ namespace BLL.DTO.Movie
 
     public class AddMovieRating
     {
-        public Guid MovieId { get; set; }
-        public Guid UserId { get; set; }
-        public int StarCount { get; set; }
+        public Guid Id { get; set; }
+        public string Poster { get; set; }
+        public string Title { get; set; }
+        public string Description { get; set; }
+        public DateTime ReleasedDate { get; set; }
+        public string Country { get; set; }
+        public ICollection<string> Genres { get; set; }
+        public ICollection<string> Comments { get; set; }
+        public ICollection<string> Actors { get; set; }
+        public string Director { get; set; }
+        public uint? Duration { get; set; }
+        public float? IMDBRating { get; set; }
+        public float Rating { get; set; }
     }
 
     public class GetCommentDto

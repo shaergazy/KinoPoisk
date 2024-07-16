@@ -6,20 +6,21 @@ var Urls = Urls || {};
 // Person
     Urls.Person = {
         GetById: '@Url.Action("Index", "People", new { handler = "ById" })',
-        GetPeople: '@Url.Page("/People", new { handler = "People" })',
+        GetPeople: '@Url.Page("/People/Index", new { handler = "People" })',
     };
 
     Urls.Country = {
-        GetById: '@Url.Action("Index", "People", new { handler = "ById" })'
+        GetById: '@Url.Action("Index", "People", new { handler = "ById" })',
+        GetCountries: '@Url.Page("/Countries/Index", new { handler = "Countries" })',
     };
     
     Urls.Genre = {
         GetById: '@Url.Action("Index", "Genres", new { handler = "ById" })',
-        GetAll: '@Url.Action("Index", "Genres")'
+        GetAll: '@Url.Action("Index", "Genres")',
+        GetGenres: '@Url.Page("/Genres/Index", new { handler = "Genres" })',
     };
 
     Urls.Movie = {
-        GetCountries: '@Url.Action("Create", "Movies", new { handler = "Countries" })',
         GetAll: '@Url.Action("Index", "Movies")'
     };
 </script>

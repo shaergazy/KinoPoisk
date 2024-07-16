@@ -19,8 +19,5 @@ namespace BLL.Services.Interfaces
 
         Task<IEnumerable<ListMovieDto>> GetTopRatedMoviesAsync(int count);
         Task<IEnumerable<ListMovieDto>> GetNewestMoviesAsync(int count);
-        IEnumerable<ListCountryDto> GetCountries();
-        IEnumerable<ListGenreDto> GetGenres();
-        IEnumerable<ListPersonDto> GetPeople();
     }
 }

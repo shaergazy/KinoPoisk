@@ -2,32 +2,44 @@
 
     $('#countrySelect').select2({
         ajax: {
-            url: Urls.Movie.GetCountries,
+            url: Urls.Country.GetCountries,
             dataType: 'json',
+            delay: 250,
+            data: function (params) {
+                if (!params.term || params.term.length < 3) {
+                    return null; 
+                } else {
+                    return {
+                        searchTerm: params.term 
+                    };
+                }
+            },
             processResults: function (data) {
                 return {
                     results: $.map(data, function (item) {
                         return {
                             id: item.id,
                             text: item.name,
-                            flag: item.flagLink 
+                            flag: item.flagLink
                         };
                     })
                 };
             }
         },
+        allowClear: true,
         templateResult: formatCountry,
-        templateSelection: formatCountrySelection
+        templateSelection: formatCountrySelection,
+/*        minimumInputLength: 3, */
     });
 
     $('#genreSelect').select2({
         ajax: {
             url: Urls.Genre.GetGenres,
             dataType: 'json',
-            delay: 250, // Задержка для уменьшения количества запросов
+            delay: 250, 
             data: function (params) {
                 return {
-                    term: params.term // Передаем терм в параметрах запроса
+                    searchTerm: params.term 
                 };
             },
             processResults: function (data) {
@@ -41,7 +53,7 @@
                 };
             }
         },
-        minimumInputLength: 1, // Минимальная длина ввода для запуска запроса
+        /*minimumInputLength: 3, */
         placeholder: 'Выберите жанр',
         allowClear: true
     });
@@ -50,7 +62,7 @@
     $('#addActorModal').on('shown.bs.modal', function () {
         $('#actorSelect').select2({
             ajax: {
-                url: '/People/Index?handler=People&amp',
+                url: Urls.Person.GetPeople,
                 type: 'POST',
                 dataType: 'json',
                 delay: 250,

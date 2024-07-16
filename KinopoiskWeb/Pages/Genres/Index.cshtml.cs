@@ -87,10 +87,15 @@ namespace KinopoiskWeb.Pages.Genres
             }
         }
 
-        public async Task<JsonResult> OnPostGenres(string searchTerm)
+        public JsonResult OnGetGenres(string searchTerm)
         {
-            var genres = _service.FilterEntities(searchTerm);
-            return new JsonResult(genres    );
+            var genres = _service.GetAll();
+            if (!string.IsNullOrWhiteSpace(searchTerm) && searchTerm.Length >= 3)
+            {
+                genres = genres.Where(s =>
+                    s.Name.ToUpper().Contains(searchTerm.ToUpper()));
+            }
+            return new JsonResult(genres);
         }
     }
 

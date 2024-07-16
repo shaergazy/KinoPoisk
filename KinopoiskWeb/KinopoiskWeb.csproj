@@ -9,6 +9,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="Pages\Movies\Detaixls.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="Pages\Countries\Index.html" />
     <None Remove="Pages\Index1.html" />
   </ItemGroup>
@@ -33,6 +37,10 @@
 
   <ItemGroup>
     <Folder Include="Files\Flags\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Pages\Movies\Detaixls.cshtml" />
   </ItemGroup>
 
 </Project>

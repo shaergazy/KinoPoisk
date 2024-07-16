@@ -1,16 +1,14 @@
 ﻿using AutoMapper;
-using BLL.DTO.Country;
+using BLL.DTO;
 using BLL.DTO.Genre;
 using BLL.DTO.Movie;
 using BLL.DTO.Person;
 using BLL.Services.Interfaces;
-using Common.Extensions;
-using Common.Helpers;
 using DAL.Models;
 using Data.Models;
 using Data.Repositories.RepositoryInterfaces;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Repositories;
 
 namespace BLL.Services.Implementation
 {
@@ -32,11 +30,57 @@ namespace BLL.Services.Implementation
             return comment.Id;
         }
 
+        public override async Task<DataTablesResponse<Movie>> SearchAsync(DataTablesRequestDto request)
+        {
+            var entities = _uow.Repository.GetAll(); ;
+
+            var recordsTotal = entities.Count();
+
+            entities = FilterEntities(request.SearchTerm?.ToUpper(), entities);
+
+            var recordsFiltered = entities.Count();
+
+            entities = OrderByColumn(entities, request);
+
+            var data = await GetPagedData(request, entities);
+
+            var datatableResponse = new DataTablesResponse<Movie>()
+            {
+                Draw = request.Draw,
+                RecordsTotal = recordsTotal,
+                RecordsFiltered = recordsFiltered,
+                Data = data
+            };
+            return datatableResponse;
+        }
+
+        public virtual async Task<GetMovieDto> GetByIdAsync(Guid id)
+        {
+            var entity = await _uow.Repository.GetAll()
+            .Include(m => m.Country)
+            .Include(m => m.Genres)
+            .Include(m => m.Comments)
+            .Include(m => m.People)
+            .FirstOrDefaultAsync(x => x.Id == id);
+
+            return _mapper.Map<GetMovieDto>(entity);
+        }
+
         public async Task<int> AddRatingAsync(AddMovieRating dto)
         {
             var rating = _mapper.Map<MovieRating>(dto);
             await _uow.Ratings.AddAsync(rating);
             return rating.Id;
+        }
+
+        public override IQueryable<Movie> FilterEntities(string searchTerm, IQueryable<Movie> entities = null)
+        {
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                entities = entities.Where(s =>
+                    s.Title.ToUpper().Contains(searchTerm));
+            }
+            return entities;
         }
 
         public async Task DeleteCommentAsync(int commentId)
@@ -130,24 +174,6 @@ namespace BLL.Services.Implementation
             }
 
             return movieToUpdate;
-        }
-
-        public IEnumerable<ListCountryDto> GetCountries()
-        {
-            var countries = _uow.Countries.GetAll();
-            return _mapper.Map<List<ListCountryDto>>(countries);
-        }
-
-        public IEnumerable<ListGenreDto> GetGenres()
-        {
-            var genres = _uow.Genres.GetAll();
-            return _mapper.Map<List<ListGenreDto>>(genres);
-        }
-
-        public IEnumerable<ListPersonDto> GetPeople()
-        {
-            var people = _uow.People.GetAll().ToList();
-            return _mapper.Map<List<ListPersonDto>>(people);
         }
 
         public async Task<IEnumerable<ListMovieDto>> GetNewestMoviesAsync(int count)

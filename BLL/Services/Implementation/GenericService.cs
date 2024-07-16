@@ -29,7 +29,7 @@ namespace BLL.Services.Implementation
             return _mapper.Map<IEnumerable<TListDto>>(entities);
         }
 
-        public async Task<TGetDto> GetByIdAsync(TKey id)
+        public virtual async Task<TGetDto> GetByIdAsync(TKey id)
         {
             var entity = await _unitOfWork.Repository.GetByIdAsync(id);
             return _mapper.Map<TGetDto>(entity);

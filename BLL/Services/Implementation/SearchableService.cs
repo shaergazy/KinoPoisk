@@ -68,7 +68,7 @@ namespace BLL.Services.Implementation
             return entities;
         }
 
-        public virtual IQueryable<TEntity> FilterEntities(string searchTerm, IQueryable<TEntity>? entities = null)
+        public virtual IQueryable<TEntity> FilterEntities(string searchTerm, IQueryable<TEntity> entities = null)
         {
             if (entities == null)
             {

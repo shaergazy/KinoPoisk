@@ -44,24 +44,5 @@ namespace KinopoiskWeb.Pages.Movies
                 return Page();
             }
         }
-    
-
-        //public async Task<JsonResult> OnGetCountries()
-        //{
-        //    var countries = _movieService.GetCountries().ToList();
-        //    return new JsonResult(countries);
-        //}
-
-        //public async Task<JsonResult> OnGetGenres()
-        //{
-        //    var genres = _movieService.GetGenres().ToList();
-        //    return new JsonResult(genres);
-        //}
-
-        //public async Task<JsonResult> OnGetPeople()
-        //{
-        //    var people = _movieService.GetPeople().ToList();
-        //    return new JsonResult(people);
-        //}
     }
 }

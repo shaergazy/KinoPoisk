@@ -49,11 +49,11 @@
             <input asp-for="Movie.IMDBRating" class="form-control" />
             <span asp-validation-for="Movie.IMDBRating" class="text-danger"></span>
         </div>
-        
+
         <div class="form-group" width="100%">
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addActorModal" width ="100%">
-            Add actor
-        </button>
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addActorModal" width="100%">
+                Add actor
+            </button>
         </div>
         <div id="actorsList" class="d-flex flex-wrap gap-3">
         </div>
@@ -94,10 +94,6 @@
             </div>
         </div>
     </div>
-
-
-
-
 
     @section Scripts {
         @await Html.PartialAsync("Shared/_Urls")
