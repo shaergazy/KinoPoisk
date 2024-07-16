@@ -40,11 +40,14 @@ namespace BLL.Infrastructure
            .ForMember(dest => dest.Director, opt => opt.MapFrom(src => src.People.FirstOrDefault(p => p.PersonType.ToString() == "Director") != null
                ? new GetPersonDto { FirstName = src.People.First(p => p.PersonType.ToString() == "Director").Person.FirstName, LastName = src.People.First(p => p.PersonType.ToString() == "Director").Person.LastName }
                : null))
-           .ForMember(dest => dest.Actors, opt => opt.MapFrom(src => src.People.Where(p => p.PersonType.ToString() == "Actor").Select(a => new GetPersonDto
-           {
-               FirstName = a.Person.FirstName,
-               LastName = a.Person.LastName
-           }).ToList()));
+           .ForMember(dest => dest.Actors, opt => opt.MapFrom(src => src.People
+                .OrderBy(p => p.Order)
+                .Where(p => p.PersonType.ToString() == "Actor")
+                .Select(a => new GetPersonDto
+                {
+                    FirstName = a.Person.FirstName,
+                    LastName = a.Person.LastName
+                }).ToList()));
         }
     }
 }

@@ -1,6 +1,9 @@
 ﻿using AutoMapper;
 using BLL.Services.Interfaces;
+using Common.Extensions;
+using Common.Helpers;
 using Data.Repositories.RepositoryInterfaces;
+using Microsoft.AspNetCore.Http;
 
 namespace BLL.Services.Implementation
 {
@@ -67,6 +70,24 @@ namespace BLL.Services.Implementation
         public virtual async Task<TEntity> BuildEntityForUpdate(TEditDto dto)
         {
             return _mapper.Map<TEntity>(dto);
+        }
+
+        public string GenerateUniqueFileName(IFormFile file)
+        {
+            return $"{Path.GetFileNameWithoutExtension(file.FileName)}_{DateTime.Now.ToString("yyyyMMddHHmmss")}{Path.GetExtension(file.FileName)}";
+        }
+
+        public async Task<string> SaveFileAsync(IFormFile file)
+        {
+            var fileName = GenerateUniqueFileName(file);
+            var path = Path.Combine(AppConstants.BaseDir, AppConstants.PosterDir, fileName);
+
+            using (var stream = new FileStream(path, FileMode.Create))
+            {
+                await file.CopyToAsync(stream);
+            }
+
+            return AppConstants.RelativeFilesPath.Combine(AppConstants.PosterDir, fileName);
         }
     }
 }

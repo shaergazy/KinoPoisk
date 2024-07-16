@@ -68,3 +68,27 @@ body {
     text-decoration: underline;
 }
 
+.rating {
+    display: flex;
+    direction: row;
+    margin: 10px 0;
+}
+
+    .rating span {
+        font-size: 20px;
+        cursor: pointer;
+    }
+
+.comments {
+    margin-top: 20px;
+}
+
+.comment-list {
+    list-style-type: none;
+    padding: 0;
+}
+
+    .comment-list li {
+        border-bottom: 1px solid #ccc;
+        padding: 5px 0;
+

@@ -1,5 +1,4 @@
 ﻿using BLL.DTO;
-using Microsoft.AspNetCore.Mvc;
 
 namespace BLL.Services.Interfaces
 {
@@ -17,6 +16,6 @@ namespace BLL.Services.Interfaces
 
         public IQueryable<TEntity> OrderByColumn(IQueryable<TEntity> entities, DataTablesRequestDto request);
 
-        public IQueryable<TEntity> FilterEntities(IQueryable<TEntity> entities, string searchTerm);
+        public IQueryable<TEntity> FilterEntities(string searchTerm, IQueryable<TEntity>? entities = null);
     }
 }

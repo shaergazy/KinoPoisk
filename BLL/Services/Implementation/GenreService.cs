@@ -19,8 +19,11 @@ namespace BLL.Services.Implementation
             _uow = unitOfWork;
         }
 
-        public override IQueryable<Genre> FilterEntities(IQueryable<Genre> entities, string searchTerm)
+        public override IQueryable<Genre> FilterEntities(string searchTerm, IQueryable<Genre>? entities = null)
         {
+            if (entities == null)
+                entities = _uow.Repository.GetAll();
+
             if (!string.IsNullOrWhiteSpace(searchTerm))
             {
                 entities = entities.Where(s =>

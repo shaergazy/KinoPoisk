@@ -132,11 +132,6 @@ namespace BLL.Services.Implementation
             return movieToUpdate;
         }
 
-        public string GenerateUniqueFileName(IFormFile file)
-        {
-            return $"{Path.GetFileNameWithoutExtension(file.FileName)}_{DateTime.Now:yyyyMMddHHmmss}{Path.GetExtension(file.FileName)}";
-        }
-
         public IEnumerable<ListCountryDto> GetCountries()
         {
             var countries = _uow.Countries.GetAll();
@@ -155,19 +150,6 @@ namespace BLL.Services.Implementation
             return _mapper.Map<List<ListPersonDto>>(people);
         }
 
-        public async Task<string> SaveFileAsync(IFormFile file)
-        {
-            var fileName = GenerateUniqueFileName(file);
-            var path = Path.Combine(AppConstants.BaseDir, AppConstants.PosterDir, fileName);
-
-            using (var stream = new FileStream(path, FileMode.Create))
-            {
-                await file.CopyToAsync(stream);
-            }
-
-            return AppConstants.RelativeFilesPath.Combine(AppConstants.PosterDir, fileName);
-        }
-
         public async Task<IEnumerable<ListMovieDto>> GetNewestMoviesAsync(int count)
         {
             var movies = await _uow.Movies.GetAll()
@@ -176,11 +158,6 @@ namespace BLL.Services.Implementation
                 .OrderByDescending(x => x.ReleasedDate)
                 .Take(count)
                 .ToListAsync();
-
-            foreach (var movie in movies)
-            {
-               movie.People = movie.People.OrderBy(p => p.Order).ToList();
-            }
 
             return _mapper.Map<List<ListMovieDto>>(movies);
         }
@@ -199,11 +176,6 @@ namespace BLL.Services.Implementation
                 .Select(x => x.Movie)
                 .Take(count)
                 .ToListAsync();
-
-            foreach (var movie in movies)
-            {
-                movie.People.OrderBy(p => p.Order);
-            }
 
             return _mapper.Map<List<ListMovieDto>>(movies);
         }

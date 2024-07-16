@@ -2,7 +2,6 @@
 using BLL.DTO;
 using BLL.Services.Interfaces;
 using Data.Repositories.RepositoryInterfaces;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Dynamic.Core;
 
@@ -32,7 +31,7 @@ namespace BLL.Services.Implementation
 
             var recordsTotal = entities.Count();
 
-            entities = FilterEntities(entities, request.SearchTerm?.ToUpper());
+            entities = FilterEntities( request.SearchTerm?.ToUpper(), entities);
 
             var recordsFiltered = entities.Count();
 
@@ -48,11 +47,6 @@ namespace BLL.Services.Implementation
                 Data = data
             };
             return s;
-        }
-
-        public virtual IQueryable<TEntity> FilterEntities(IQueryable<TEntity> entities, string searchTerm)
-        {
-            return entities;
         }
 
         public async virtual Task<IList<TEntity>> GetPagedData(DataTablesRequestDto request, IQueryable<TEntity> entities)
@@ -71,6 +65,15 @@ namespace BLL.Services.Implementation
             var sortDirection = request.SortDirection;
 
             entities = entities.OrderBy($"{sortColumnName} {sortDirection}");
+            return entities;
+        }
+
+        public virtual IQueryable<TEntity> FilterEntities(string searchTerm, IQueryable<TEntity>? entities = null)
+        {
+            if (entities == null)
+            {
+                _unitOfWork.Repository.GetAll();
+            }
             return entities;
         }
     }

@@ -23,17 +23,29 @@
                 @foreach (var actor in movie.Actors)
                 {
                     <span>@actor</span>
-
                     @(actor != movie.Actors.Last() ? ", " : "")
                 }
             </div>
             <div class="description" id="description-@movie.Id">
                 @movie.Description
             </div>
+            <div class="rating" id="rating-@movie.Id">
+                <span data-value="1">&#9733;</span>
+                <span data-value="2">&#9733;</span>
+                <span data-value="3">&#9733;</span>
+                <span data-value="4">&#9733;</span>
+                <span data-value="5">&#9733;</span>
+            </div>
+            <div class="comments">
+                <h3>Комментарии</h3>
+                <input type="text" id="comment-input-@movie.Id" placeholder="Оставьте комментарий" />
+                <button onclick="addComment('@movie.Id')">Добавить</button>
+                <ul class="comment-list" id="comment-list-@movie.Id">
+                    <!-- Здесь будут отображаться комментарии -->
+                </ul>
+            </div>
         </div>
     </div>
-    
-
 }
 <h1>Top 10 high rated movies </h1>
 @foreach (var movie in Model.NewestMovies)

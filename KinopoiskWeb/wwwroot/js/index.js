@@ -21,4 +21,28 @@
             });
         }
     });
+    $('.rating span').on('click', function () {
+        const rating = $(this).data('value');
+        const movieId = $(this).parent().attr('id').split('-')[1];
+        addRating(movieId, rating);
+
+        // Подсветка выбранных звезд
+        $(this).siblings().addBack().css('color', '#000');
+        $(this).prevAll().addBack().css('color', 'gold');
+    });
 });
+function addRating(movieId, rating) {
+    // Логика добавления рейтинга (например, отправка на сервер)
+    console.log(`Рейтинг фильма ${movieId} составляет ${rating} звезд`);
+}
+
+function addComment(movieId) {
+    const commentInput = $(`#comment-input-${movieId}`);
+    const commentList = $(`#comment-list-${movieId}`);
+    const comment = commentInput.val();
+
+    if (comment) {
+        commentList.append(`<li>${comment}</li>`);
+        commentInput.val('');
+    }
+}

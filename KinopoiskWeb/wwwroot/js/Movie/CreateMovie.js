@@ -22,8 +22,14 @@
 
     $('#genreSelect').select2({
         ajax: {
-            url: Urls.Movie.GetGenres,
+            url: Urls.Genre.GetGenres,
             dataType: 'json',
+            delay: 250, // Задержка для уменьшения количества запросов
+            data: function (params) {
+                return {
+                    term: params.term // Передаем терм в параметрах запроса
+                };
+            },
             processResults: function (data) {
                 return {
                     results: $.map(data, function (item) {
@@ -34,24 +40,36 @@
                     })
                 };
             }
-        }
+        },
+        minimumInputLength: 1, // Минимальная длина ввода для запуска запроса
+        placeholder: 'Выберите жанр',
+        allowClear: true
     });
+
 
     $('#addActorModal').on('shown.bs.modal', function () {
         $('#actorSelect').select2({
             ajax: {
-                url: Urls.Movie.GetPeople,
+                url: '/People/Index?handler=People&amp',
+                type: 'POST',
                 dataType: 'json',
+                delay: 250,
+                data: function (params) {
+                    return {
+                        searchTerm: params.term // search term
+                    };
+                },
                 processResults: function (data) {
                     return {
                         results: $.map(data, function (item) {
                             return {
                                 id: item.id,
-                                text: item.firstName + ' ' + item.lastName
+                                text: item.name
                             };
                         })
                     };
-                }
+                },
+                cache: true
             },
             dropdownParent: $('#addActorModal') 
         });
@@ -138,7 +156,7 @@
 
     $('#directorSelect').select2({
         ajax: {
-            url: Urls.Movie.GetPeople,
+            url: Urls.Person.GetPeople,
             dataType: 'json',
             processResults: function (data) {
                 return {

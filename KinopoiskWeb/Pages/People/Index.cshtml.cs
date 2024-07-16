@@ -12,6 +12,8 @@ namespace KinopoiskWeb.Pages.People
 {
     public class IndexModel : PageModel
     {
+
+
         private readonly IPersonService _service;
         private readonly IMapper _mapper;
 
@@ -73,6 +75,12 @@ namespace KinopoiskWeb.Pages.People
             await _service.DeleteAsync(PersonId);
 
             return RedirectToPage();
+        }
+
+        public JsonResult OnPostPeople(string searchTerm)
+        {
+            var people = _service.FilterEntities(searchTerm);
+            return new JsonResult(people);
         }
     }
 }

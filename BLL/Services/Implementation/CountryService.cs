@@ -6,7 +6,6 @@ using Common.Extensions;
 using Common.Helpers;
 using DAL.Models;
 using Data.Repositories.RepositoryInterfaces;
-using Microsoft.AspNetCore.Http;
 using System.Linq.Dynamic.Core;
 
 namespace BLL.Services.Implementation
@@ -22,12 +21,11 @@ namespace BLL.Services.Implementation
             _uow = unitOfWork;
         }
 
-        public override IQueryable<Country> FilterEntities(IQueryable<Country> entities, string searchTerm)
+        public override IQueryable<Country> FilterEntities(string searchTerm, IQueryable<Country>? entities = null)
         {
             if (!string.IsNullOrWhiteSpace(searchTerm))
             {
-                entities = entities.Where(s =>
-                    s.Name.ToUpper().Contains(searchTerm));
+                entities = entities.Where(s => s.Name.ToUpper().Contains(searchTerm));
             }
 
             return entities;
@@ -40,14 +38,8 @@ namespace BLL.Services.Implementation
             if (_uow.Repository.Any(x => x.Name == dto.Name))
                 throw new Exception("Country already exist");
             var country = _mapper.Map<Country>(dto);
-            var file = dto.Flag;
-            var fileName = GenerateUniqueFileName(file);
-            var path = AppConstants.RelativeFilesPath.Combine(AppConstants.BaseDir, AppConstants.FlagDir, fileName);
 
-            (Stream Source, string FileName) fileStream = await file.ToStream();
-            await (path, fileStream.Source).SaveStreamByPath();
-
-            var relativePath = AppConstants.RelativeFilesPath.Combine(AppConstants.FlagDir, fileName);
+            var relativePath = await SaveFileAsync(dto.Flag);
 
             country.FlagLink = relativePath;
             country.IsOwnPicture = true;
@@ -99,11 +91,6 @@ namespace BLL.Services.Implementation
                 countryToUpdate.IsOwnPicture = true;
             }
             return countryToUpdate;
-        }
-
-        public string GenerateUniqueFileName(IFormFile file)
-        {
-            return $"{Path.GetFileNameWithoutExtension(file.FileName)}_{DateTime.Now.ToString("yyyyMMddHHmmss")}{Path.GetExtension(file.FileName)}";
         }
     }
 }

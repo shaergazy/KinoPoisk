@@ -86,6 +86,12 @@ namespace KinopoiskWeb.Pages.Genres
                 return RedirectToPage();
             }
         }
+
+        public async Task<JsonResult> OnPostGenres(string searchTerm)
+        {
+            var genres = _service.FilterEntities(searchTerm);
+            return new JsonResult(genres    );
+        }
     }
 
 
