@@ -79,7 +79,7 @@ namespace KinopoiskWeb.Pages.Countries
         public JsonResult OnGetCountries(string searchTerm)
         {
             var entities = _service.GetAll();
-            if (!string.IsNullOrWhiteSpace(searchTerm) && searchTerm.Length >= 3)
+            if (!string.IsNullOrWhiteSpace(searchTerm))
             {
                 entities = entities.Where(s => s.Name.ToUpper()
                                    .Contains(searchTerm.ToUpper()));

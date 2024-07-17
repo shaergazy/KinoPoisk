@@ -81,7 +81,7 @@ namespace KinopoiskWeb.Pages.People
         public JsonResult OnGetPeople(string searchTerm)
         {
             People = _mapper.Map<List<IndexPersonVM>>(_service.GetAll());
-            if (!string.IsNullOrWhiteSpace(searchTerm) && searchTerm.Length >= 3)
+            if (!string.IsNullOrWhiteSpace(searchTerm))
             {
                 People = People.Where(m => (m.FirstName + " " + m.LastName).Contains(searchTerm)
                                             || (m.LastName + " " + m.FirstName).Contains(searchTerm)).ToList();

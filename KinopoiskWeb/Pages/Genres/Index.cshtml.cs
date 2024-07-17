@@ -90,7 +90,7 @@ namespace KinopoiskWeb.Pages.Genres
         public JsonResult OnGetGenres(string searchTerm)
         {
             var genres = _service.GetAll();
-            if (!string.IsNullOrWhiteSpace(searchTerm) && searchTerm.Length >= 3)
+            if (!string.IsNullOrWhiteSpace(searchTerm))
             {
                 genres = genres.Where(s =>
                     s.Name.ToUpper().Contains(searchTerm.ToUpper()));

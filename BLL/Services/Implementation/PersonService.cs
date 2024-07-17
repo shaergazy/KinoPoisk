@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using BLL.DTO;
 using BLL.DTO.Person;
 using BLL.Services.Interfaces;
 using DAL.Models;
@@ -7,7 +8,7 @@ using System.Linq.Dynamic.Core;
 
 namespace BLL.Services.Implementation
 {
-    public class PersonService : SearchableService<ListPersonDto, AddPersonDto, EditPersonDto, GetPersonDto, Person, int>,
+    public class PersonService : SearchableService<ListPersonDto, AddPersonDto, EditPersonDto, GetPersonDto, Person, int, DataTablesRequestDto>,
         IPersonService
     {
         private readonly IMapper _mapper;
@@ -19,8 +20,9 @@ namespace BLL.Services.Implementation
             _uow = unitOfWork;
         }
 
-        public override IQueryable<Person> FilterEntities(string searchTerm, IQueryable<Person>? entities = null)
+        public override IQueryable<Person> FilterEntities(DataTablesRequestDto request, IQueryable<Person>? entities = null)
         {
+            var searchTerm = request.SearchTerm;
             if (entities == null)
                 entities = _uow.Repository.GetAll();
 

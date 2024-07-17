@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using BLL.DTO;
 using BLL.DTO.Genre;
 using BLL.Services.Interfaces;
 using DAL.Models;
@@ -7,7 +8,7 @@ using System.Linq.Dynamic.Core;
 
 namespace BLL.Services.Implementation
 {
-    public class GenreService : SearchableService<ListGenreDto, AddGenreDto, EditGenreDto, GetGenreDto, Genre, int>,
+    public class GenreService : SearchableService<ListGenreDto, AddGenreDto, EditGenreDto, GetGenreDto, Genre, int, DataTablesRequestDto>,
         IGenreService
     {
         private readonly IMapper _mapper;
@@ -19,8 +20,9 @@ namespace BLL.Services.Implementation
             _uow = unitOfWork;
         }
 
-        public override IQueryable<Genre> FilterEntities(string searchTerm, IQueryable<Genre>? entities = null)
+        public override IQueryable<Genre> FilterEntities(DataTablesRequestDto request, IQueryable<Genre>? entities = null)
         {
+            var searchTerm = request.SearchTerm;
             if (entities == null)
                 entities = _uow.Repository.GetAll();
 

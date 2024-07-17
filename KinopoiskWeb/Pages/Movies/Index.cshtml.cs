@@ -28,9 +28,10 @@ namespace KinopoiskWeb.Pages.Movies
 
         public async Task<IActionResult> OnPostAsync()
         {
-            var response = _mapper.Map<DataTablesResponseVM<Movie>>(await _service.SearchAsync(_mapper
-                                  .Map<DataTablesRequestDto>(DataTablesRequest)));
-            return new JsonResult(response);
+            //var response = _mapper.Map<DataTablesResponseVM<Movie>>(await _service.SearchAsync(_mapper
+            //                      .Map<DataTablesRequestDto>(DataTablesRequest)));
+            //return new JsonResult(response);
+            return new JsonResult("");
         }
     }
 }

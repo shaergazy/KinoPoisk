@@ -29,7 +29,7 @@
         allowClear: true,
         templateResult: formatCountry,
         templateSelection: formatCountrySelection,
-/*        minimumInputLength: 3, */
+        minimumInputLength: 3, 
     });
 
     $('#genreSelect').select2({
@@ -53,7 +53,6 @@
                 };
             }
         },
-        /*minimumInputLength: 3, */
         placeholder: 'Select genre',
         allowClear: true
     });
@@ -84,7 +83,7 @@
                         })
                     };
                 },
-                cache: true
+                minimumInputLength: 3, 
             },
             dropdownParent: $('#addActorModal') 
         });
@@ -95,7 +94,7 @@
         var personName = $('#actorSelect option:selected').text();
         var order = $('#actorOrder').val();
 
-        // Проверка на наличие уже добавленного актера
+
         var isActorAlreadyAdded = $('#actorsList .card input[name$="PersonId"]').filter(function () {
             return $(this).val() === personId;
         }).length > 0;
@@ -193,7 +192,8 @@
                     })
                 };
             }
-        }
+        },
+        minimumInputLength: 3, 
     });
 
     $('#countrySelect').on('select2:select', function (e) {

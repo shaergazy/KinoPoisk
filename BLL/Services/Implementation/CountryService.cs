@@ -1,5 +1,7 @@
 ﻿
 using AutoMapper;
+using Azure.Core;
+using BLL.DTO;
 using BLL.DTO.Country;
 using BLL.Services.Interfaces;
 using Common.Extensions;
@@ -10,7 +12,7 @@ using System.Linq.Dynamic.Core;
 
 namespace BLL.Services.Implementation
 {
-    public class CountryService : SearchableService<ListCountryDto, AddCountryDto, EditCountryDto, GetCountryDto, Country, int>, ICountryService
+    public class CountryService : SearchableService<ListCountryDto, AddCountryDto, EditCountryDto, GetCountryDto, Country, int, DataTablesRequestDto>, ICountryService
     {
         private readonly IMapper _mapper;
         private readonly IUnitOfWork<Country, int> _uow;
@@ -21,8 +23,9 @@ namespace BLL.Services.Implementation
             _uow = unitOfWork;
         }
 
-        public override IQueryable<Country> FilterEntities(string searchTerm, IQueryable<Country>? entities = null)
+        public override IQueryable<Country> FilterEntities(DataTablesRequestDto request, IQueryable<Country>? entities = null)
         {
+            var searchTerm = request.SearchTerm;
             if (!string.IsNullOrWhiteSpace(searchTerm))
             {
                 entities = entities.Where(s => s.Name.ToUpper().Contains(searchTerm));
@@ -78,16 +81,7 @@ namespace BLL.Services.Implementation
                 if (countryToUpdate.IsOwnPicture)
                     File.Delete(countryToUpdate.FlagLink);
 
-                var file = dto.Flag;
-                var path = AppConstants.RelativeFilesPath.Combine(AppConstants.BaseDir, AppConstants.FlagDir, file.FileName);
-
-                (Stream Source, string FileName) fileStream = await file.ToStream();
-                await (path, fileStream.Source).SaveStreamByPath();
-
-
-                var relativePath = AppConstants.RelativeFilesPath.Combine(AppConstants.FlagDir, file.FileName);
-
-                countryToUpdate.FlagLink = relativePath;
+                countryToUpdate.FlagLink = await SaveFileAsync(dto.Flag);
                 countryToUpdate.IsOwnPicture = true;
             }
             return countryToUpdate;

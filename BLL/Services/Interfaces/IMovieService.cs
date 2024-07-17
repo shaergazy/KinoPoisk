@@ -1,18 +1,18 @@
-﻿using BLL.DTO.Country;
-using BLL.DTO.Genre;
+﻿using BLL.DTO;
 using BLL.DTO.Movie;
-using BLL.DTO.Person;
 using DAL.Models;
 
 namespace BLL.Services.Interfaces
 {
-    public interface IMovieService : ISearchableService<ListMovieDto, AddMovieDto, EditMovieDto, GetMovieDto, Movie, Guid>, IService
+    public interface IMovieService : ISearchableService<ListMovieDto, AddMovieDto, EditMovieDto, GetMovieDto, Movie, Guid, MovieDataTablesRequest>, IService
     {
         Task<int> AddRatingAsync(AddMovieRating dto);
         Task<int> AddCommentAsync(AddCommentDo dto);
 
         Task<IEnumerable<Comment>> GetCommentsAsync(Guid id);
         Task DeleteCommentAsync(int commentId);
+
+        public IQueryable<Movie> SortByParametrs(IQueryable<Movie> entities, MovieDataTablesRequest request);
 
         //Task<IEnumerable<Movie>> GetMoviesFromExternalSourceAsync(string titleOrIMDBId);
         //Task ImportMovieFromExternalSourceAsync(Movie movie);

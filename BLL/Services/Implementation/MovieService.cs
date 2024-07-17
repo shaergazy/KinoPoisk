@@ -9,10 +9,11 @@ using Data.Models;
 using Data.Repositories.RepositoryInterfaces;
 using Microsoft.EntityFrameworkCore;
 using Repositories;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace BLL.Services.Implementation
 {
-    public class MovieService : SearchableService<ListMovieDto, AddMovieDto, EditMovieDto, GetMovieDto, Movie, Guid>, IMovieService
+    public class MovieService : SearchableService<ListMovieDto, AddMovieDto, EditMovieDto, GetMovieDto, Movie, Guid, MovieDataTablesRequest>, IMovieService
     {
         private readonly IMapper _mapper;
         private readonly IUnitOfWork<Movie, Guid> _uow;
@@ -30,13 +31,13 @@ namespace BLL.Services.Implementation
             return comment.Id;
         }
 
-        public override async Task<DataTablesResponse<Movie>> SearchAsync(DataTablesRequestDto request)
+        public override async Task<DataTablesResponse<Movie>> SearchAsync(MovieDataTablesRequest request)
         {
             var entities = _uow.Repository.GetAll(); ;
 
             var recordsTotal = entities.Count();
 
-            entities = FilterEntities(request.SearchTerm?.ToUpper(), entities);
+            entities = FilterEntities(request, entities);
 
             var recordsFiltered = entities.Count();
 
@@ -59,10 +60,10 @@ namespace BLL.Services.Implementation
             var entity = await _uow.Repository.GetAll()
             .Include(m => m.Country)
             .Include(m => m.Genres)
-            .ThenInclude(x => x.Genre)
+                .ThenInclude(x => x.Genre)
             .Include(m => m.Comments)
             .Include(m => m.People)
-            .ThenInclude(mp => mp.Person)
+                .ThenInclude(mp => mp.Person)
             .FirstOrDefaultAsync(x => x.Id == id);
 
             return _mapper.Map<GetMovieDto>(entity);
@@ -75,13 +76,35 @@ namespace BLL.Services.Implementation
             return rating.Id;
         }
 
-        public override IQueryable<Movie> FilterEntities(string searchTerm, IQueryable<Movie> entities = null)
+        public override IQueryable<Movie> FilterEntities(MovieDataTablesRequest request, IQueryable<Movie> entities = null)
         {
-            if (!string.IsNullOrWhiteSpace(searchTerm))
+            var searchTerm = request.SearchTerm.ToUpper();
+            if (!string.IsNullOrWhiteSpace(request.SearchTerm))
+                entities = entities.Where(s => s.Title.ToUpper().Contains(request.SearchTerm));
+
+            if (!string.IsNullOrEmpty(request.Title))
+                entities = entities.Where(m => m.Title.Contains(request.Title));
+
+            if (request.Year.HasValue)
+                entities = entities.Where(m => m.ReleasedDate.Year == request.Year);
+            
+            if (request.CountryId.HasValue)
+                entities = entities.Where(m => m.CountryId == request.CountryId);
+            
+            if (!string.IsNullOrEmpty(request.Actor))
             {
-                entities = entities.Where(s =>
-                    s.Title.ToUpper().Contains(searchTerm));
+                entities = entities.Where(m => m.People.Any(p => p.PersonType.ToString() == "Actor" &&
+                                            (p.Person.FirstName + " " + p.Person.LastName).Contains(request.Actor)
+                                            || (p.Person.LastName + " " + p.Person.FirstName).Contains(request.Actor)));
             }
+
+            if (!string.IsNullOrEmpty(request.Director))
+            {
+                entities = entities.Where(m => m.People.Any(p => p.PersonType.ToString() == "Director" &&
+                                            (p.Person.FirstName + " " + p.Person.LastName).Contains(request.Actor)
+                                            || (p.Person.LastName + " " + p.Person.FirstName).Contains(request.Actor)));
+            }
+
             return entities;
         }
 
@@ -206,6 +229,11 @@ namespace BLL.Services.Implementation
                 .ToListAsync();
 
             return _mapper.Map<List<ListMovieDto>>(movies);
+        }
+
+        public IQueryable<Movie> SortByParametrs(IQueryable<Movie> entities, MovieDataTablesRequest request)
+        {
+            throw new NotImplementedException();
         }
     }
 }

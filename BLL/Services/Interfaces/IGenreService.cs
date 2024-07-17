@@ -4,7 +4,7 @@ using DAL.Models;
 
 namespace BLL.Services.Interfaces
 {
-    public interface IGenreService : ISearchableService<ListGenreDto, AddGenreDto, EditGenreDto, GetGenreDto, Genre, int>, IService
+    public interface IGenreService : ISearchableService<ListGenreDto, AddGenreDto, EditGenreDto, GetGenreDto, Genre, int, DataTablesRequestDto>, IService
     {
     }
 }

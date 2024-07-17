@@ -66,7 +66,7 @@ namespace Common.CommonServices
 
             services.AddTransient<AuthService>();
             services.AddTransient(typeof(IGenericService<,,,,,>), typeof(GenericService<,,,,,>));
-            services.AddTransient(typeof(ISearchableService<,,,,,>), typeof(SearchableService<,,,,,>));
+            services.AddTransient(typeof(ISearchableService<,,,,,,>), typeof(SearchableService<,,,,,,>));
             services.AddTransient<ICountryService, CountryService>();
             services.AddTransient<IGenreService, GenreService>();
             services.AddTransient<IPersonService, PersonService>();
