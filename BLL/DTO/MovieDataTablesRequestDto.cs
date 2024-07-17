@@ -1,6 +1,6 @@
 ﻿namespace BLL.DTO
 {
-    public class MovieDataTablesRequest : DataTablesRequestDto
+    public class MovieDataTablesRequestDto : DataTablesRequestDto
     {
         public string Title { get; set; }
         public int? Year { get; set; }

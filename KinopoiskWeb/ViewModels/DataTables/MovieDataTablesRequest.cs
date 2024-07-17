@@ -1,6 +1,4 @@
-﻿using KinopoiskWeb.DataTables;
-
-namespace KinopoiskWeb.ViewModels.DataTables
+﻿namespace KinopoiskWeb.DataTables
 {
     public class MovieDataTablesRequest : DataTablesRequest
     {

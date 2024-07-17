@@ -102,7 +102,7 @@ namespace DAL.Seed
 
                 await _appDbContext.SaveChangesAsync();
             }
-            catch (Exception exp)
+                catch (Exception exp)
             {
                 logger.LogCritical(exp, "System couldn't seed countries");
             }

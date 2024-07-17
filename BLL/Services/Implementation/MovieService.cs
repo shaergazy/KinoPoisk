@@ -1,19 +1,15 @@
 ﻿using AutoMapper;
 using BLL.DTO;
-using BLL.DTO.Genre;
 using BLL.DTO.Movie;
-using BLL.DTO.Person;
 using BLL.Services.Interfaces;
 using DAL.Models;
 using Data.Models;
 using Data.Repositories.RepositoryInterfaces;
 using Microsoft.EntityFrameworkCore;
-using Repositories;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace BLL.Services.Implementation
 {
-    public class MovieService : SearchableService<ListMovieDto, AddMovieDto, EditMovieDto, GetMovieDto, Movie, Guid, MovieDataTablesRequest>, IMovieService
+    public class MovieService : SearchableService<ListMovieDto, AddMovieDto, EditMovieDto, GetMovieDto, Movie, Guid, MovieDataTablesRequestDto>, IMovieService
     {
         private readonly IMapper _mapper;
         private readonly IUnitOfWork<Movie, Guid> _uow;
@@ -31,9 +27,9 @@ namespace BLL.Services.Implementation
             return comment.Id;
         }
 
-        public override async Task<DataTablesResponse<Movie>> SearchAsync(MovieDataTablesRequest request)
+        public override async Task<DataTablesResponse<Movie>> SearchAsync(MovieDataTablesRequestDto request)
         {
-            var entities = _uow.Repository.GetAll(); ;
+            var entities = _uow.Repository.GetAll(); 
 
             var recordsTotal = entities.Count();
 
@@ -76,9 +72,9 @@ namespace BLL.Services.Implementation
             return rating.Id;
         }
 
-        public override IQueryable<Movie> FilterEntities(MovieDataTablesRequest request, IQueryable<Movie> entities = null)
+        public override IQueryable<Movie> FilterEntities(MovieDataTablesRequestDto request, IQueryable<Movie> entities = null)
         {
-            var searchTerm = request.SearchTerm.ToUpper();
+            var searchTerm = request.SearchTerm?.ToUpper();
             if (!string.IsNullOrWhiteSpace(request.SearchTerm))
                 entities = entities.Where(s => s.Title.ToUpper().Contains(request.SearchTerm));
 
@@ -124,7 +120,7 @@ namespace BLL.Services.Implementation
                 throw new ArgumentNullException(nameof(dto), "You have to complete all properties");
 
             var movie = _mapper.Map<Movie>(dto);
-            movie.Poster = await SaveFileAsync(dto.Poster);
+            movie.Poster = await   SaveFileAsync(dto.Poster);
 
             var country = await _uow.Countries.FirstOrDefaultAsync(x => x.Id == dto.CountryId);
             if (country != null)
@@ -231,7 +227,7 @@ namespace BLL.Services.Implementation
             return _mapper.Map<List<ListMovieDto>>(movies);
         }
 
-        public IQueryable<Movie> SortByParametrs(IQueryable<Movie> entities, MovieDataTablesRequest request)
+        public IQueryable<Movie> SortByParametrs(IQueryable<Movie> entities, MovieDataTablesRequestDto request)
         {
             throw new NotImplementedException();
         }

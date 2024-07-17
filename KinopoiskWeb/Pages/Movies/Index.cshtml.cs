@@ -24,14 +24,13 @@ namespace KinopoiskWeb.Pages.Movies
         }
 
         [BindProperty]
-        public DataTablesRequest DataTablesRequest { get; set; }
+        public MovieDataTablesRequest DataTablesRequest { get; set; }
 
         public async Task<IActionResult> OnPostAsync()
         {
-            //var response = _mapper.Map<DataTablesResponseVM<Movie>>(await _service.SearchAsync(_mapper
-            //                      .Map<DataTablesRequestDto>(DataTablesRequest)));
-            //return new JsonResult(response);
-            return new JsonResult("");
+            var response = _mapper.Map<DataTablesResponseVM<Movie>>(await _service.SearchAsync(_mapper
+                                  .Map<MovieDataTablesRequestDto>(DataTablesRequest)));
+            return new JsonResult(response);
         }
     }
 }

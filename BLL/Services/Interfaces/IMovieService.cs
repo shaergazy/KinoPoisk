@@ -4,7 +4,7 @@ using DAL.Models;
 
 namespace BLL.Services.Interfaces
 {
-    public interface IMovieService : ISearchableService<ListMovieDto, AddMovieDto, EditMovieDto, GetMovieDto, Movie, Guid, MovieDataTablesRequest>, IService
+    public interface IMovieService : ISearchableService<ListMovieDto, AddMovieDto, EditMovieDto, GetMovieDto, Movie, Guid, MovieDataTablesRequestDto>, IService
     {
         Task<int> AddRatingAsync(AddMovieRating dto);
         Task<int> AddCommentAsync(AddCommentDo dto);
@@ -12,7 +12,7 @@ namespace BLL.Services.Interfaces
         Task<IEnumerable<Comment>> GetCommentsAsync(Guid id);
         Task DeleteCommentAsync(int commentId);
 
-        public IQueryable<Movie> SortByParametrs(IQueryable<Movie> entities, MovieDataTablesRequest request);
+        public IQueryable<Movie> SortByParametrs(IQueryable<Movie> entities, MovieDataTablesRequestDto request);
 
         //Task<IEnumerable<Movie>> GetMoviesFromExternalSourceAsync(string titleOrIMDBId);
         //Task ImportMovieFromExternalSourceAsync(Movie movie);

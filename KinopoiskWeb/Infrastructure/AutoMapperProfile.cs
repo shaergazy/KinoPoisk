@@ -1,16 +1,14 @@
 ﻿using AutoMapper;
+using BLL.DTO;
 using BLL.DTO.Country;
 using BLL.DTO.Genre;
 using BLL.DTO.Movie;
 using BLL.DTO.Person;
-using DAL.Models;
-using Data.Models;
+using KinopoiskWeb.DataTables;
 using KinopoiskWeb.ViewModels.Country;
 using KinopoiskWeb.ViewModels.Genre;
 using KinopoiskWeb.ViewModels.Movie;
 using KinopoiskWeb.ViewModels.Person;
-using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.Blazor;
-using Newtonsoft.Json;
 
 namespace KinopoiskWeb.Infrastructure
 {
@@ -38,7 +36,12 @@ namespace KinopoiskWeb.Infrastructure
             .ForMember(dest => dest.SortDirection, opt => opt.MapFrom(src => src.Order.ElementAt(0).Dir.ToLower()))
             .ForMember(dest => dest.SearchTerm, opt => opt.MapFrom(src => src.Search.Value)).ReverseMap();
 
-            CreateMap(typeof(DataTables.DataTablesResponseVM<>), typeof(BLL.DTO.DataTablesResponse<>)).ReverseMap();
+            CreateMap<MovieDataTablesRequest, BLL.DTO.MovieDataTablesRequestDto>()
+            .ForMember(dest => dest.SortColumn, opt => opt.MapFrom(src => src.Columns.ElementAt(src.Order.ElementAt(0).Column).Name))
+            .ForMember(dest => dest.SortDirection, opt => opt.MapFrom(src => src.Order.ElementAt(0).Dir.ToLower()))
+            .ForMember(dest => dest.SearchTerm, opt => opt.MapFrom(src => src.Search.Value)).ReverseMap();
+
+            CreateMap(typeof(DataTablesResponseVM<>), typeof(BLL.DTO.DataTablesResponse<>)).ReverseMap();
 
             CreateMap<CreateMovieVM, AddMovieDto>()
             .ForMember(dest => dest.Actors, opt => opt.MapFrom(src => src.Actors))
