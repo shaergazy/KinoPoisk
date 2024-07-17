@@ -34,14 +34,13 @@
     });
 
     // Добавление рейтинга
-    $('.rating span').on('click', function () {
-        const rating = $(this).data('value');
-        const movieId = $(this).parent().attr('id').split('-')[1];
-        addRating(movieId, rating);
-
-        // Подсветка выбранных звезд
-        $(this).siblings().addBack().css('color', '#000');
-        $(this).prevAll().addBack().css('color', 'gold');
+    $('.rating').each(function () {
+        var ratingValue = parseFloat($(this).data('rating'));
+        $(this).find('span').each(function (index) {
+            if (index < ratingValue) {
+                $(this).addClass('active');
+            }
+        });
     });
 });
 

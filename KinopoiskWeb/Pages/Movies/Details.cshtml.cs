@@ -20,6 +20,7 @@ namespace KinopoiskWeb.Pages.Movies
         public DetailsMovieVM Movie { get; private set; }
         public async Task<IActionResult> OnGetAsync(Guid id)
         {
+            var m = await _movieService.GetByIdAsync(id);
             Movie = _mapper.Map<DetailsMovieVM>(await _movieService.GetByIdAsync(id));
 
             if (Movie == null)

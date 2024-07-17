@@ -54,7 +54,7 @@
             }
         },
         /*minimumInputLength: 3, */
-        placeholder: 'Выберите жанр',
+        placeholder: 'Select genre',
         allowClear: true
     });
 
@@ -63,20 +63,23 @@
         $('#actorSelect').select2({
             ajax: {
                 url: Urls.Person.GetPeople,
-                type: 'POST',
                 dataType: 'json',
                 delay: 250,
                 data: function (params) {
-                    return {
-                        searchTerm: params.term // search term
-                    };
+                    if (!params.term || params.term.length < 3) {
+                        return null;
+                    } else {
+                        return {
+                            searchTerm: params.term
+                        };
+                    }
                 },
                 processResults: function (data) {
                     return {
                         results: $.map(data, function (item) {
                             return {
                                 id: item.id,
-                                text: item.name
+                                text: item.firstName + " " + item.lastName
                             };
                         })
                     };
@@ -130,7 +133,7 @@
         var card = $(this).closest('.card');
         card.remove();
 
-        // Update the names of the remaining inputs
+
         $('#actorsList .card').each(function (index) {
             $(this).find('input[name^="Movie.Actors"]').each(function () {
                 var name = $(this).attr('name');
@@ -170,6 +173,16 @@
         ajax: {
             url: Urls.Person.GetPeople,
             dataType: 'json',
+            delay: 250,
+            data: function (params) {
+                if (!params.term || params.term.length < 3) {
+                    return null;
+                } else {
+                    return {
+                        searchTerm: params.term
+                    };
+                }
+            },
             processResults: function (data) {
                 return {
                     results: $.map(data, function (item) {

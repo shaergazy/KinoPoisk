@@ -4,6 +4,7 @@ using BLL.DTO.Person;
 using BLL.Services.Interfaces;
 using DAL.Models;
 using KinopoiskWeb.DataTables;
+using KinopoiskWeb.ViewModels.Movie;
 using KinopoiskWeb.ViewModels.Person;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -79,13 +80,13 @@ namespace KinopoiskWeb.Pages.People
 
         public JsonResult OnGetPeople(string searchTerm)
         {
-            var entities = _service.GetAll();
+            People = _mapper.Map<List<IndexPersonVM>>(_service.GetAll());
             if (!string.IsNullOrWhiteSpace(searchTerm) && searchTerm.Length >= 3)
             {
-                entities = entities.Where(m => (m.FirstName + " " + m.LastName).Contains(searchTerm)
-                                            || (m.LastName + " " + m.FirstName).Contains(searchTerm));
+                People = People.Where(m => (m.FirstName + " " + m.LastName).Contains(searchTerm)
+                                            || (m.LastName + " " + m.FirstName).Contains(searchTerm)).ToList();
             }
-            return new JsonResult(entities);
+            return new JsonResult(People);
         }
     }
 }

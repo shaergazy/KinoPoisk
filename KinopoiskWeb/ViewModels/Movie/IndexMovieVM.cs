@@ -9,5 +9,6 @@
         public string? Director { get; set; }
         public uint Duration { get; set; }
         public string[] Actors { get; set; }
+        public float Rating { get; set; }
     }
 }

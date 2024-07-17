@@ -59,8 +59,10 @@ namespace BLL.Services.Implementation
             var entity = await _uow.Repository.GetAll()
             .Include(m => m.Country)
             .Include(m => m.Genres)
+            .ThenInclude(x => x.Genre)
             .Include(m => m.Comments)
             .Include(m => m.People)
+            .ThenInclude(mp => mp.Person)
             .FirstOrDefaultAsync(x => x.Id == id);
 
             return _mapper.Map<GetMovieDto>(entity);

@@ -65,6 +65,7 @@ namespace BLL.DTO.Movie
         public uint Duration { get; set; }
         public GetPersonDto? Director { get; set; }
         public ICollection<GetPersonDto>? Actors { get; set; }
+        public float Rating { get; set; }
     }
 
 

@@ -1,17 +1,53 @@
 ﻿@page "{id:guid}"
 @model KinopoiskWeb.Pages.Movies.DetailsModel
 @{
+    ViewData["Title"] = Model.Movie.Title;
 }
-<h1>@Model.Movie.Title</h1>
 
-<img src="@Model.Movie.Poster" alt="Poster" />
-<p>@Model.Movie.Description</p>
-<p>Released Date: @Model.Movie.ReleasedDate.ToShortDateString()</p>
-<p>Country: @Model.Movie.Country</p>
-<p>Director: @Model.Movie.Director</p>
-<p>Duration: @Model.Movie.Duration minutes</p>
-<p>IMDB Rating: @Model.Movie.IMDBRating</p>
-<p>Rating: @Model.Movie.Rating</p>
-<p>Genres: @string.Join(", ", @Model.Movie.Genres)</p>
-<p>Comments: @string.Join(", ", @Model.Movie.Comments)</p>
-<p>Actors: @string.Join(", ", @Model.Movie.Actors)</p>
+<div class="containerMovieDetails">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="poster">
+                <img src="@Model.Movie.Poster" alt="Poster" class="img-fluid" />
+            </div>
+        </div>
+        <div class="col-md-8 movie-details">
+            <h1>@Model.Movie.Title</h1>
+            <p><strong>Release Date:</strong> @Model.Movie.ReleasedDate.ToString("dd/MM/yyyy")</p>
+            <p><strong>Country:</strong> @Model.Movie.Country</p>
+            <p><strong>Director:</strong> @Model.Movie.Director</p>
+            <p><strong>Duration:</strong> @Model.Movie.Duration minutes</p>
+            <p><strong>IMDB Rating:</strong> @Model.Movie.IMDBRating</p>
+            <p><strong>Rating:</strong> @Model.Movie.Rating</p>
+            <p><strong>Genres:</strong> @string.Join(", ", @Model.Movie.Genres)</p>
+            <h2>Actors</h2>
+            <ul class="actors-list">
+                @foreach (var actor in Model.Movie.Actors)
+                {
+                    <li>@actor</li>
+                }
+            </ul>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <div class="description-section">
+                <h2>Description</h2>
+                <p>@Model.Movie.Description</p>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <div class="comments-section">
+                <h2>Comments</h2>
+                <ul>
+                    @foreach (var comment in Model.Movie.Comments)
+                    {
+                        <li>@comment</li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
