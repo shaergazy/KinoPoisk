@@ -2,6 +2,7 @@
 using BLL.DTO;
 using BLL.DTO.Movie;
 using BLL.Services.Interfaces;
+using DAL.Enums;
 using DAL.Models;
 using Data.Models;
 using Data.Repositories.RepositoryInterfaces;
@@ -35,7 +36,7 @@ namespace BLL.Services.Implementation
 
             entities = FilterEntities(request, entities);
 
-            var recordsFiltered = entities.Count();
+            int recordsFiltered = entities.Count();
 
             entities = OrderByColumn(entities, request);
 
@@ -76,33 +77,30 @@ namespace BLL.Services.Implementation
         {
             var searchTerm = request.SearchTerm?.ToUpper();
             if (!string.IsNullOrWhiteSpace(request.SearchTerm))
-                entities = entities.Where(s => s.Title.ToUpper().Contains(request.SearchTerm));
+                entities = entities.Where(s => s.Title.ToUpper().Contains(searchTerm));
 
             if (!string.IsNullOrEmpty(request.Title))
                 entities = entities.Where(m => m.Title.Contains(request.Title));
 
             if (request.Year.HasValue)
                 entities = entities.Where(m => m.ReleasedDate.Year == request.Year);
-            
-            if (request.CountryId.HasValue)
-                entities = entities.Where(m => m.CountryId == request.CountryId);
-            
-            if (!string.IsNullOrEmpty(request.Actor))
+
+            if (request.Country.HasValue)
+                entities = entities.Where(m => m.CountryId == request.Country);
+
+            if (request.Actor.HasValue)
             {
-                entities = entities.Where(m => m.People.Any(p => p.PersonType.ToString() == "Actor" &&
-                                            (p.Person.FirstName + " " + p.Person.LastName).Contains(request.Actor)
-                                            || (p.Person.LastName + " " + p.Person.FirstName).Contains(request.Actor)));
+                entities = entities.Where(m => m.People.Any(p => p.PersonType == PersonType.Actor && p.PersonId == request.Actor));
             }
 
-            if (!string.IsNullOrEmpty(request.Director))
+            if (request.Director.HasValue)
             {
-                entities = entities.Where(m => m.People.Any(p => p.PersonType.ToString() == "Director" &&
-                                            (p.Person.FirstName + " " + p.Person.LastName).Contains(request.Actor)
-                                            || (p.Person.LastName + " " + p.Person.FirstName).Contains(request.Actor)));
+                entities = entities.Where(m => m.People.Any(p => p.PersonType == PersonType.Director && p.PersonId == request.Director));
             }
 
             return entities;
         }
+
 
         public async Task DeleteCommentAsync(int commentId)
         {

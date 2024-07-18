@@ -36,7 +36,7 @@ namespace KinopoiskWeb.Infrastructure
             .ForMember(dest => dest.SortDirection, opt => opt.MapFrom(src => src.Order.ElementAt(0).Dir.ToLower()))
             .ForMember(dest => dest.SearchTerm, opt => opt.MapFrom(src => src.Search.Value)).ReverseMap();
 
-            CreateMap<MovieDataTablesRequest, BLL.DTO.MovieDataTablesRequestDto>()
+            CreateMap<MovieDataTablesRequest, MovieDataTablesRequestDto>()
             .ForMember(dest => dest.SortColumn, opt => opt.MapFrom(src => src.Columns.ElementAt(src.Order.ElementAt(0).Column).Name))
             .ForMember(dest => dest.SortDirection, opt => opt.MapFrom(src => src.Order.ElementAt(0).Dir.ToLower()))
             .ForMember(dest => dest.SearchTerm, opt => opt.MapFrom(src => src.Search.Value)).ReverseMap();

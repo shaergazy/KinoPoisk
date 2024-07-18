@@ -1,6 +1,7 @@
 using Common.CommonServices;
 using KinopoiskWeb.Extensions;
 using KinopoiskWeb.Infrastructure;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 internal class Program
 {
@@ -11,6 +12,13 @@ internal class Program
         // Add services to the container.
         builder.Services.AddRazorPages();
         builder.Services.AddCommonServices(builder.Configuration);
+        builder.Services.AddAuthentication(
+            CookieAuthenticationDefaults.AuthenticationScheme)
+            .AddCookie(c =>
+            {
+                c.LoginPath = "/login";
+                c.LogoutPath = "/logout";
+            });
         builder.Services.ConfigMapper();
         var app = builder.Build();
 
@@ -28,6 +36,7 @@ internal class Program
 
         app.UseRouting();
 
+        app.UseAuthentication();
         app.UseAuthorization();
 
         app.MapRazorPages();

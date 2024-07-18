@@ -4,12 +4,10 @@
         console.error("CSRF token not found.");
         return;
     }
-
-    // Initialize Select2 for dynamic data loading
-    function initializeSelect2(elementId, url, placeholder) {
-        $('#' + elementId).select2({
+    
+        $('#countryFilter').select2({
             ajax: {
-                url: url,
+                url: Urls.Country.GetCountries,
                 dataType: 'json',
                 delay: 250,
                 data: function (params) {
@@ -29,28 +27,77 @@
                 },
                 minimumInputLength: 3
             },
-            placeholder: placeholder,
+            placeholder: 'Select country',
             allowClear: true
         });
-    }
-
-    // Initialize Select2 elements
-    initializeSelect2('titleFilter', Urls.Movie.GetTitles, 'Select title');
-    initializeSelect2('countryFilter', Urls.Country.GetCountries, 'Select country');
-    initializeSelect2('actorFilter', Urls.Person.GetPeople, 'Select actor');
-    initializeSelect2('directorFilter', Urls.Person.GetDirectors, 'Select director');
+    
+    
+        $('#actorFilter').select2({
+            ajax: {
+                url: Urls.Person.GetPeople,
+                dataType: 'json',
+                delay: 250,
+                data: function (params) {
+                    return {
+                        searchTerm: params.term
+                    };
+                },
+                processResults: function (data) {
+                    return {
+                        results: $.map(data, function (item) {
+                            return {
+                                id: item.id,
+                                text: item.firstName + " " + item.lastName
+                            };
+                        })
+                    };
+                },
+                minimumInputLength: 3
+            },
+            placeholder: 'Select actor',
+            allowClear: true
+        });
+    
+        $('#directorFilter').select2({
+            ajax: {
+                url: Urls.Person.GetPeople,
+                dataType: 'json',
+                delay: 250,
+                data: function (params) {
+                    return {
+                        searchTerm: params.term
+                    };
+                },
+                processResults: function (data) {
+                    return {
+                        results: $.map(data, function (item) {
+                            return {
+                                id: item.id,
+                                text: item.firstName + " " + item.lastName
+                            };
+                        })
+                    };
+                },
+                minimumInputLength: 3
+            },
+            placeholder: 'Select director',
+            allowClear: true
+        });
+    
+        
 
     // Initialize DataTable
     var table = $('#moviesTable').DataTable({
         "processing": true,
         "serverSide": true,
+        "dom": 'lrtip',
         "ajax": {
             url: Urls.Movie.GetAll,
             method: 'POST',
             headers: { 'RequestVerificationToken': token },
             data: function (d) {
                 d.title = $('#titleFilter').val();
-                d.releasedDate = $('#releasedDateFilter').val();
+                d.year = $('#releasedDateFilter').val();
                 d.country = $('#countryFilter').val();
                 d.actor = $('#actorFilter').val();
                 d.director = $('#directorFilter').val();
@@ -99,10 +146,24 @@
         "order": [[0, "desc"]]
     });
 
-    // Reload table when filter changes
-    $('.filter-input').on('change', function () {
-        table.ajax.reload();
-    });
+    // Function to reload table with debounce
+    function debounce(func, delay) {
+        let debounceTimer;
+        return function () {
+            const context = this;
+            const args = arguments;
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(() => func.apply(context, args), delay);
+        };
+    }
+
+    // Reload table when filter changes with debounce
+    $('.filter-input').on('input', debounce(function () {
+        var titleLength = $('#titleFilter').val().length;
+        if (titleLength >= 3 || titleLength === 0) {
+            table.ajax.reload();
+        }
+    }, 500));
 
     // Show more/less description
     $('#moviesTable').on('click', '.more-link', function (e) {

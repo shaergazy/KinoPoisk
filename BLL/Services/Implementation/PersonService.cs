@@ -4,6 +4,8 @@ using BLL.DTO.Person;
 using BLL.Services.Interfaces;
 using DAL.Models;
 using Data.Repositories.RepositoryInterfaces;
+using Microsoft.EntityFrameworkCore;
+using Repositories;
 using System.Linq.Dynamic.Core;
 
 namespace BLL.Services.Implementation
@@ -32,6 +34,26 @@ namespace BLL.Services.Implementation
                                             || (m.LastName + " " + m.FirstName).Contains(searchTerm));
             }
             return entities;
+        }
+
+        public IEnumerable<ListPersonDto> GetActors()
+        {
+            var actors = _uow.Repository.GetAll()
+                                        .Include(p => p.Movies)
+                                        .ThenInclude(mp => mp.Movie)
+                                        .Where(p => p.Movies.Any(mp => mp.PersonType == DAL.Enums.PersonType.Actor))
+                                        .ToList();
+            return _mapper.Map<List<ListPersonDto>>(actors);
+        }
+
+        public IEnumerable<ListPersonDto> GetDirectors()
+        {
+            var directors = _uow.Repository.GetAll()
+                                       .Include(p => p.Movies)
+                                       .ThenInclude(mp => mp.Movie)
+                                       .Where(p => p.Movies.Any(mp => mp.PersonType == DAL.Enums.PersonType.Director))
+                                       .ToList();
+            return _mapper.Map<List<ListPersonDto>>(directors);
         }
     }
 }

@@ -7,6 +7,8 @@ var Urls = Urls || {};
     Urls.Person = {
         GetById: '@Url.Action("Index", "People", new { handler = "ById" })',
         GetPeople: '@Url.Page("/People/Index", new { handler = "People" })',
+        GetActors: '@Url.Page("/People/Index", new { handler = "Actors" })',
+        GetDirectors: '@Url.Page("/People/Index", new { handler = "Directors" })',
     };
 
     Urls.Country = {

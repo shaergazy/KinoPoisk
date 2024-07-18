@@ -4,8 +4,8 @@
     {
         public string Title { get; set; }
         public int? Year { get; set; }
-        public int? CountryId { get; set; }
-        public string Actor { get; set; }
-        public string Director { get; set; }
+        public int? Country { get; set; }
+        public int? Actor { get; set; }
+        public int? Director { get; set; }
     }
 }

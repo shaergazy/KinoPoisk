@@ -88,6 +88,28 @@ namespace KinopoiskWeb.Pages.People
             }
             return new JsonResult(People);
         }
+
+        public JsonResult OnGetDirectors(string searchTerm)
+        {
+            People = _mapper.Map<List<IndexPersonVM>>(_service.GetDirectors());
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                People = People.Where(m => (m.FirstName + " " + m.LastName).Contains(searchTerm)
+                                            || (m.LastName + " " + m.FirstName).Contains(searchTerm)).ToList();
+            }
+            return new JsonResult(People);
+        }
+
+        public JsonResult OnGetActors(string searchTerm)
+        {
+            People = _mapper.Map<List<IndexPersonVM>>(_service.GetActors());
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                People = People.Where(m => (m.FirstName + " " + m.LastName).Contains(searchTerm)
+                                            || (m.LastName + " " + m.FirstName).Contains(searchTerm)).ToList();
+            }
+            return new JsonResult(People);
+        }
     }
 }
 

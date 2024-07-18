@@ -1,5 +1,5 @@
 ﻿$(document).ready(function () {
-    var maxLength = 100; // Максимальная длина сокращенного текста
+    var maxLength = 1000; // Максимальная длина сокращенного текста
 
     function toggleDescription(description, movieId) {
         var fullText = description.data('fullText') || description.text().trim();
