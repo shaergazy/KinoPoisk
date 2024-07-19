@@ -20,6 +20,8 @@ public class IndexModel : PageModel
 
     public async Task OnGetAsync()
     {
+        NewestMovies = new List<IndexMovieVM>();
+        HighRatedMovies = new List<IndexMovieVM> { new IndexMovieVM() };
         NewestMovies = _mapper.Map<List<IndexMovieVM>>((await _movieService.GetNewestMoviesAsync(10)).ToList()); 
         HighRatedMovies = _mapper.Map<List<IndexMovieVM>>((await _movieService.GetTopRatedMoviesAsync(10)).ToList());
     }

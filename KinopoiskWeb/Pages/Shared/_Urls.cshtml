@@ -25,4 +25,8 @@ var Urls = Urls || {};
     Urls.Movie = {
         GetAll: '@Url.Action("Index", "Movies")'
     };
+
+    Urls.Account = {
+        Logout: '@Url.Page("/Account/Logout", new { handler = "Logout" })',
+    };
 </script>

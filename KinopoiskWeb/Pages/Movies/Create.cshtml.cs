@@ -2,11 +2,13 @@ using AutoMapper;
 using BLL.DTO.Movie;
 using BLL.Services.Interfaces;
 using KinopoiskWeb.ViewModels.Movie;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace KinopoiskWeb.Pages.Movies
 {
+    [Authorize]
     public class CreateModel : PageModel
     {
         private readonly IMovieService _movieService;

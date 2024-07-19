@@ -1,7 +1,10 @@
+using BLL.Services.Interfaces;
 using Common.CommonServices;
+using DAL.Models.Users;
 using KinopoiskWeb.Extensions;
 using KinopoiskWeb.Infrastructure;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Identity;
 
 internal class Program
 {
@@ -12,6 +15,16 @@ internal class Program
         // Add services to the container.
         builder.Services.AddRazorPages();
         builder.Services.AddCommonServices(builder.Configuration);
+
+        builder.Services.AddIdentity<User, Role>(options =>
+        {
+            options.Password.RequireDigit = false;
+            options.Password.RequireLowercase = false;
+            options.Password.RequireUppercase = false;
+            options.Password.RequireNonAlphanumeric = false;
+            options.Password.RequiredLength = 6;
+        });
+
         builder.Services.AddAuthentication(
             CookieAuthenticationDefaults.AuthenticationScheme)
             .AddCookie(c =>

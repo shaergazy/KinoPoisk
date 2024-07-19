@@ -10,9 +10,11 @@ using KinopoiskWeb.DataTables;
 using Microsoft.Data.SqlClient;
 using Common.Exceptions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 
 namespace KinopoiskWeb.Pages.Genres
 {
+    [Authorize]
     public class IndexModel : PageModel
     {
         private readonly IGenreService _service;

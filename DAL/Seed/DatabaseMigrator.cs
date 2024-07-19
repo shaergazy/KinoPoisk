@@ -29,8 +29,8 @@ namespace DAL.Seed
                 var _appDbContext = serviceProvider.GetRequiredService<AppDbContext>();
                 var roleManager = serviceProvider.GetRequiredService<RoleManager<Role>>();
                 var userManager = serviceProvider.GetRequiredService<UserManager<User>>();
-                //await SeedRolesAsync(roleManager);
-                //await SeedAdminAsync(userManager);
+                await SeedRolesAsync(roleManager);
+                await SeedAdminAsync(userManager);
                 await SeedCountriesAsync(_appDbContext, logger);
             }
             catch (Exception ex)

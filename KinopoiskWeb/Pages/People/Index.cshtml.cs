@@ -4,13 +4,14 @@ using BLL.DTO.Person;
 using BLL.Services.Interfaces;
 using DAL.Models;
 using KinopoiskWeb.DataTables;
-using KinopoiskWeb.ViewModels.Movie;
 using KinopoiskWeb.ViewModels.Person;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace KinopoiskWeb.Pages.People
 {
+    [Authorize]
     public class IndexModel : PageModel
     {
 
