@@ -23,7 +23,8 @@ var Urls = Urls || {};
     };
 
     Urls.Movie = {
-        GetAll: '@Url.Action("Index", "Movies")'
+        GetAll: '@Url.Action("Index", "Movies")',
+        Rate: '@Url.Action("Rate", "Movies", new { handler = "Rate" })',
     };
 
     Urls.Account = {

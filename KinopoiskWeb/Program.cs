@@ -27,11 +27,19 @@ internal class Program
 
         builder.Services.AddAuthentication(
             CookieAuthenticationDefaults.AuthenticationScheme)
-            .AddCookie(c =>
+            .AddCookie(opt =>
             {
-                c.LoginPath = "/login";
-                c.LogoutPath = "/logout";
+                opt.LoginPath = "/login";
+                opt.LogoutPath = "/logout";
+                opt.AccessDeniedPath = "/Account/AccessDenied";
+
             });
+
+        builder.Services.AddAntiforgery(options =>
+        {
+            options.HeaderName = "RequestVerificationToken";
+        });
+
         builder.Services.ConfigMapper();
         var app = builder.Build();
 

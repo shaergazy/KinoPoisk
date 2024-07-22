@@ -14,7 +14,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace KinopoiskWeb.Pages.Genres
 {
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     public class IndexModel : PageModel
     {
         private readonly IGenreService _service;

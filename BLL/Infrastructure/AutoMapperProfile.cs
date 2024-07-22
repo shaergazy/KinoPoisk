@@ -47,7 +47,8 @@ namespace BLL.Infrastructure
                     FirstName = a.Person.FirstName,
                     LastName = a.Person.LastName
                 }).ToList()))
-           .ForMember(dest => dest.Rating, opt => opt.MapFrom(src => src.Ratings.Average(x => x.StarCount)));
+           .ForMember(dest => dest.Rating, opt => opt.MapFrom(src =>
+                src.Ratings != null && src.Ratings.Any() ? src.Ratings.Average(r => r.StarCount) : 0f));
 
             CreateMap<Movie, GetMovieDto>()
                  .ForMember(dest => dest.Poster, opt => opt.MapFrom(src => "/" + src.Poster.Replace("\\", "/")))

@@ -58,6 +58,7 @@ namespace BLL.Services.Implementation
             .Include(m => m.Country)
             .Include(m => m.Genres)
                 .ThenInclude(x => x.Genre)
+            .Include(m => m.Ratings)
             .Include(m => m.Comments)
             .Include(m => m.People)
                 .ThenInclude(mp => mp.Person)
@@ -70,6 +71,7 @@ namespace BLL.Services.Implementation
         {
             var rating = _mapper.Map<MovieRating>(dto);
             await _uow.Ratings.AddAsync(rating);
+            await _uow.SaveChangesAsync();
             return rating.Id;
         }
 
@@ -199,7 +201,8 @@ namespace BLL.Services.Implementation
         {
             var movies = await _uow.Movies.GetAll()
                 .Include(x => x.People)
-                .ThenInclude(m => m.Person)
+                    .ThenInclude(m => m.Person)
+                .Include(m => m.Ratings)
                 .OrderByDescending(x => x.ReleasedDate)
                 .Take(count)
                 .ToListAsync();

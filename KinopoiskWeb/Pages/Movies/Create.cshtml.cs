@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace KinopoiskWeb.Pages.Movies
 {
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     public class CreateModel : PageModel
     {
         private readonly IMovieService _movieService;

@@ -9,6 +9,7 @@ using KinopoiskWeb.ViewModels.Country;
 using KinopoiskWeb.ViewModels.Genre;
 using KinopoiskWeb.ViewModels.Movie;
 using KinopoiskWeb.ViewModels.Person;
+using static KinopoiskWeb.Pages.Movies.DetailsModel;
 
 namespace KinopoiskWeb.Infrastructure
 {
@@ -52,7 +53,8 @@ namespace KinopoiskWeb.Infrastructure
             .ForMember(dest => dest.Order, opt => opt.MapFrom(src => src.Order));
             CreateMap<ListMovieDto, IndexMovieVM>()
            .ForMember(dest => dest.Director, opt => opt.MapFrom(src => src.Director != null ? $"{src.Director.FirstName} {src.Director.LastName}" : string.Empty))
-           .ForMember(dest => dest.Actors, opt => opt.MapFrom(src => src.Actors != null ? src.Actors.Select(a => $"{a.FirstName} {a.LastName}").ToArray() : new string[0]));
+           .ForMember(dest => dest.Actors, opt => opt.MapFrom(src => src.Actors != null ? src.Actors.Select(a => $"{a.FirstName} {a.LastName}").ToArray() : new string[0]))
+           .ForMember(dest => dest.Rating, opt => opt.MapFrom(src => src.Rating));
 
             CreateMap<GetMovieDto, DetailsMovieVM>()
            .ForMember(dest => dest.Director, opt => opt.MapFrom(src => src.Director != null ? $"{src.Director.FirstName} {src.Director.LastName}" : string.Empty))
@@ -61,6 +63,8 @@ namespace KinopoiskWeb.Infrastructure
            .ForMember(dest => dest.Genres, opt => opt.MapFrom(src => src.Genres != null ? src.Genres.Select(g => g.Name).ToArray() : new string[0]))
            .ForMember(dest => dest.Comments, opt => opt.MapFrom(src => src.Comments != null ? src.Comments.Select(c => c.Text).ToArray() : new string[0]))
            .ForMember(dest => dest.ReleasedDate, opt => opt.MapFrom(src => src.DateRealesed));
+
+            CreateMap<RateMovieVM, AddMovieRating>().ReverseMap();
         }
     }
 }

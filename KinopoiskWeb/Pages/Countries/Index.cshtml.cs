@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace KinopoiskWeb.Pages.Countries
 {
-    //[Authorize]
+    [Authorize(Roles = "Admin")]
     public class IndexModel : PageModel
     {
         private readonly ICountryService _service;

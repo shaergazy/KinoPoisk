@@ -2,6 +2,7 @@
 using BLL.DTO.Genre;
 using BLL.DTO.Person;
 using Common.Enums;
+using DAL.Models.Users;
 using Data.Models;
 using Microsoft.AspNetCore.Http;
 using System.ComponentModel.DataAnnotations;
@@ -71,19 +72,9 @@ namespace BLL.DTO.Movie
 
     public class AddMovieRating
     {
-        public Guid Id { get; set; }
-        public string Poster { get; set; }
-        public string Title { get; set; }
-        public string Description { get; set; }
-        public DateTime ReleasedDate { get; set; }
-        public string Country { get; set; }
-        public ICollection<string> Genres { get; set; }
-        public ICollection<string> Comments { get; set; }
-        public ICollection<string> Actors { get; set; }
-        public string Director { get; set; }
-        public uint? Duration { get; set; }
-        public float? IMDBRating { get; set; }
-        public float Rating { get; set; }
+        public Guid MovieId { get; set; }
+        public Guid UserId { get; set; }
+        public int StarCount { get; set; }
     }
 
     public class GetCommentDto
