@@ -1,0 +1,71 @@
+﻿@page
+@model KinopoiskWeb.Pages.Movies.ImportModel
+@{
+    ViewData["Title"] = "Import Movie";
+}
+
+<h1>Import Movie</h1>
+
+<div>
+    <form id="search-form">
+        <div class="form-group">
+            <label for="title">Title:</label>
+            <input type="text" id="title" class="form-control" />
+        </div>
+        <button type="button" id="search-button" class="btn btn-primary">Search</button>
+    </form>
+</div>
+
+<div id="search-results">
+    <!-- Results will be populated here -->
+</div>
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#search-button').on('click', function () {
+                var title = $('#title').val();
+
+                $.ajax({
+                    url: '/Movies/Import?handler=Search',
+                    method: 'GET',
+                    data: { title: title },
+                    success: function (response) {
+                        var resultsDiv = $('#search-results');
+                        resultsDiv.empty();
+
+                        if (response.success && response.movies.length > 0) {
+                            response.movies.forEach(function (movie) {
+                                var movieDiv = $('<div>').addClass('movie-result');
+                                movieDiv.append($('<h3>').text(movie.Title));
+                                movieDiv.append($('<p>').text('Year: ' + movie.Year));
+                                movieDiv.append($('<button>').text('Import').addClass('btn btn-success').data('movie', movie));
+                                resultsDiv.append(movieDiv);
+                            });
+
+                            $('.btn-success').on('click', function () {
+                                var movie = $(this).data('movie');
+                                $.ajax({
+                                    url: '/Movies/Import?handler=Import',
+                                    method: 'POST',
+                                    contentType: 'application/json',
+                                    data: JSON.stringify(movie),
+                                    success: function (response) {
+                                        if (response.success) {
+                                            alert('Movie imported successfully!');
+                                        } else {
+                                            alert('Error importing movie: ' + response.error);
+                                        }
+                                    }
+                                });
+                            });
+                        } else {
+                            resultsDiv.append($('<p>').text('No movies found.'));
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+}

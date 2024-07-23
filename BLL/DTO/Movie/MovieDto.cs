@@ -1,11 +1,7 @@
 ﻿using BLL.DTO.Country;
 using BLL.DTO.Genre;
 using BLL.DTO.Person;
-using Common.Enums;
-using DAL.Models.Users;
-using Data.Models;
 using Microsoft.AspNetCore.Http;
-using System.ComponentModel.DataAnnotations;
 
 namespace BLL.DTO.Movie
 {
