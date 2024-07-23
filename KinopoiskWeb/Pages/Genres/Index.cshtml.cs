@@ -12,8 +12,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace KinopoiskWeb.Pages.Genres
 {
-    [AllowAnonymous]
-    [Authorize(Roles = "Admin")]
+    //[Authorize(Roles = "Admin")]
     public class IndexModel : PageModel
     {
         private readonly IGenreService _service;

@@ -253,5 +253,10 @@ namespace BLL.Services.Implementation
         {
             throw new NotImplementedException();
         }
+
+        Task<IEnumerable<Comment>> IMovieService.GetCommentsAsync(Guid id)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

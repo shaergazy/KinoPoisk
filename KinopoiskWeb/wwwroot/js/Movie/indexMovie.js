@@ -4,93 +4,90 @@
         console.error("CSRF token not found.");
         return;
     }
-    
-        $('#countryFilter').select2({
-            ajax: {
-                url: Urls.Country.GetCountries,
-                dataType: 'json',
-                delay: 250,
-                data: function (params) {
-                    return {
-                        searchTerm: params.term
-                    };
-                },
-                processResults: function (data) {
-                    return {
-                        results: $.map(data, function (item) {
-                            return {
-                                id: item.id,
-                                text: item.name
-                            };
-                        })
-                    };
-                },
-                minimumInputLength: 3
+
+    $('#countryFilter').select2({
+        ajax: {
+            url: Urls.Country.GetCountries,
+            dataType: 'json',
+            delay: 250,
+            data: function (params) {
+                return {
+                    searchTerm: params.term
+                };
             },
-            placeholder: 'Select country',
-            allowClear: true
-        });
-    
-    
-        $('#actorFilter').select2({
-            ajax: {
-                url: Urls.Person.GetPeople,
-                dataType: 'json',
-                delay: 250,
-                data: function (params) {
-                    return {
-                        searchTerm: params.term
-                    };
-                },
-                processResults: function (data) {
-                    return {
-                        results: $.map(data, function (item) {
-                            return {
-                                id: item.id,
-                                text: item.firstName + " " + item.lastName
-                            };
-                        })
-                    };
-                },
-                minimumInputLength: 3
+            processResults: function (data) {
+                return {
+                    results: $.map(data, function (item) {
+                        return {
+                            id: item.id,
+                            text: item.name
+                        };
+                    })
+                };
             },
-            placeholder: 'Select actor',
-            allowClear: true
-        });
-    
-        $('#directorFilter').select2({
-            ajax: {
-                url: Urls.Person.GetPeople,
-                dataType: 'json',
-                delay: 250,
-                data: function (params) {
-                    return {
-                        searchTerm: params.term
-                    };
-                },
-                processResults: function (data) {
-                    return {
-                        results: $.map(data, function (item) {
-                            return {
-                                id: item.id,
-                                text: item.firstName + " " + item.lastName
-                            };
-                        })
-                    };
-                },
-                minimumInputLength: 3
+            minimumInputLength: 3
+        },
+        placeholder: 'Select country',
+        allowClear: true
+    });
+
+    $('#actorFilter').select2({
+        ajax: {
+            url: Urls.Person.GetPeople,
+            dataType: 'json',
+            delay: 250,
+            data: function (params) {
+                return {
+                    searchTerm: params.term
+                };
             },
-            placeholder: 'Select director',
-            allowClear: true
-        });
-    
-        
+            processResults: function (data) {
+                return {
+                    results: $.map(data, function (item) {
+                        return {
+                            id: item.id,
+                            text: item.firstName + " " + item.lastName
+                        };
+                    })
+                };
+            },
+            minimumInputLength: 3
+        },
+        placeholder: 'Select actor',
+        allowClear: true
+    });
+
+    $('#directorFilter').select2({
+        ajax: {
+            url: Urls.Person.GetPeople,
+            dataType: 'json',
+            delay: 250,
+            data: function (params) {
+                return {
+                    searchTerm: params.term
+                };
+            },
+            processResults: function (data) {
+                return {
+                    results: $.map(data, function (item) {
+                        return {
+                            id: item.id,
+                            text: item.firstName + " " + item.lastName
+                        };
+                    })
+                };
+            },
+            minimumInputLength: 3
+        },
+        placeholder: 'Select director',
+        allowClear: true
+    });
 
     // Initialize DataTable
     var table = $('#moviesTable').DataTable({
         "processing": true,
         "serverSide": true,
-        "dom": 'lrtip',
+        "dom": 'Blrtip',
         "ajax": {
             url: Urls.Movie.GetAll,
             method: 'POST',
@@ -143,7 +140,31 @@
                 }
             }
         ],
-        "order": [[0, "desc"]]
+        "order": [[0, "desc"]],
+        "buttons": [
+            {
+                extend: 'csv',
+                exportOptions: {
+                    columns: [2, 3, 4, 5, 6]
+                }
+            },
+            {
+                extend: 'excel',
+                exportOptions: {
+                    columns: [2, 3, 4, 5, 6]
+                }
+            },
+            {
+                extend: 'pdfHtml5',
+                download: 'open',
+                exportOptions: {
+                    columns: [2, 3, 4, 5, 6]
+                }
+            },
+        ],
+        "layout": {
+            topStart: 'buttons'
+        }
     });
 
     // Function to reload table with debounce
@@ -182,4 +203,38 @@
             $link.text('less');
         }
     });
+
+    var token = $('input[name="__RequestVerificationToken"]').val();
+
+    $('#downloadPdf').click(function (e) {
+        e.preventDefault();
+        var form = $('<form>', {
+            action: Urls.Movie.GetPDF,
+            method: 'post'
+        }).append($('<input>', { type: 'hidden', name: '__RequestVerificationToken', value: token }));
+
+        appendFiltersToForm(form);
+        $('body').append(form);
+        form.submit();
+    });
+
+    $('#downloadExcel').click(function (e) {
+        e.preventDefault();
+        var form = $('<form>', {
+            action: '@Url.Page("/Movies/Index", new { handler = "DownloadExcel" })',
+            method: 'post'
+        }).append($('<input>', { type: 'hidden', name: '__RequestVerificationToken', value: token }));
+
+        appendFiltersToForm(form);
+        $('body').append(form);
+        form.submit();
+    });
+
+    function appendFiltersToForm(form) {
+        form.append($('<input>', { type: 'hidden', name: 'DataTablesRequest.Title', value: $('#titleFilter').val() }));
+        form.append($('<input>', { type: 'hidden', name: 'DataTablesRequest.ReleasedDate', value: $('#releasedDateFilter').val() }));
+        form.append($('<input>', { type: 'hidden', name: 'DataTablesRequest.Country', value: $('#countryFilter').val() }));
+        form.append($('<input>', { type: 'hidden', name: 'DataTablesRequest.Actor', value: $('#actorFilter').val() }));
+        form.append($('<input>', { type: 'hidden', name: 'DataTablesRequest.Director', value: $('#directorFilter').val() }));
+    }
 });

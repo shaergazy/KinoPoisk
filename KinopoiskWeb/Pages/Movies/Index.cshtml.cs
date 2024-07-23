@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace KinopoiskWeb.Pages.Movies
 {
+    [IgnoreAntiforgeryToken]
     public class IndexModel : PageModel
     {
         private readonly IMovieService _service;
