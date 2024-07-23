@@ -4,11 +4,6 @@
     ViewData["Title"] = "Home Page";
 }
 <h1>Top 10 newest movies</h1>
-
-@if (User.Identity.IsAuthenticated)
-{
-    <h1>User is authenticated</h1>
-}
 @foreach (var movie in Model.NewestMovies)
 {
     <div class="movie-card" onclick="location.href='/Movies/Details/@movie.Id'">
