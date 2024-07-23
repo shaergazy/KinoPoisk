@@ -21,11 +21,20 @@ namespace BLL.Services.Implementation
             _uow = unitOfWork;
         }
 
-        public async Task<int> AddCommentAsync(AddCommentDo dto)
+        public async Task AddCommentAsync(AddCommentDo dto)
         {
+            var movie = await _uow.Movies.FirstOrDefaultAsync(x => x.Id == dto.MovieId);
+            if (movie == null)
+                throw new Exception("Movie does not exist");
+            var user = await _uow.Users.FirstOrDefaultAsync(x => x.Id == dto.UserId.ToString());
             var comment = _mapper.Map<Comment>(dto);
-            await _uow.Comments.AddAsync(comment);
-            return comment.Id;
+            comment.User = user;
+
+            if (movie.Comments == null)
+                movie.Comments = new List<Comment>();
+
+            movie.Comments.Add(comment);
+            await _uow.SaveChangesAsync();
         }
 
         public override async Task<DataTablesResponse<Movie>> SearchAsync(MovieDataTablesRequestDto request)
@@ -119,9 +128,11 @@ namespace BLL.Services.Implementation
             await _uow.Comments.DeleteByIdAsync(commentId);
         }
 
-        public Task<IEnumerable<Comment>> GetCommentsAsync(Guid id)
+        public async Task<IEnumerable<GetCommentDto>> GetCommentsAsync(Guid id)
         {
-            throw new NotImplementedException();
+            var movie = await _uow.Movies.GetAll()
+                .Include(x => x.Comments).FirstOrDefaultAsync(x => x.Id == id);
+            return _mapper.Map<List<GetCommentDto>>(movie.Comments);
         }
 
         public override async Task<Movie> BuildEntityForCreate(AddMovieDto dto)

@@ -2,6 +2,7 @@
 using BLL.DTO.Movie;
 using BLL.Services.Interfaces;
 using KinopoiskWeb.ViewModels.Movie;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Security.Claims;
@@ -49,11 +50,25 @@ namespace KinopoiskWeb.Pages.Movies
             return new JsonResult(new { success = true });
         }
 
-        public class RateMovieVM
+        public async Task<IActionResult> OnGetLoadAllCommentsAsync(Guid id)
         {
-            public Guid MovieId { get; set; }
-            public Guid UserId { get; set; }
-            public int StarCount { get; set; }
+            var comments = await _movieService.GetCommentsAsync(id);
+            return new JsonResult(new { success = true, comments = comments });
+        }
+
+        [Authorize]
+        public async Task<IActionResult> OnPostAddCommentAsync([FromBody] AddCommentVM model)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (userId == null)
+            {
+                return new JsonResult(new { success = false, redirect = Url.Page("/Account/Register") });
+            }
+
+            model.UserId = Guid.Parse(userId);
+            await _movieService.AddCommentAsync(_mapper.Map<AddCommentDo>(model));
+
+            return new JsonResult(new { success = true });
         }
     }
 }

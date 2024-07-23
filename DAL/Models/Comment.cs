@@ -8,7 +8,7 @@ namespace DAL.Models
         [Key]
         public int Id { get; set; }
         public string Text { get; set; }
-        //public bool IsPublished { get; set; }
+        public bool IsPublished { get; set; }
         public Guid UserId { get; set; }
         public User User { get; set; }
     }

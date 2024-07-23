@@ -52,15 +52,41 @@
         <div class="col-12">
             <div class="comments-section">
                 <h2>Comments</h2>
-                <ul>
-                    @foreach (var comment in Model.Movie.Comments)
+                <ul id="comments-list">
+                    @foreach (var comment in Model.Movie.Comments.Take(5))
                     {
                         <li>@comment</li>
                     }
                 </ul>
+                @if (Model.Movie.Comments.Count() > 5)
+                {
+                    <button id="load-more-comments" class="btn btn-primary">Load more comments</button>
+                }
             </div>
         </div>
     </div>
+    @if (User.Identity.IsAuthenticated)
+    {
+        <div class="row">
+            <div class="col-12">
+                <form id="add-comment-form">
+                    <div class="form-group">
+                        <label for="comment">Add a comment:</label>
+                        <textarea id="comment" class="form-control" rows="3"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="row">
+            <div class="col-12">
+                <p>Please <a href="/Account/Register">register</a> or <a href="/Account/Login">login</a> to leave a comment.</p>
+            </div>
+        </div>
+    }
 </div>
 
 @section Scripts {

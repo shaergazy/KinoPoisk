@@ -1,5 +1,6 @@
 ﻿using DAL;
 using DAL.Models;
+using DAL.Models.Users;
 using Data.Models;
 using Data.Repositories.RepositoryInterfaces;
 using Microsoft.EntityFrameworkCore;
@@ -18,6 +19,7 @@ namespace Repositories
         public IGenericRepository<MoviePerson, int> _moviePersonRepository;
         public IGenericRepository<MovieRating, int> _ratingRepository;
         public IGenericRepository<MovieGenre, int> _movieGenreRepository;
+        public IGenericRepository<User, Guid> _userRepository;
 
         private IGenericRepository<TEntity, TKey> _repository;
 
@@ -29,7 +31,7 @@ namespace Repositories
         public IGenericRepository<Genre, int> Genres => _genresRepository ??= new GenericRepository<Genre, int>(_appDbContext);
         public IGenericRepository<Country, int> Countries => _countriesRepository ??= new GenericRepository<Country, int>(_appDbContext);
         public IGenericRepository<Person, int> People => _peopleRepository ??= new GenericRepository<Person, int>(_appDbContext);
-
+        public IGenericRepository<User, Guid> Users => _userRepository ??= new GenericRepository<User, Guid>(_appDbContext);
 
         public IGenericRepository<TEntity, TKey> Repository => _repository ??= new GenericRepository<TEntity, TKey>(_appDbContext);
 

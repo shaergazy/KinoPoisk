@@ -1,4 +1,5 @@
 ﻿using DAL.Models;
+using DAL.Models.Users;
 using Data.Models;
 
 namespace Data.Repositories.RepositoryInterfaces
@@ -14,6 +15,7 @@ namespace Data.Repositories.RepositoryInterfaces
         public IGenericRepository<Comment, int> Comments { get; }
         public IGenericRepository<MovieRating, int> Ratings { get; }
         public IGenericRepository<MovieGenre, int> MovieGenres { get; }
+        public IGenericRepository<User, Guid> Users { get; }
         Task SaveChangesAsync();
     }
 }

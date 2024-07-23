@@ -65,6 +65,10 @@ namespace KinopoiskWeb.Infrastructure
            .ForMember(dest => dest.ReleasedDate, opt => opt.MapFrom(src => src.DateRealesed));
 
             CreateMap<RateMovieVM, AddMovieRating>().ReverseMap();
+
+            CreateMap<AddCommentVM, AddCommentDo>()
+            .ForMember(dest => dest.Text, opt => opt.MapFrom(src => src.CommentText)).ReverseMap();
+
         }
     }
 }
