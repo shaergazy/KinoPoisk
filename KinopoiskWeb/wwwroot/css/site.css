@@ -192,3 +192,32 @@ body {
     .rating span.active {
         color: #ffcc00;
     }
+
+.main-container {
+    display: flex;
+    padding: 20px;
+    width: 100%;
+    background-color: #f8f9fa;
+    box-sizing: border-box; /* Ensure padding is included in the element's total width and height */
+}
+
+.filter-container {
+    margin-top: 100px;
+    width: 20%;
+    padding: 20px;
+    overflow-y: auto;
+}
+
+    .filter-container .form-group {
+        margin-bottom: 10px;
+    }
+
+.content-container {
+    flex: 1;
+    padding: 20px;
+    width: 80%;
+}
+
+    .content-container h1 {
+        margin-top: 0;
+    }

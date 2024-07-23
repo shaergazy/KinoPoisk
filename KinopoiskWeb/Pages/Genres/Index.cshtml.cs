@@ -1,19 +1,18 @@
 using AutoMapper;
-using BLL.DTO.Genre;
 using BLL.DTO;
+using BLL.DTO.Genre;
 using BLL.Services.Interfaces;
 using DAL.Models;
+using KinopoiskWeb.DataTables;
 using KinopoiskWeb.ViewModels.Genre;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using KinopoiskWeb.DataTables;
-using Microsoft.Data.SqlClient;
-using Common.Exceptions;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Authorization;
 
 namespace KinopoiskWeb.Pages.Genres
 {
+    [AllowAnonymous]
     [Authorize(Roles = "Admin")]
     public class IndexModel : PageModel
     {
@@ -88,6 +87,7 @@ namespace KinopoiskWeb.Pages.Genres
                 return RedirectToPage();
             }
         }
+
 
         public JsonResult OnGetGenres(string searchTerm)
         {

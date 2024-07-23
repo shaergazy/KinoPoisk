@@ -6,7 +6,7 @@ namespace BLL.Services.Interfaces
 {
     public interface IMovieService : ISearchableService<ListMovieDto, AddMovieDto, EditMovieDto, GetMovieDto, Movie, Guid, MovieDataTablesRequestDto>, IService
     {
-        Task<int> AddRatingAsync(AddMovieRating dto);
+        Task AddRatingAsync(AddMovieRating dto);
         Task<int> AddCommentAsync(AddCommentDo dto);
 
         Task<IEnumerable<Comment>> GetCommentsAsync(Guid id);

@@ -67,12 +67,22 @@ namespace BLL.Services.Implementation
             return _mapper.Map<GetMovieDto>(entity);
         }
 
-        public async Task<int> AddRatingAsync(AddMovieRating dto)
+        public async Task AddRatingAsync(AddMovieRating dto)
         {
-            var rating = _mapper.Map<MovieRating>(dto);
-            await _uow.Ratings.AddAsync(rating);
+            var existinRating = await _uow.Ratings.FirstOrDefaultAsync(x => x.MovieId == dto.MovieId && x.UserId == dto.UserId);
+
+            if (existinRating != null)
+            {
+                existinRating.StarCount = dto.StarCount;
+            }
+
+            else
+            {
+                var rating = _mapper.Map<MovieRating>(dto);
+                await _uow.Ratings.AddAsync(rating);
+            }
+
             await _uow.SaveChangesAsync();
-            return rating.Id;
         }
 
         public override IQueryable<Movie> FilterEntities(MovieDataTablesRequestDto request, IQueryable<Movie> entities = null)

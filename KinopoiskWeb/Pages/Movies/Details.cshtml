@@ -26,18 +26,18 @@
                     <li>@actor</li>
                 }
             </ul>
-@*             <div class="row">
-                <div class="col-12"> *@
+            <div class="row">
+                <div class="col-12">
                     <p><strong>Rating:</strong></p>
-                    <div class="rating" id="rating-@Model.Movie.Id" data-rating="@Model.Movie.Rating">
+                    <div class="rating" id="rating-@Model.Movie.Id" data-movie-id="@Model.Movie.Id" data-rating="@Model.Movie.Rating">
                         @for (int i = 1; i <= 10; i++)
                         {
                             <span data-value="@i" class="rating-star">&#9733;</span>
                         }
                     </div>
                     @Html.AntiForgeryToken()
-@*                 </div>
-            </div> *@
+                </div>
+            </div>
         </div>
     </div>
     <div class="row">
@@ -64,73 +64,9 @@
 </div>
 
 @section Scripts {
-    @await Html.PartialAsync("Shared/_Urls")
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
     <script src="https://cdn.datatables.net/2.0.8/js/dataTables.js"></script>
-    <script src="~/js/person.js" asp-append-version="true"></script>
-    <script>
-        $(document).ready(function () {
-            // Function to update the stars based on the current rating
-            function updateStars(rating) {
-                $('.rating-star').each(function () {
-                    var starValue = $(this).data('value');
-                    if (starValue <= rating) {
-                        $(this).css('color', '#f5b301');
-                    } else {
-                        $(this).css('color', '');
-                    }
-                });
-            }
-
-            // Initial star rating display
-            var initialRating = $('.rating').data('rating');
-            updateStars(initialRating);
-
-            // Get CSRF token
-            var token = $('input[name="__RequestVerificationToken"]').val();
-
-            // Handle star click event
-            $('.rating-star').on('click', function () {
-                var movieId = '@Model.Movie.Id';
-                var ratingValue = $(this).data('value');
-
-                var formData = {
-                    MovieId: movieId,
-                    StarCount: ratingValue
-                };
-
-                $.ajax({
-                    url: '@Url.Page("Details", new { id = Model.Movie.Id, handler = "Rate" })',
-                    type: 'POST',
-                    headers: {
-                        "RequestVerificationToken": token
-                    },
-                    contentType: 'application/json; charset=utf-8',
-                    data: JSON.stringify(formData),
-                    success: function (response) {
-                        if (response.success) {
-                            alert('Rating submitted successfully!');
-                            updateStars(ratingValue);
-                        } else if (response.redirect) {
-                            window.location.href = response.redirect;
-                        }
-                    },
-                    error: function (xhr, status, error) {
-                        alert('Error submitting rating: ' + error);
-                    }
-                });
-            });
-
-            // Handle star hover event
-                $('.rating-star').hover(
-                    function () {
-                        var hoverValue = $(this).data('value');
-                        updateStars(hoverValue);
-                    },
-                    function () {
-                        updateStars(initialRating);
-                    }
-                );
-        });
-    </script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script src="~/js/Movie/detailsMovie.js" asp-append-version="true"></script>
 }
