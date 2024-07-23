@@ -203,38 +203,4 @@
             $link.text('less');
         }
     });
-
-    var token = $('input[name="__RequestVerificationToken"]').val();
-
-    $('#downloadPdf').click(function (e) {
-        e.preventDefault();
-        var form = $('<form>', {
-            action: Urls.Movie.GetPDF,
-            method: 'post'
-        }).append($('<input>', { type: 'hidden', name: '__RequestVerificationToken', value: token }));
-
-        appendFiltersToForm(form);
-        $('body').append(form);
-        form.submit();
-    });
-
-    $('#downloadExcel').click(function (e) {
-        e.preventDefault();
-        var form = $('<form>', {
-            action: '@Url.Page("/Movies/Index", new { handler = "DownloadExcel" })',
-            method: 'post'
-        }).append($('<input>', { type: 'hidden', name: '__RequestVerificationToken', value: token }));
-
-        appendFiltersToForm(form);
-        $('body').append(form);
-        form.submit();
-    });
-
-    function appendFiltersToForm(form) {
-        form.append($('<input>', { type: 'hidden', name: 'DataTablesRequest.Title', value: $('#titleFilter').val() }));
-        form.append($('<input>', { type: 'hidden', name: 'DataTablesRequest.ReleasedDate', value: $('#releasedDateFilter').val() }));
-        form.append($('<input>', { type: 'hidden', name: 'DataTablesRequest.Country', value: $('#countryFilter').val() }));
-        form.append($('<input>', { type: 'hidden', name: 'DataTablesRequest.Actor', value: $('#actorFilter').val() }));
-        form.append($('<input>', { type: 'hidden', name: 'DataTablesRequest.Director', value: $('#directorFilter').val() }));
-    }
 });
