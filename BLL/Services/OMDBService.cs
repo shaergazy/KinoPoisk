@@ -17,8 +17,6 @@ namespace BLL.Services
             _rottenTomatoesRatings = rottenTomatoesRatings;
         }
 
-        #region ApiImplementation
-
         public Item GetItemByTitle(string title, bool fullPlot = false)
         {
             return GetItemByTitle(title,  null, fullPlot);
@@ -70,10 +68,6 @@ namespace BLL.Services
             return searchList;
         }
 
-        #endregion
-
-        #region Internal
-
         private async Task<T> GetOmdbDataAsync<T>(string query)
         {
             using (var client = new HttpClient { BaseAddress = new Uri(BaseUrl) })
@@ -104,7 +98,5 @@ namespace BLL.Services
                 });
             }
         }
-        #endregion
-    
     }
 }
