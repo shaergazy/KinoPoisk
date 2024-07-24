@@ -3,16 +3,78 @@
 @{
     ViewData["Title"] = "Import Movie";
 }
-
 <h1>Import Movie</h1>
 
 <div>
-    <form id="search-form">
-        <div class="form-group">
-            <label for="title">Title:</label>
-            <input type="text" id="title" class="form-control" />
-        </div>
-        <button type="button" id="search-button" class="btn btn-primary">Search</button>
+    <h2>Search Movies</h2>
+    <form id="search-form-title" class="form-inline mb-3">
+        <fieldset>
+            <legend>By Title</legend>
+            <div class="form-row align-items-center">
+                <div class="col-auto">
+                    <label for="title" class="sr-only">Title</label>
+                    <input type="text" id="title" class="form-control mb-2" placeholder="Title" />
+                </div>
+                <div class="col-auto">
+                    <label for="year" class="sr-only">Year</label>
+                    <select id="year" class="form-control mb-2">
+                        <option value="">Year</option>
+                        @for (int year = 1900; year <= DateTime.Now.Year; year++)
+                        {
+                            <option value="@year">@year</option>
+                        }
+                    </select>
+                </div>
+                <div class="col-auto">
+                    <label for="plot" class="sr-only">Plot</label>
+                    <select id="plot" class="form-control mb-2">
+                        <option value="short">Short</option>
+                        <option value="full">Full</option>
+                    </select>
+                </div>
+                <div class="col-auto">
+                    <button type="button" id="search-button-title" class="btn btn-primary mb-2">Search</button>
+                </div>
+                <div class="col-auto">
+                    <button type="button" id="reset-button-title" class="btn btn-secondary mb-2 ml-2">Reset</button>
+                </div>
+            </div>
+        </fieldset>
+    </form>
+
+    <form id="search-form-id" class="form-inline">
+        <fieldset>
+            <legend>By ID</legend>
+            <div class="form-row align-items-center">
+                <div class="col-auto">
+                    <label for="imdbId" class="sr-only">IMDb ID</label>
+                    <input type="text" id="imdbId" class="form-control mb-2" placeholder="IMDb ID" />
+                </div>
+                <div class="col-auto">
+                    <label for="year-id" class="sr-only">Year</label>
+                    <select id="year-id" class="form-control mb-2">
+                        <option value="">Year</option>
+                        @for (int year = 1900; year <= DateTime.Now.Year; year++)
+                        {
+                            <option value="@year">@year</option>
+                        }
+                    </select>
+                </div>
+                <div class="col-auto">
+                    <label for="plot-id" class="sr-only">Plot</label>
+                    <select id="plot-id" class="form-control mb-2">
+                        <option value="short">Short</option>
+                        <option value="full">Full</option>
+                    </select>
+                </div>
+                <div class="col-auto">
+                    <button type="button" id="search-button-id" class="btn btn-primary mb-2">Search</button>
+                </div>
+                <div class="col-auto">
+                    <button type="button" id="reset-button-id" class="btn btn-secondary mb-2 ml-2">Reset</button>
+                </div>
+            </div>
+        </fieldset>
     </form>
 </div>
 
@@ -24,48 +86,92 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script>
         $(document).ready(function () {
-            $('#search-button').on('click', function () {
+            $('#search-button-title').on('click', function () {
                 var title = $('#title').val();
+                var year = $('#year').val();
+                var plot = $('#plot').val();
+
+                var data = { title: title, year: year, plot: plot };
 
                 $.ajax({
                     url: '/Movies/Import?handler=Search',
                     method: 'GET',
-                    data: { title: title },
+                    data: data,
                     success: function (response) {
-                        var resultsDiv = $('#search-results');
-                        resultsDiv.empty();
-
-                        if (response.success && response.movies.length > 0) {
-                            response.movies.forEach(function (movie) {
-                                var movieDiv = $('<div>').addClass('movie-result');
-                                movieDiv.append($('<h3>').text(movie.Title));
-                                movieDiv.append($('<p>').text('Year: ' + movie.Year));
-                                movieDiv.append($('<button>').text('Import').addClass('btn btn-success').data('movie', movie));
-                                resultsDiv.append(movieDiv);
-                            });
-
-                            $('.btn-success').on('click', function () {
-                                var movie = $(this).data('movie');
-                                $.ajax({
-                                    url: '/Movies/Import?handler=Import',
-                                    method: 'POST',
-                                    contentType: 'application/json',
-                                    data: JSON.stringify(movie),
-                                    success: function (response) {
-                                        if (response.success) {
-                                            alert('Movie imported successfully!');
-                                        } else {
-                                            alert('Error importing movie: ' + response.error);
-                                        }
-                                    }
-                                });
-                            });
-                        } else {
-                            resultsDiv.append($('<p>').text('No movies found.'));
-                        }
+                        populateResults(response);
                     }
                 });
             });
+
+            $('#reset-button-title').on('click', function () {
+                $('#search-form-title')[0].reset();
+                $('#search-results').empty();
+            });
+
+            $('#search-button-id').on('click', function () {
+                var imdbId = $('#imdbId').val();
+                var year = $('#year-id').val();
+                var plot = $('#plot-id').val();
+
+                var data = { imdbId: imdbId, year: year, plot: plot };
+
+                $.ajax({
+                    url: '/Movies/Import?handler=SearchById',
+                    method: 'GET',
+                    data: data,
+                    success: function (response) {
+                        populateResults(response);
+                    }
+                });
+            });
+
+            $('#reset-button-id').on('click', function () {
+                $('#search-form-id')[0].reset();
+                $('#search-results').empty();
+            });
+
+            function populateResults(response) {
+                var resultsDiv = $('#search-results');
+                resultsDiv.empty();
+
+                if (response.success && response.movies.searchResults.length > 0) {
+                    var table = $('<table>').addClass('table');
+                    table.append('<thead><tr><th>IMDB Id</th><th>Title</th><th>Year</th><th>Poster</th><th>Action</th></tr></thead>');
+                    var tbody = $('<tbody>');
+
+                    response.movies.searchResults.forEach(function (movie) {
+                        var row = $('<tr>');
+                        row.append($('<td>').text(movie.imdbId));
+                        row.append($('<td>').text(movie.title));
+                        row.append($('<td>').text(movie.year));
+                        row.append($('<td>').html('<img src="' + movie.poster + '" alt="' + movie.title + '" class="img-thumbnail" width="100" />'));
+                        row.append($('<td>').append('<button class="btn btn-success import-button" data-imdbid="' + movie.imdbId + '">Import</button>'));
+                        tbody.append(row);
+                    });
+
+                    table.append(tbody);
+                    resultsDiv.append(table);
+
+                    $('.import-button').on('click', function () {
+                        var imdbId = $(this).data('imdbid');
+                        $.ajax({
+                            url: '/Movies/Import?handler=Import',
+                            method: 'POST',
+                            contentType: 'application/json',
+                            data: imdbId,
+                            success: function (response) {
+                                if (response.success) {
+                                    alert('Movie imported successfully!');
+                                } else {
+                                    alert('Error importing movie: ' + response.error);
+                                }
+                            }
+                        });
+                    });
+                } else {
+                    resultsDiv.append($('<p>').text('No movies found.'));
+                }
+            }
         });
     </script>
 }

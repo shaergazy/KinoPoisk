@@ -1,6 +1,6 @@
 ﻿using BLL.DTO.Movie;
+using BLL.Utilities;
 using Newtonsoft.Json;
-using OMDbApiNet.Utilities;
 using System.Net.Http.Headers;
 
 namespace BLL.Services

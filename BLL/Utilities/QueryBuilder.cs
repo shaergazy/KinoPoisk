@@ -1,12 +1,11 @@
-using System;
 using System.Text.RegularExpressions;
 
-namespace OMDbApiNet.Utilities
+namespace BLL.Utilities
 {
-	/// <summary>
-	/// This class contains the methods for building the query to be sent to OMDb.
-	/// </summary>
-	public static class QueryBuilder
+    /// <summary>
+    /// This class contains the methods for building the query to be sent to OMDb.
+    /// </summary>
+    public static class QueryBuilder
 	{
 		public static string GetItemByTitleQuery(string title, int? year, bool fullPlot)
 		{
@@ -31,8 +30,8 @@ namespace OMDbApiNet.Utilities
 					throw new ArgumentOutOfRangeException("Year has to be greater than 1800.", nameof(year));
 				}
 			}
-
-			return query;
+            query += $"&type=movie";
+            return query;
 		}
 
 		public static string GetItemByIdQuery(string id, bool fullPlot)
@@ -45,8 +44,9 @@ namespace OMDbApiNet.Utilities
 			var plot = fullPlot ? "full" : "short";
 
 			var query = $"&i={id}&plot={plot}";
+            query += $"&type=movie";
 
-			return query;
+            return query;
 		}
 
 		public static string GetSearchListQuery(int? year, string query, int page)
@@ -75,7 +75,9 @@ namespace OMDbApiNet.Utilities
 				}
 			}
 
-			return editedQuery;
+            editedQuery += $"&type=movie";
+
+            return editedQuery;
 		}
 	}
 }

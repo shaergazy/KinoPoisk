@@ -1,5 +1,6 @@
 ﻿using BLL.DTO.Country;
 using BLL.DTO.Genre;
+using BLL.Services;
 using BLL.Services.Implementation;
 using BLL.Services.Interfaces;
 using Common.Helpers;
@@ -70,6 +71,7 @@ namespace Common.CommonServices
             services.AddTransient<ICountryService, CountryService>();
             services.AddTransient<IGenreService, GenreService>();
             services.AddTransient<IPersonService, PersonService>();
+            services.AddSingleton(new OMDBService("fc8e73bf"));
         }
 
         /// <summary>
