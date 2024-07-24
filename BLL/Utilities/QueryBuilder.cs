@@ -77,42 +77,5 @@ namespace OMDbApiNet.Utilities
 
 			return editedQuery;
 		}
-
-		public static string GetEpisodeByEpisodeIdQuery(string episodeId)
-		{
-			if (string.IsNullOrWhiteSpace(episodeId))
-			{
-				throw new ArgumentException("Value cannot be null or whitespace.", nameof(episodeId));
-			}
-
-			return $"&i={episodeId}";
-		}
-		
-		public static string GetSeasonEpisodeQuery(string seriesId, string seriesTitle, int seasonNumber, int? episodeNumber)
-		{
-			string query;
-
-			if (seriesId != null)
-			{
-				query = $"&i={seriesId}";
-			} 
-			else if (seriesTitle != null)
-			{
-				query = $"&t={seriesTitle}";
-			}
-			else
-			{
-				throw new ArgumentNullException("Not both seriesId and seriesTitle can be null.");
-			}
-
-			query += $"&season={seasonNumber}";
-
-			if (episodeNumber != null)
-			{
-				query += $"&episode={episodeNumber}";
-			}
-
-			return query;
-		}
 	}
 }
