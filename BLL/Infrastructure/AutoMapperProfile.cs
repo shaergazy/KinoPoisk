@@ -32,6 +32,7 @@ namespace BLL.Infrastructure
             CreateMap<Person, DeletePersonDto>().ReverseMap();
 
             CreateMap<Comment, AddCommentDo>().ReverseMap();
+            CreateMap<Comment, GetCommentDto>().ReverseMap();
 
             CreateMap<MovieRating, AddMovieRating>().ReverseMap();
             CreateMap<AddMovieDto, Movie>().ReverseMap();

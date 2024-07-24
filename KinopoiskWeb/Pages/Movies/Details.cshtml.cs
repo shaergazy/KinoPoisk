@@ -53,7 +53,7 @@ namespace KinopoiskWeb.Pages.Movies
         public async Task<IActionResult> OnGetLoadAllCommentsAsync(Guid id)
         {
             var comments = await _movieService.GetCommentsAsync(id);
-            return new JsonResult(new { success = true, comments = comments });
+            return new JsonResult(new { success = true, comments });
         }
 
         [Authorize]

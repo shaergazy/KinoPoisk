@@ -9,7 +9,7 @@ namespace BLL.Services.Interfaces
         Task AddRatingAsync(AddMovieRating dto);
         Task AddCommentAsync(AddCommentDo dto);
 
-        Task<IEnumerable<Comment>> GetCommentsAsync(Guid id);
+        Task<IEnumerable<GetCommentDto>> GetCommentsAsync(Guid id);
         Task DeleteCommentAsync(int commentId);
 
         public IQueryable<Movie> SortByParametrs(IQueryable<Movie> entities, MovieDataTablesRequestDto request);
