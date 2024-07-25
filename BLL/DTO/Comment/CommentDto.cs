@@ -15,6 +15,10 @@ namespace BLL.DTO.Comment
     public class AddCommentDto : Base { }
     public class EditCommentDto : IdHasBase { }
     public class DeleteCommentDto : IdHasBase { }
-    public class GetCommentDto : IdHasBase { }
+    public class GetCommentDto : IdHasBase
+    {
+        public string UserName { get; set; }
+        public DateTime Date { get; set; }
+    }
     public class ListCommentDto : IdHasBase { }
 }

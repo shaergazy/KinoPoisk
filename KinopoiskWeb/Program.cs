@@ -5,6 +5,8 @@ using KinopoiskWeb.Extensions;
 using KinopoiskWeb.Infrastructure;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
+using OfficeOpenXml;
+using QuestPDF.Infrastructure;
 
 internal class Program
 {
@@ -39,7 +41,8 @@ internal class Program
         {
             options.HeaderName = "RequestVerificationToken";
         });
-
+        QuestPDF.Settings.License = LicenseType.Community;
+        ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
         builder.Services.ConfigMapper();
         var app = builder.Build();
 

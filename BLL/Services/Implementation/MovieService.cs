@@ -7,6 +7,8 @@ using DAL.Models;
 using Data.Models;
 using Data.Repositories.RepositoryInterfaces;
 using Microsoft.EntityFrameworkCore;
+using QuestPDF.Fluent;
+using QuestPDF.Previewer;
 
 namespace BLL.Services.Implementation
 {
@@ -52,6 +54,7 @@ namespace BLL.Services.Implementation
                 RecordsFiltered = recordsFiltered,
                 Data = data
             };
+
             return datatableResponse;
         }
 
@@ -78,7 +81,6 @@ namespace BLL.Services.Implementation
             {
                 existinRating.StarCount = dto.StarCount;
             }
-
             else
             {
                 var rating = _mapper.Map<MovieRating>(dto);
@@ -86,7 +88,19 @@ namespace BLL.Services.Implementation
             }
 
             await _uow.SaveChangesAsync();
+
+            var averageRating = await _uow.Ratings
+                .Where(r => r.MovieId == dto.MovieId)
+                .AverageAsync(r => r.StarCount);
+
+            var movie = await _uow.Movies.FirstOrDefaultAsync(m => m.Id == dto.MovieId);
+            if (movie != null)
+            {
+                movie.Rating = (float)averageRating;
+                await _uow.SaveChangesAsync();
+            }
         }
+
 
         public override IQueryable<Movie> FilterEntities(MovieDataTablesRequestDto request, IQueryable<Movie> entities = null)
         {
@@ -122,9 +136,14 @@ namespace BLL.Services.Implementation
             await _uow.Comments.DeleteByIdAsync(commentId);
         }
 
-        public async Task<IEnumerable<GetCommentDto>> GetCommentsAsync(Guid id)
+        public async Task<IEnumerable<GetCommentDto>> GetCommentsAsync(Guid movieId, int start, int length)
         {
-            var comments = _uow.Comments.Where(c => c.MovieId == id).ToList();
+            var comments = await _uow.Comments
+                             .Where(c => c.MovieId == movieId)
+                             .Include(x => x.User)
+                             .OrderBy(c => c.Date)
+                             .Skip(start)
+                             .Take(length).ToListAsync();
             return _mapper.Map<List<GetCommentDto>>(comments);
         }
 

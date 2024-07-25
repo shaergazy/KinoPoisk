@@ -1,6 +1,9 @@
 ﻿using AutoMapper;
+using BLL.DTO;
 using BLL.DTO.Movie;
 using BLL.Services.Interfaces;
+using DAL.Models;
+using KinopoiskWeb.DataTables;
 using KinopoiskWeb.ViewModels.Movie;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -9,6 +12,7 @@ using System.Security.Claims;
 
 namespace KinopoiskWeb.Pages.Movies
 {
+    [IgnoreAntiforgeryToken]
     public class DetailsModel : PageModel
     {
         private readonly IMovieService _movieService;
@@ -50,10 +54,17 @@ namespace KinopoiskWeb.Pages.Movies
             return new JsonResult(new { success = true });
         }
 
-        public async Task<IActionResult> OnGetLoadAllCommentsAsync(Guid id)
+        public async Task<JsonResult> OnPostLoadCommentsAsync(Guid id, DataTablesRequest request)
         {
-            var comments = await _movieService.GetCommentsAsync(id);
-            return new JsonResult(new { success = true, comments });
+            var comments = await _movieService.GetCommentsAsync(id, request.Start, request.Length);
+
+            var response = new DataTablesResponse<GetCommentDto>
+            {
+                Draw = request.Draw,
+                Data = comments.ToList(),
+            };
+
+            return new JsonResult(response);
         }
 
         [Authorize]

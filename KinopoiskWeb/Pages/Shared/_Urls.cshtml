@@ -24,7 +24,9 @@ var Urls = Urls || {};
 
     Urls.Movie = {
         GetAll: '@Url.Action("Index", "Movies")',
-        GetPDF: '@Url.Action("Index", "Movies", new { handler = "DownloadPdf" })',
+        GetPDF: '@Url.Action("Index", "Movies", new { handler = "GeneratePDF" })',
+        GetExcel: '@Url.Action("Index", "Movies", new { handler = "GenerateExcel" })',
+        LoadComments: '@Url.Action("Details", "Movies", new { handler = "LoadComments" })',
         Rate: '@Url.Action("Rate", "Movies", new { handler = "Rate" })',
     };
 

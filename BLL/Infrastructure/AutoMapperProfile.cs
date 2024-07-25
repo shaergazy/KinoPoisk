@@ -32,7 +32,8 @@ namespace BLL.Infrastructure
             CreateMap<Person, DeletePersonDto>().ReverseMap();
 
             CreateMap<Comment, AddCommentDo>().ReverseMap();
-            CreateMap<Comment, GetCommentDto>().ReverseMap();
+            CreateMap<Comment, GetCommentDto>()
+            .ForMember(x => x.UserName, opt => opt.MapFrom(src => src.User.UserName)).ReverseMap();
 
             CreateMap<MovieRating, AddMovieRating>().ReverseMap();
             CreateMap<AddMovieDto, Movie>().ReverseMap();
@@ -47,9 +48,7 @@ namespace BLL.Infrastructure
                 {
                     FirstName = a.Person.FirstName,
                     LastName = a.Person.LastName
-                }).ToList()))
-           .ForMember(dest => dest.Rating, opt => opt.MapFrom(src =>
-                src.Ratings != null && src.Ratings.Any() ? src.Ratings.Average(r => r.StarCount) : 0f));
+                }).ToList()));
 
             CreateMap<Movie, GetMovieDto>()
                  .ForMember(dest => dest.Poster, opt => opt.MapFrom(src => "/" + src.Poster.Replace("\\", "/")))
@@ -64,9 +63,7 @@ namespace BLL.Infrastructure
                     FirstName = a.Person.FirstName,
                     LastName = a.Person.LastName
                 }).ToList()))
-
            .ForMember(dest => dest.Country, opt => opt.MapFrom(src => src.Country))
-
            .ForMember(dest => dest.Genres, opt => opt.MapFrom(src =>
                  src.Genres != null ? src.Genres.Select(g => new GetGenreDto
                  {
@@ -79,8 +76,6 @@ namespace BLL.Infrastructure
                      Id = c.Id,
                      Text = c.Text
                  }).ToList() : new List<GetCommentDto>()))
-            .ForMember(dest => dest.Rating, opt => opt.MapFrom(src =>
-                src.Ratings != null && src.Ratings.Any() ? src.Ratings.Average(r => r.StarCount) : 0f))
             .ForMember(dest => dest.DateRealesed, opt => opt.MapFrom(src => src.ReleasedDate))
             .ReverseMap();
 

@@ -143,29 +143,41 @@
         "order": [[0, "desc"]],
         "buttons": [
             {
-                extend: 'csv',
-                exportOptions: {
-                    columns: [2, 3, 4, 5, 6]
+                text: 'Export as PDF',
+                action: function () {
+                    generateReport('pdf');
                 }
             },
             {
-                extend: 'excel',
-                exportOptions: {
-                    columns: [2, 3, 4, 5, 6]
+                text: 'Export as Excel',
+                action: function () {
+                    generateReport('excel');
                 }
-            },
-            {
-                extend: 'pdfHtml5',
-                download: 'open',
-                exportOptions: {
-                    columns: [2, 3, 4, 5, 6]
-                }
-            },
+            }
         ],
         "layout": {
             topStart: 'buttons'
         }
     });
+
+    function generateReport(format) {
+        $.ajax({
+            url: format === 'pdf' ? Urls.Movie.GetPDF : Urls.Movie.GetExcel,
+            type: 'POST',
+            headers: { 'RequestVerificationToken': token },
+            data: table.ajax.params(),
+            xhrFields: {
+                responseType: 'blob'
+            },
+            success: function (data) {
+                var blob = new Blob([data], { type: format === 'pdf' ? 'application/pdf' : 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+                var link = document.createElement('a');
+                link.href = window.URL.createObjectURL(blob);
+                link.download = format === 'pdf' ? `MoviesReport_${Date.now()}.pdf` : `MoviesReport_${Date.now()}.xlsx`;
+                link.click();
+            }
+        });
+    }
 
     // Function to reload table with debounce
     function debounce(func, delay) {

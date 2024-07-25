@@ -20,5 +20,6 @@ namespace DAL.Models
         public uint? Duration { get; set; }
         public float? IMDBRating { get; set; }
         public ICollection<MovieRating> Ratings { get; set;}
+        public float Rating { get; set; }  
     }
 }
