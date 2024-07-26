@@ -1,6 +1,7 @@
 ﻿$(document).ready(function () {
     var token = $('input[name="__RequestVerificationToken"]').val();
 
+    // Поиск по заголовку
     $('#search-button-title').on('click', function () {
         var title = $('#title').val();
         var year = $('#year').val();
@@ -19,11 +20,13 @@
         });
     });
 
+    // Сброс формы поиска по заголовку
     $('#reset-button-title').on('click', function () {
         $('#search-form-title')[0].reset();
         $('#search-results').empty();
     });
 
+    // Поиск по IMDB Id
     $('#search-button-id').on('click', function () {
         var imdbId = $('#imdbId').val();
         var year = $('#year-id').val();
@@ -42,11 +45,13 @@
         });
     });
 
+    // Сброс формы поиска по IMDB Id
     $('#reset-button-id').on('click', function () {
         $('#search-form-id')[0].reset();
         $('#search-results').empty();
     });
 
+    // Функция для заполнения результатов поиска
     function populateResults(response) {
         var resultsDiv = $('#search-results');
         resultsDiv.empty();
@@ -69,13 +74,15 @@
             table.append(tbody);
             resultsDiv.append(table);
 
+            // Обработчик для кнопки "Import"
             $('.import-button').on('click', function () {
-                var imdbId = $(this).data('imdbid');
+                var imdbId = $(this).data('imdbid'); // Получаем значение атрибута data-imdbid
                 $.ajax({
                     url: '/Movies/Import?handler=Import',
                     method: 'POST',
                     contentType: 'application/json',
-                    data: JSON.stringify({ imdbId: imdbId }),
+                    data: JSON.stringify({ ImdbId: imdbId }), // Оборачиваем imdbId в JSON
+                    dataType: 'json',
                     headers: { 'RequestVerificationToken': token },
                     success: function (response) {
                         if (response.success) {

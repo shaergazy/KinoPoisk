@@ -1,9 +1,41 @@
 ﻿$(document).ready(function () {
-    var movieId = $('.rating').data('movie-id');
-    var token = $('input[name="__RequestVerificationToken"]').val();
+    var maxLength = 1000; // Максимальная длина сокращенного текста
 
-    function updateStars(rating) {
-        $('.rating-star').each(function () {
+    function toggleDescription(description, movieId) {
+        var fullText = description.data('fullText') || description.text().trim();
+        description.data('fullText', fullText); // Сохраняем полный текст в data атрибуте
+
+        if (fullText.length > maxLength) {
+            var truncatedText = fullText.substring(0, maxLength) + '...';
+            description.html(truncatedText + ' <span class="more" id="more-' + movieId + '">more</span>');
+        }
+    }
+
+    $('.description').each(function () {
+        var description = $(this);
+        var movieId = description.attr('id') ? description.attr('id').split('-')[1] : null;
+        if (movieId) {
+            toggleDescription(description, movieId);
+        }
+    });
+
+    $('#moviesTable').on('click', '.more', function () {
+        var description = $(this).parent();
+        var movieId = $(this).attr('id').split('-')[1];
+        var fullText = description.data('fullText');
+
+        description.html(fullText + ' <span class="less" id="less-' + movieId + '">less</span>');
+    });
+
+    $('#moviesTable').on('click', '.less', function () {
+        var description = $(this).parent();
+        var movieId = $(this).attr('id').split('-')[1];
+        toggleDescription(description, movieId);
+    });
+
+    function updateStars(ratingElement) {
+        var rating = ratingElement.data('rating');
+        ratingElement.find('span').each(function () {
             var starValue = $(this).data('value');
             if (starValue <= rating) {
                 $(this).css('color', '#f5b301');
@@ -13,11 +45,17 @@
         });
     }
 
-    var initialRating = $('.rating').data('rating');
-    updateStars(initialRating);
+    // Обновление звезд для всех элементов рейтинга
+    $('.rating').each(function () {
+        updateStars($(this));
+    });
 
-    $('.rating-star').on('click', function () {
+    var token = $('input[name="__RequestVerificationToken"]').val();
+
+    $('.rating span').on('click', function () {
+        var movieId = $(this).closest('.rating').attr('id').split('-')[1];
         var ratingValue = $(this).data('value');
+
         var formData = {
             MovieId: movieId,
             StarCount: ratingValue
@@ -34,7 +72,7 @@
             success: function (response) {
                 if (response.success) {
                     toastr.success('Rating submitted successfully!');
-                    updateStars(ratingValue);
+                    updateStars($(this).closest('.rating').data('rating', ratingValue));
                 } else if (response.redirect) {
                     window.location.href = response.redirect;
                 }
@@ -45,19 +83,24 @@
         });
     });
 
-    $('.rating-star').hover(
+    $('.rating span').hover(
         function () {
             var hoverValue = $(this).data('value');
-            updateStars(hoverValue);
+            $(this).prevAll().addBack().css('color', '#f5b301');
         },
         function () {
-            updateStars(initialRating);
+            updateStars($(this).closest('.rating'));
         }
     );
+
+    var movieId = $('.rating').data('movie-id');
 
     var table = $('#commentsTable').DataTable({
         "processing": true,
         "serverSide": true,
+        "searching": false, // Убрать строку поиска
+        "paging": false, // Отключить стандартную пагинацию
+        "info": false, // Убрать нижний раздел
         "ajax": {
             "url": `/Movies/Details/${movieId}?handler=LoadComments`,
             "type": "POST",
@@ -68,7 +111,6 @@
         },
         "scrollY": "400px", // Установить высоту таблицы
         "scrollCollapse": true,
-        "paging": false, // Отключить стандартную пагинацию
         "deferRender": true, // Включить отложенный рендеринг
         "columns": [
             { "data": "userName" },
@@ -78,11 +120,11 @@
     });
 
     // Функция для подгрузки комментариев при прокрутке вниз
-    $('#commentsTable').on('scroll', function () {
+    $('#commentsTable_wrapper .dataTables_scrollBody').on('scroll', function () {
         var scrollHeight = this.scrollHeight;
         var scrollTop = this.scrollTop;
         var height = $(this).height();
-        if (scrollHeight - scrollTop <= height) {
+        if (scrollHeight - scrollTop <= height + 100) {
             table.ajax.reload(null, false); // Перезагрузка данных без сброса пагинации
         }
     });

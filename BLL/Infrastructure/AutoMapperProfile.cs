@@ -51,7 +51,7 @@ namespace BLL.Infrastructure
                 }).ToList()));
 
             CreateMap<Movie, GetMovieDto>()
-                 .ForMember(dest => dest.Poster, opt => opt.MapFrom(src => "/" + src.Poster.Replace("\\", "/")))
+                 .ForMember(dest => dest.Poster, opt => opt.MapFrom(src => src.Poster.Replace("\\", "/")))
                     .ForMember(dest => dest.Director, opt => opt.MapFrom(src => src.People.FirstOrDefault(p => p.PersonType.ToString() == "Director") != null
                ? new GetPersonDto { FirstName = src.People.First(p => p.PersonType.ToString() == "Director").Person.FirstName, LastName = src.People.First(p => p.PersonType.ToString() == "Director").Person.LastName }
                : null))

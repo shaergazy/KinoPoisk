@@ -1,15 +1,16 @@
+using BLL.DTO.Movie;
+using BLL.Services;
+using BLL.Services.Interfaces;
+using DAL.Models;
+using Data.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Newtonsoft.Json;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using BLL.Services;
-using BLL.DTO.Movie;
-using BLL.Services.Interfaces;
+using Microsoft.EntityFrameworkCore;
+using System.Text.RegularExpressions;
 
 namespace KinopoiskWeb.Pages.Movies
 {
-    [IgnoreAntiforgeryToken]
+    //[IgnoreAntiforgeryToken]
     public class ImportModel : PageModel
     {
         private readonly OMDBService _omdbService;
@@ -54,37 +55,26 @@ namespace KinopoiskWeb.Pages.Movies
             return new JsonResult(new { success = false, error = "No movies found" });
         }
 
-        public async Task<IActionResult> OnPostImportAsync( string imdbId)
+        public async Task<IActionResult> OnPostImportAsync([FromBody] ImdbIdRequest request)
         {
-            if (string.IsNullOrEmpty(imdbId))
+            try
             {
-                return new JsonResult(new { success = false, error = "Invalid movie data" });
+                var item = _omdbService.GetItemById(request.ImdbId);
+                if (item == null)  return new JsonResult(new { success = false });
+                await _movieService.ImportMovieAsync(item);
+                return new JsonResult(new { success = true, movie = item });
             }
-
-            var item = _omdbService.GetItemById(imdbId);
-            if (item != null)
+            catch (Exception)
             {
-                //var movieDto = new AddMovieDto
-                //{
-                //    Title = item.Title,
-                //    ReleasedDate = item.Year,
-                //    Director = item.Director,
-                //    Actors = item.Actors,
-                //    Description = item.Plot,
-                //    Poster = item.Poster,
-                //    ImdbId = item.
-                //};
 
-                //var result = await _movieService.AddMovieAsync(movieDto);
-
-                //if (result.Success)
-                //{
-                //    return new JsonResult(new { success = true });
-                //}
-
-                //return new JsonResult(new { success = false, error = result.ErrorMessage });
+                throw;
             }
-            return new JsonResult(new { success = false, error = "Movie not found" });
         }
+        public class ImdbIdRequest
+        {
+            public string ImdbId { get; set; }
+        }
+
+
     }
 }

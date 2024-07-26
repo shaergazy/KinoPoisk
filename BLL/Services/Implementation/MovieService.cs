@@ -9,6 +9,8 @@ using Data.Repositories.RepositoryInterfaces;
 using Microsoft.EntityFrameworkCore;
 using QuestPDF.Fluent;
 using QuestPDF.Previewer;
+using Repositories;
+using System;
 
 namespace BLL.Services.Implementation
 {
@@ -229,13 +231,11 @@ namespace BLL.Services.Implementation
 
             return movieToUpdate;
         }
-
         public async Task<IEnumerable<ListMovieDto>> GetNewestMoviesAsync(int count)
         {
             var movies = await _uow.Movies.GetAll()
                 .Include(x => x.People)
                     .ThenInclude(m => m.Person)
-                .Include(m => m.Ratings)
                 .OrderByDescending(x => x.ReleasedDate)
                 .Take(count)
                 .ToListAsync();
@@ -243,18 +243,90 @@ namespace BLL.Services.Implementation
             return _mapper.Map<List<ListMovieDto>>(movies);
         }
 
+        public async Task ImportMovieAsync(Item dto)
+        {
+            var movie = new Movie
+            {
+                Id = Guid.NewGuid(),
+                Title = dto.Title,
+                Description = dto.Plot,
+                ReleasedDate = DateTime.Parse(dto.Released),
+                Poster = dto.Poster,
+                IMDBRating = float.Parse(dto.ImdbRating),
+                Duration = ParseDuration(dto.Runtime),
+                Genres = new List<MovieGenre>(),  // Инициализируем коллекции
+                People = new List<MoviePerson>()
+            };
+            await _uow.Movies.AddAsync(movie);
+
+            // Handle Country
+            var countryNames = dto.Country.Split(", ");
+            foreach (var countryName in countryNames)
+            {
+                var country = await _uow.Countries.FirstOrDefaultAsync(c => c.Name == countryName);
+                if (country == null)
+                {
+                    country = new Country { Name = countryName };
+                    await _uow.Countries.AddAsync(country);
+                }
+                movie.Country = country;
+            }
+
+            // Handle Genres
+            var genreNames = dto.Genre.Split(", ");
+            foreach (var genreName in genreNames)
+            {
+                var genre = await _uow.Genres.FirstOrDefaultAsync(g => g.Name == genreName);
+                if (genre == null)
+                {
+                    genre = new Genre { Name = genreName };
+                    await _uow.Genres.AddAsync(genre);
+                }
+                movie.Genres.Add(new MovieGenre { Genre = genre });
+            }
+
+            // Handle People (Actors and Directors)
+            var actors = dto.Actors.Split(", ");
+            uint i = 1;
+            foreach (var personName in actors)
+            {
+                var names = personName.Split(" ");
+                var firstName = names.First();
+                var lastName = names.Last();
+                var person = await _uow.People.FirstOrDefaultAsync(p => p.FirstName == firstName && p.LastName == lastName);
+                if (person == null)
+                {
+                    person = new Person { FirstName = firstName, LastName = lastName };
+                    await _uow.People.AddAsync(person);
+                }
+                movie.People.Add(new MoviePerson { Person = person, Order = i, PersonType = PersonType.Actor });
+                i++;
+            }
+
+            var directorNames = dto.Director.Split(" ");
+            var director = await _uow.People.FirstOrDefaultAsync(p => p.FirstName == directorNames.First() && p.LastName == directorNames.Last()); 
+            if (director == null) 
+            {
+                director = new Person { FirstName = directorNames.First(), LastName = directorNames.Last() };
+                await _uow.People.AddAsync(director);
+            }
+                movie.People.Add(new MoviePerson { Person = director, PersonType = PersonType.Director });
+                await _uow.SaveChangesAsync();
+        }
+
+        private uint ParseDuration(string runtime)
+        {
+            var parts = runtime.Split(" ");
+            return uint.TryParse(parts[0], out var duration) ? duration : 0;
+        }
+
+
         public async Task<IEnumerable<ListMovieDto>> GetTopRatedMoviesAsync(int count)
         {
             var movies = await _uow.Movies.GetAll()
                 .Include(x => x.People)
                 .ThenInclude(m => m.Person)
-                .Select(movie => new
-                {
-                    Movie = movie,
-                    AverageRating = movie.Ratings.Average(r => (int?)r.StarCount) ?? 0
-                })
-                .OrderByDescending(x => x.AverageRating)
-                .Select(x => x.Movie)
+                .OrderByDescending(x => x.Rating)
                 .Take(count)
                 .ToListAsync();
 

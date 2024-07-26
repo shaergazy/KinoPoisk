@@ -7,7 +7,7 @@ namespace BLL.Utilities
     /// </summary>
     public static class QueryBuilder
 	{
-		public static string GetItemByTitleQuery(string title, int? year, bool fullPlot)
+		public static string GetItemByTitleQuery(string title, int? year, bool fullPlot = true)
 		{
 			if (string.IsNullOrWhiteSpace(title))
 			{
@@ -34,7 +34,7 @@ namespace BLL.Utilities
             return query;
 		}
 
-		public static string GetItemByIdQuery(string id, bool fullPlot)
+		public static string GetItemByIdQuery(string id, bool fullPlot = true)
 		{
 			if (string.IsNullOrWhiteSpace(id))
 			{

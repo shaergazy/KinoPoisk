@@ -8,6 +8,7 @@ namespace BLL.Services.Interfaces
     {
         Task AddRatingAsync(AddMovieRating dto);
         Task AddCommentAsync(AddCommentDo dto);
+        public Task ImportMovieAsync(Item dto);
 
         Task<IEnumerable<GetCommentDto>> GetCommentsAsync(Guid movieId, int start, int length);
         Task DeleteCommentAsync(int commentId);

@@ -2,13 +2,18 @@
 @model KinopoiskWeb.Pages.Movies.DetailsModel
 @{
     ViewData["Title"] = Model.Movie.Title;
+    string posterUrl = Model.Movie.Poster;
+    if (!string.IsNullOrEmpty(Model.Movie.Poster) && !Uri.IsWellFormedUriString(Model.Movie.Poster, UriKind.RelativeOrAbsolute))
+    {
+        posterUrl = $"/{Model.Movie.Poster}";
+    }
 }
 
 <div class="containerMovieDetails">
     <div class="row">
         <div class="col-md-4">
             <div class="poster">
-                <img src="@Model.Movie.Poster" alt="Poster" class="img-fluid" />
+                <img src="@posterUrl" alt="Poster" class="img-fluid" />
             </div>
         </div>
         <div class="col-md-8 movie-details">
@@ -51,13 +56,13 @@
     <div class="row">
         <div class="col-12">
             <div class="comments-section">
-                <h2>Комментарии</h2>
+                <h2>Comments</h2>
                 <table id="commentsTable" class="display" style="width:100%">
                     <thead>
                         <tr>
-                            <th>Пользователь</th>
-                            <th>Комментарий</th>
-                            <th>Дата</th>
+                            <th>User</th>
+                            <th>Comment</th>
+                            <th>Date</th>
                         </tr>
                     </thead>
                     <tbody>

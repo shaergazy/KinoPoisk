@@ -17,7 +17,7 @@ public class IndexModel : PageModel
     public List<IndexMovieVM> NewestMovies { get; set; }
     public List<IndexMovieVM> HighRatedMovies { get; set; }
 
-
+    
     public async Task OnGetAsync()
     {
         NewestMovies = new List<IndexMovieVM>();
