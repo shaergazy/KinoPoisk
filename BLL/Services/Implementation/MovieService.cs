@@ -7,10 +7,6 @@ using DAL.Models;
 using Data.Models;
 using Data.Repositories.RepositoryInterfaces;
 using Microsoft.EntityFrameworkCore;
-using QuestPDF.Fluent;
-using QuestPDF.Previewer;
-using Repositories;
-using System;
 
 namespace BLL.Services.Implementation
 {
@@ -60,7 +56,7 @@ namespace BLL.Services.Implementation
             return datatableResponse;
         }
 
-        public virtual async Task<GetMovieDto> GetByIdAsync(Guid id)
+        public override async Task<GetMovieDto> GetByIdAsync(Guid id)
         {
             var entity = await _uow.Repository.GetAll()
             .Include(m => m.Country)
@@ -252,11 +248,15 @@ namespace BLL.Services.Implementation
                 Description = dto.Plot,
                 ReleasedDate = DateTime.Parse(dto.Released),
                 Poster = dto.Poster,
-                IMDBRating = float.Parse(dto.ImdbRating),
                 Duration = ParseDuration(dto.Runtime),
                 Genres = new List<MovieGenre>(),  // Инициализируем коллекции
                 People = new List<MoviePerson>()
             };
+            if (float.TryParse(dto.ImdbRating, out float imdbRating))
+            {
+                movie.IMDBRating = imdbRating;
+            }
+
             await _uow.Movies.AddAsync(movie);
 
             // Handle Country

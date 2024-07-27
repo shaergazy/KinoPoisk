@@ -27,7 +27,8 @@ var Urls = Urls || {};
         GetPDF: '@Url.Action("Index", "Movies", new { handler = "GeneratePDF" })',
         GetExcel: '@Url.Action("Index", "Movies", new { handler = "GenerateExcel" })',
         LoadComments: '@Url.Action("Details", "Movies", new { handler = "LoadComments" })',
-        Rate: '@Url.Action("Rate", "Movies", new { handler = "Rate" })',
+        Rate: '@Url.Action("Details", "Movies", new { handler = "Rate" })',
+        AddComment: '@Url.Action("Details", "Movies", new { handler = "AddComment" })',
     };
 
     Urls.Account = {

@@ -53,7 +53,7 @@
     var token = $('input[name="__RequestVerificationToken"]').val();
 
     $('.rating span').on('click', function () {
-        var movieId = $(this).closest('.rating').attr('id').split('-')[1];
+        var movieId = $(this).closest('.rating').data('movie-id');
         var ratingValue = $(this).data('value');
 
         var formData = {
@@ -62,7 +62,7 @@
         };
 
         $.ajax({
-            url: `/Movies/Details/${movieId}?handler=Rate`,
+            url: Urls.Movie.Rate + `/${movieId}`,
             type: 'POST',
             headers: {
                 "RequestVerificationToken": token
@@ -102,7 +102,7 @@
         "paging": false, // Отключить стандартную пагинацию
         "info": false, // Убрать нижний раздел
         "ajax": {
-            "url": `/Movies/Details/${movieId}?handler=LoadComments`,
+            "url": Urls.Movie.LoadComments + `/${movieId}`,
             "type": "POST",
             "data": function (d) {
                 d.movieId = movieId;
@@ -144,7 +144,7 @@
         };
 
         $.ajax({
-            url: `/Movies/Details/${movieId}?handler=AddComment`,
+            url: Urls.Movie.AddComment + `/${movieId}`,
             type: 'POST',
             headers: {
                 "RequestVerificationToken": token
