@@ -6,9 +6,11 @@ namespace BLL.Services.Interfaces
 {
     public interface IMovieService : ISearchableService<ListMovieDto, AddMovieDto, EditMovieDto, GetMovieDto, Movie, Guid, MovieDataTablesRequestDto>, IService
     {
+        Task<byte[]> GeneratePdfAsync(MovieDataTablesRequestDto dto);
+        Task<byte[]> GenerateExcelAsync(MovieDataTablesRequestDto dto);
         Task AddRatingAsync(AddMovieRating dto);
         Task AddCommentAsync(AddCommentDo dto);
-        public Task ImportMovieAsync(Item dto);
+        public Task ImportMovieAsync(ExternalMovieDto dto);
 
         Task<IEnumerable<GetCommentDto>> GetCommentsAsync(Guid movieId);
         Task DeleteCommentAsync(int commentId);

@@ -1,4 +1,6 @@
-﻿$(document).ready(function () {
+﻿const DATE_FORMAT = 'DD/MM/YYYY';
+
+$(document).ready(function () {
     var maxLength = 1000; // Максимальная длина сокращенного текста
 
     function toggleDescription(description, movieId) {
@@ -83,7 +85,6 @@
         });
     });
 
-
     $('.rating span').hover(
         function () {
             var hoverValue = $(this).data('value');
@@ -99,37 +100,24 @@
     var table = $('#commentsTable').DataTable({
         "processing": true,
         "serverSide": true,
-        "searching": false, // Убрать строку поиска
-        "paging": false, // Отключить стандартную пагинацию
-        "info": false, // Убрать нижний раздел
+        "searching": false,
+        "paging": false, 
+        "info": false,
         "ajax": {
             "url": Urls.Movie.LoadComments + `/${movieId}`,
             "type": "POST",
             "data": function (d) {
                 d.movieId = movieId;
-                d.length = 10; // Установить количество загружаемых записей
             }
         },
-
-        "scrollY": "400px", 
+        "scrollY": "200px",
         "scrollCollapse": true,
         "deferRender": true,
         "columns": [
             { "data": "userName" },
             { "data": "text" },
-            { "data": "date", "render": function (data) { return moment(data).format('DD/MM/YYYY'); } }
+            { "data": "date", "render": function (data) { return moment(data).format(DATE_FORMAT); } }
         ]
-
-    });
-
-    // Функция для подгрузки комментариев при прокрутке вниз
-    $('#commentsTable_wrapper .dataTables_scrollBody').on('scroll', function () {
-        var scrollHeight = this.scrollHeight;
-        var scrollTop = this.scrollTop;
-        var height = $(this).height();
-        if (scrollHeight - scrollTop <= height + 100) {
-            table.ajax.reload(null, false); // Перезагрузка данных без сброса пагинации
-        }
     });
 
     $('#add-comment-form').on('submit', function (event) {

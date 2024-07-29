@@ -17,16 +17,16 @@ namespace BLL.Services
             _rottenTomatoesRatings = rottenTomatoesRatings;
         }
 
-        public Item GetItemByTitle(string title, bool fullPlot = false)
+        public ExternalMovieDto GetItemByTitle(string title, bool fullPlot = false)
         {
             return GetItemByTitle(title,  null, fullPlot);
         }
 
-        public Item GetItemByTitle(string title,   int? year, bool fullPlot = false)
+        public ExternalMovieDto GetItemByTitle(string title,   int? year, bool fullPlot = false)
         {
             var query = QueryBuilder.GetItemByTitleQuery(title,  year, fullPlot);
 
-            var item = GetOmdbDataAsync<Item>(query).Result;
+            var item = GetOmdbDataAsync<ExternalMovieDto>(query).Result;
 
             if (item.Response.Equals("False"))
             {
@@ -36,11 +36,11 @@ namespace BLL.Services
             return item;
         }
 
-        public Item GetItemById(string id, bool fullPlot = false)
+        public ExternalMovieDto GetItemById(string id, bool fullPlot = false)
         {
             var query = QueryBuilder.GetItemByIdQuery(id, fullPlot);
 
-            var item = GetOmdbDataAsync<Item>(query).Result;
+            var item = GetOmdbDataAsync<ExternalMovieDto>(query).Result;
 
             if (item.Response.Equals("False"))
             {

@@ -7,6 +7,8 @@ using DAL.Models;
 using Data.Models;
 using Data.Repositories.RepositoryInterfaces;
 using Microsoft.EntityFrameworkCore;
+using OfficeOpenXml;
+using QuestPDF.Fluent;
 
 namespace BLL.Services.Implementation
 {
@@ -25,6 +27,55 @@ namespace BLL.Services.Implementation
             _countryService = countryService;
             _genreService = genreService;
             _personService = personService;
+        }
+
+        public async Task<byte[]> GeneratePdfAsync(MovieDataTablesRequestDto dto)
+        {
+            var response = await SearchAsync(dto);
+            var movies = response.Data;
+
+            var document = new ListMoviePdfDocument(movies.ToList());
+            using (var ms = new MemoryStream())
+            {
+                document.GeneratePdf(ms);
+                return ms.ToArray();
+            }
+        }
+
+        public async Task<byte[]> GenerateExcelAsync(MovieDataTablesRequestDto dto)
+        {
+            var response = await SearchAsync(dto);
+            var movies = response.Data;
+
+            using (var ms = new MemoryStream())
+            {
+                using (var package = new ExcelPackage(ms))
+                {
+                    var worksheet = package.Workbook.Worksheets.Add("Movies");
+
+                    // Headers
+                    worksheet.Cells[1, 1].Value = "Title";
+                    worksheet.Cells[1, 2].Value = "Description";
+                    worksheet.Cells[1, 3].Value = "Released Date";
+                    worksheet.Cells[1, 4].Value = "Duration";
+                    worksheet.Cells[1, 5].Value = "IMDB Rating";
+                    worksheet.Cells[1, 6].Value = "Rating";
+
+                    // Content
+                    for (int i = 0; i < movies.Count; i++)
+                    {
+                        var movie = movies[i];
+                        worksheet.Cells[i + 2, 1].Value = movie.Title;
+                        worksheet.Cells[i + 2, 2].Value = movie.Description;
+                        worksheet.Cells[i + 2, 3].Value = movie.ReleasedDate.ToString("dd-MM-yyyy");
+                        worksheet.Cells[i + 2, 4].Value = movie.Duration;
+                        worksheet.Cells[i + 2, 5].Value = movie.IMDBRating;
+                        worksheet.Cells[i + 2, 6].Value = movie.Rating;
+                    }
+                    package.Save();
+                }
+                return ms.ToArray();
+            }
         }
 
         public async Task AddCommentAsync(AddCommentDo dto)
@@ -155,13 +206,10 @@ namespace BLL.Services.Implementation
             }
             catch (Exception)
             {
-
                 throw;
             }
-            
-           
         }
-
+        
         public override async Task<Movie> BuildEntityForCreate(AddMovieDto dto)
         {
             if (dto.Poster == null || dto.Title == null)
@@ -256,7 +304,7 @@ namespace BLL.Services.Implementation
             return _mapper.Map<List<ListMovieDto>>(movies);
         }
 
-        public async Task ImportMovieAsync(Item dto)
+        public async Task ImportMovieAsync(ExternalMovieDto dto)
         {
             var movie = new Movie
             {

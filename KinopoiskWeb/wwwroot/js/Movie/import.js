@@ -20,6 +20,7 @@
             },
             error: function (xhr, status, error) {
                 console.error("Error in Search by Title request:", status, error);
+                toastr.error('Error in Search by Title request: ' + error);
             }
         });
     });
@@ -49,6 +50,7 @@
             },
             error: function (xhr, status, error) {
                 console.error("Error in Search by ID request:", status, error);
+                toastr.error('Error in Search by ID request: ' + error);
             }
         });
     });
@@ -94,15 +96,19 @@
                     headers: { 'RequestVerificationToken': token },
                     success: function (response) {
                         if (response.success) {
-                            alert('Movie imported successfully!');
+                            toastr.success('Movie imported successfully!');
                         } else {
-                            alert('Error importing movie: ' + response.error);
+                            toastr.error('Error importing movie: ' + response.error);
                         }
+                    },
+                    error: function (xhr, status, error) {
+                        toastr.error('Error importing movie: ' + error);
                     }
                 });
             });
         } else {
             resultsDiv.append($('<p>').text('No movies found.'));
+            toastr.info('No movies found.');
         }
     }
 
@@ -110,8 +116,8 @@
         var resultsDiv = $('#search-results');
         resultsDiv.empty();
 
-        if (response && response.success && response.movies) {
-            var movie = response.movies;
+        if (response && response.success && response.movie) {
+            var movie = response.movie;
             var details = `
             <div class="card mb-3" style="max-width: 540px;">
                 <div class="row g-0">
@@ -153,16 +159,19 @@
                     headers: { 'RequestVerificationToken': token },
                     success: function (response) {
                         if (response.success) {
-                            alert('Movie imported successfully!');
+                            toastr.success('Movie imported successfully!');
                         } else {
-                            alert('Error importing movie: ' + response.error);
+                            toastr.error('Error importing movie: ' + response.error);
                         }
+                    },
+                    error: function (xhr, status, error) {
+                        toastr.error('Error importing movie: ' + error);
                     }
                 });
             });
         } else {
             resultsDiv.append($('<p>').text('No movie found.'));
+            toastr.info('No movie found.');
         }
     }
-
 });
