@@ -33,7 +33,7 @@ namespace BLL.Infrastructure
 
             CreateMap<Comment, AddCommentDo>().ReverseMap();
             CreateMap<Comment, GetCommentDto>()
-            .ForMember(x => x.UserName, opt => opt.MapFrom(src => src.User.UserName)).ReverseMap();
+            .ForMember(x => x.UserName, opt => opt.MapFrom(src => src.User.Email)).ReverseMap();
 
             CreateMap<MovieRating, AddMovieRating>().ReverseMap();
             CreateMap<AddMovieDto, Movie>().ReverseMap();

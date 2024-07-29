@@ -83,6 +83,7 @@
         });
     });
 
+
     $('.rating span').hover(
         function () {
             var hoverValue = $(this).data('value');
@@ -109,14 +110,16 @@
                 d.length = 10; // Установить количество загружаемых записей
             }
         },
-        "scrollY": "400px", // Установить высоту таблицы
+
+        "scrollY": "400px", 
         "scrollCollapse": true,
-        "deferRender": true, // Включить отложенный рендеринг
+        "deferRender": true,
         "columns": [
             { "data": "userName" },
             { "data": "text" },
             { "data": "date", "render": function (data) { return moment(data).format('DD/MM/YYYY'); } }
         ]
+
     });
 
     // Функция для подгрузки комментариев при прокрутке вниз

@@ -84,7 +84,7 @@ namespace BLL.DTO.Movie
     public class AddCommentDo
     {
         public string Text { set; get; }
-        public Guid UserId { set; get; }
+        public string UserId { set; get; }
         public Guid MovieId { set; get; }
     }
 }

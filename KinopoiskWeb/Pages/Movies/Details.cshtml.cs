@@ -56,7 +56,7 @@ namespace KinopoiskWeb.Pages.Movies
 
         public async Task<JsonResult> OnPostLoadCommentsAsync(Guid id, DataTablesRequest request)
         {
-            var comments = await _movieService.GetCommentsAsync(id, request.Start, request.Length);
+            var comments = await _movieService.GetCommentsAsync(id);
 
             var response = new DataTablesResponse<GetCommentDto>
             {
@@ -76,7 +76,7 @@ namespace KinopoiskWeb.Pages.Movies
                 return new JsonResult(new { success = false, redirect = Url.Page("/Account/Register") });
             }
 
-            model.UserId = Guid.Parse(userId);
+            model.UserId = userId;
             await _movieService.AddCommentAsync(_mapper.Map<AddCommentDo>(model));
 
             return new JsonResult(new { success = true });

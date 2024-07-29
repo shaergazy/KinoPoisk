@@ -23,6 +23,21 @@ namespace BLL.Services.Implementation
             _uow = unitOfWork;
         }
 
+        public async Task ImportCountry(string countryNames, Movie movie)
+        {
+            var countries = countryNames.Split(", ");
+            foreach (var countryName in countries)
+            {
+                var country = await _uow.Countries.FirstOrDefaultAsync(c => c.Name == countryName);
+                if (country == null)
+                {
+                    country = new Country { Name = countryName };
+                    await _uow.Countries.AddAsync(country);
+                }
+                movie.Country = country;
+            }
+        }
+
         public override IQueryable<Country> FilterEntities(DataTablesRequestDto request, IQueryable<Country>? entities = null)
         {
             var searchTerm = request.SearchTerm;

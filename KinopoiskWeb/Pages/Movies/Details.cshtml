@@ -60,9 +60,6 @@
                 <table id="commentsTable" class="display" style="width:100%">
                     <thead>
                         <tr>
-                            <th>User</th>
-                            <th>Comment</th>
-                            <th>Date</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -103,19 +100,3 @@
     @await Html.PartialAsync("Shared/_Urls")
     <script src="~/js/Movie/detailsMovie.js" asp-append-version="true"></script>
 }
-
-<style>
-    .containerMovieDetails {
-        display: flex;
-        flex-wrap: wrap;
-    }
-
-    .poster img {
-        max-width: 100%;
-        height: auto;
-    }
-
-    .movie-details {
-        padding-left: 20px;
-    }
-</style>

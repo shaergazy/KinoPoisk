@@ -33,5 +33,20 @@ namespace BLL.Services.Implementation
             }
             return entities;
         }
+
+        public async Task ImportGenres(string genreNames, Movie movie)
+    {
+        var genres = genreNames.Split(", ");
+        foreach (var genreName in genres)
+        {
+            var genre = await _uow.Genres.FirstOrDefaultAsync(g => g.Name == genreName);
+            if (genre == null)
+            {
+                genre = new Genre { Name = genreName };
+                await _uow.Genres.AddAsync(genre);
+            }
+            movie.Genres.Add(new MovieGenre { Genre = genre });
+        }
+    }
     }
 }
