@@ -192,22 +192,28 @@ namespace BLL.Services.Implementation
             await _uow.Comments.DeleteByIdAsync(commentId);
         }
 
-        public async Task<IEnumerable<GetCommentDto>> GetCommentsAsync(Guid movieId)
-            {
-            try
+        public async Task<DataTablesResponse<GetCommentDto>> GetCommentsAsync(Guid id, DataTablesRequestDto request)
             {
                 var comments = await _uow.Comments
-                             .Where(c => c.MovieId == movieId)
+                             .Where(c => c.MovieId == id)
                              .Include(x => x.User)
                              .OrderByDescending(c => c.Date)
                              .ToListAsync();
-                var d = _mapper.Map<List<GetCommentDto>>(comments);
-                return _mapper.Map<List<GetCommentDto>>(comments);
-            }
-            catch (Exception)
-            {
-                throw;
-            }
+
+                var recordsTotal = comments.Count;
+                comments = comments.Skip(request.Start).Take(request.Length).ToList();
+                var recordsFiltered = comments.Count;
+                var data = _mapper.Map<List<GetCommentDto>>(comments);
+
+                var datatableResponse = new DataTablesResponse<GetCommentDto>()
+                {
+                    Draw = request.Draw,
+                    RecordsTotal = recordsTotal,
+                    RecordsFiltered = recordsFiltered,
+                    Data = data
+                };
+
+                return datatableResponse;
         }
         
         public override async Task<Movie> BuildEntityForCreate(AddMovieDto dto)

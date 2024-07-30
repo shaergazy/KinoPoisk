@@ -12,7 +12,7 @@ namespace BLL.Services.Interfaces
         Task AddCommentAsync(AddCommentDo dto);
         public Task ImportMovieAsync(ExternalMovieDto dto);
 
-        Task<IEnumerable<GetCommentDto>> GetCommentsAsync(Guid movieId);
+        Task<DataTablesResponse<GetCommentDto>> GetCommentsAsync(Guid id, DataTablesRequestDto request);
         Task DeleteCommentAsync(int commentId);
 
         public IQueryable<Movie> SortByParametrs(IQueryable<Movie> entities, MovieDataTablesRequestDto request);

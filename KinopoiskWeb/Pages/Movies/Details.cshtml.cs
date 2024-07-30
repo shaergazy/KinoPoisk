@@ -2,7 +2,6 @@
 using BLL.DTO;
 using BLL.DTO.Movie;
 using BLL.Services.Interfaces;
-using DAL.Models;
 using KinopoiskWeb.DataTables;
 using KinopoiskWeb.ViewModels.Movie;
 using Microsoft.AspNetCore.Authorization;
@@ -56,15 +55,9 @@ namespace KinopoiskWeb.Pages.Movies
 
         public async Task<JsonResult> OnPostLoadCommentsAsync(Guid id, DataTablesRequest request)
         {
-            var comments = await _movieService.GetCommentsAsync(id);
-
-            var response = new DataTablesResponse<GetCommentDto>
-            {
-                Draw = request.Draw,
-                Data = comments.ToList(),
-            };
-
-            return new JsonResult(response);
+            var response = await _movieService.GetCommentsAsync(id, _mapper.Map<DataTablesRequestDto>(request));
+            var viewModel = _mapper.Map<DataTablesResponseVM<GetCommentDto>>(response);
+            return new JsonResult(viewModel);
         }
 
         [Authorize]

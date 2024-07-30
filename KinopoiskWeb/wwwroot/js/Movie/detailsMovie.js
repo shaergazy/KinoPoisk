@@ -101,7 +101,7 @@ $(document).ready(function () {
         "processing": true,
         "serverSide": true,
         "searching": false,
-        "paging": false, 
+        "paging": true, 
         "info": false,
         "ajax": {
             "url": Urls.Movie.LoadComments + `/${movieId}`,
