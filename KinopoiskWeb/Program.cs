@@ -41,6 +41,8 @@ internal class Program
         {
             options.HeaderName = "RequestVerificationToken";
         });
+        builder.Services.AddMemoryCache();
+
         QuestPDF.Settings.License = LicenseType.Community;
         ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
         builder.Services.ConfigMapper();

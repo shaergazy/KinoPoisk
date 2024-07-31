@@ -10,11 +10,6 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["KinopoiskWeb/KinopoiskWeb.csproj", "KinopoiskWeb/"]
-COPY ["BLL/BLL.csproj", "BLL/"]
-COPY ["Common/Common.csproj", "Common/"]
-COPY ["DAL/DAL.csproj", "DAL/"]
-COPY ["DTO/DTO.csproj", "DTO/"]
-COPY ["CommonServices/CommonServices.csproj", "CommonServices/"]
 RUN dotnet restore "./KinopoiskWeb/KinopoiskWeb.csproj"
 COPY . .
 WORKDIR "/src/KinopoiskWeb"

@@ -41,6 +41,12 @@ namespace DAL
                 .HasForeignKey(x => x.UserId)
                 .IsRequired();
 
+            //builder.Entity<Comment>()
+            //    .HasOne(x => x.User)
+            //    .WithMany(x => x.Comments)
+            //    .HasForeignKey(x => x.UserId)
+            //    .IsRequired();
+
             builder.Entity<UserRole>()
                 .HasOne(x => x.Role)
                 .WithMany(x => x.Users)

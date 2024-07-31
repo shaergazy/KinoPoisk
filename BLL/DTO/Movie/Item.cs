@@ -2,7 +2,7 @@
 
 namespace BLL.DTO.Movie
 {
-    public class Item
+    public class ExternalMovieDto
     {
         [JsonProperty("Title")]
         public string Title { get; set; }
@@ -46,9 +46,6 @@ namespace BLL.DTO.Movie
         [JsonProperty("Poster")]
         public string Poster { get; set; }
         
-        //[JsonProperty("Ratings")]
-        //public List<Rating> Ratings { get; set; }
-        
         [JsonProperty("Metascore")]
         public string Metascore { get; set; }
         
@@ -63,55 +60,7 @@ namespace BLL.DTO.Movie
         
         [JsonProperty("Type")]
         public string Type { get; set; }
-        
-        [JsonProperty("tomatoMeter")]
-        public string TomatoMeter { get; set; }
-        
-        [JsonProperty("tomatoImage")]
-        public string TomatoImage { get; set; }
-        
-        [JsonProperty("tomatoRating")]
-        public string TomatoRating { get; set; }
-        
-        [JsonProperty("tomatoReviews")]
-        public string TomatoReviews { get; set; }
-        
-        [JsonProperty("tomatoFresh")]
-        public string TomatoFresh { get; set; }
-        
-        [JsonProperty("tomatoRotten")]
-        public string TomatoRotten { get; set; }
-        
-        [JsonProperty("tomatoConsensus")]
-        public string TomatoConsensus { get; set; }
-        
-        [JsonProperty("tomatoUserMeter")]
-        public string TomatoUserMeter { get; set; }
-        
-        [JsonProperty("tomatoUserRating")]
-        public string TomatoUserRating { get; set; }
-        
-        [JsonProperty("tomatoUserReviews")]
-        public string TomatoUserReviews { get; set; }
-        
-        [JsonProperty("tomatoURL")]
-        public string TomatoUrl { get; set; }
-        
-        [JsonProperty("DVD")]
-        public string Dvd { get; set; }
-        
-        [JsonProperty("BoxOffice")]
-        public string BoxOffice { get; set; }
-        
-        [JsonProperty("Production")]
-        public string Production { get; set; }
-        
-        [JsonProperty("Website")]
-        public string Website { get; set; }
-        
-        [JsonProperty("totalSeasons")]
-        public string TotalSeasons { get; set; }
-        
+
         [JsonProperty("Response")]
         public string Response { get; set; }
         

@@ -8,5 +8,6 @@ namespace BLL.Services.Interfaces
     {
         IEnumerable<ListPersonDto> GetActors();
         IEnumerable<ListPersonDto> GetDirectors();
+        Task ImportPeopleAsync(string actorNames, string directorName, Movie movie);
     }
 }
