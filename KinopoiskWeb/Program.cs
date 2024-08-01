@@ -1,3 +1,4 @@
+using BLL.Services.Interfaces;
 using Common.CommonServices;
 using DAL.Models.Users;
 using Hangfire;
@@ -71,6 +72,11 @@ internal class Program
         app.UseHttpsRedirection();
         app.RegisterVirtualDir(builder.Configuration);
         app.UseStaticFiles();
+        app.UseHangfireServer();
+        app.UseHangfireDashboard("/dashboard");
+
+        RecurringJob.AddOrUpdate<IMovieService>(x => x.UpdateImdbRatings(), Cron.Daily);
+
         app.UseRouting();
         app.UseAuthentication();
         app.UseAuthorization();
@@ -78,7 +84,6 @@ internal class Program
         app.MapRazorPages();
         app.UseSerilogRequestLogging();
         app.InitializeDatabase();
-        app.UseHangfireDashboard("/dashboard");
 
         Log.Information("Application started successfully");
 

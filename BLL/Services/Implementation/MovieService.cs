@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using OfficeOpenXml;
 using QuestPDF.Fluent;
+using System.Globalization;
 
 namespace BLL.Services.Implementation
 {
@@ -33,6 +34,7 @@ namespace BLL.Services.Implementation
             _genreService = genreService;
             _personService = personService;
             _logger = logger;
+            _omdbService = omdbService;
         }
 
         public async Task<byte[]> GeneratePdfAsync(MovieDataTablesRequestDto dto)
@@ -330,10 +332,11 @@ namespace BLL.Services.Implementation
                 Genres = new List<MovieGenre>(),
                 People = new List<MoviePerson>()
             };
-            if (float.TryParse(dto.ImdbRating, out float imdbRating))
+            if (float.TryParse(dto.ImdbRating, NumberStyles.Float, CultureInfo.InvariantCulture, out float imdbRating))
             {
                 movie.IMDBRating = imdbRating;
             }
+
 
             await _uow.Movies.AddAsync(movie);
 
@@ -373,19 +376,22 @@ namespace BLL.Services.Implementation
         public async Task UpdateImdbRatings()
         {
             var movies = _uow.Movies.GetAll();
+
             foreach (var movie in movies)
             {
                 var updatedMovie = _omdbService.GetItemByTitle(movie.Title);
-                if (updatedMovie.ImdbRating != movie.IMDBRating.ToString())
+
+                if (float.TryParse(updatedMovie.ImdbRating, NumberStyles.Float, CultureInfo.InvariantCulture, out float imdbRating))
                 {
-                    if (float.TryParse(updatedMovie.ImdbRating, out float imdbRating))
+                    if (movie.IMDBRating != imdbRating)
                     {
                         movie.IMDBRating = imdbRating;
+                        await _uow.Movies.UpdateAsync(movie);
                     }
-                    await _uow.Movies.UpdateAsync(movie);
-                    await _uow.SaveChangesAsync();
                 }
             }
+
+            await _uow.SaveChangesAsync();
         }
     }
 }
