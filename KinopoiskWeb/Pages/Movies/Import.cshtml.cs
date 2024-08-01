@@ -1,5 +1,5 @@
 using BLL.DTO.Movie;
-using BLL.Services;
+using BLL.Services.Implementation;
 using BLL.Services.Interfaces;
 using DAL.Models;
 using Data.Models;

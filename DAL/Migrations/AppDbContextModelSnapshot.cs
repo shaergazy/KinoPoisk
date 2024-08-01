@@ -45,6 +45,7 @@ namespace DAL.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
@@ -116,8 +117,8 @@ namespace DAL.Migrations
                     b.Property<long?>("Duration")
                         .HasColumnType("bigint");
 
-                    b.Property<float?>("IMDBRating")
-                        .HasColumnType("real");
+                    b.Property<string>("IMDBRating")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Poster")
                         .IsRequired()
@@ -464,7 +465,8 @@ namespace DAL.Migrations
                     b.HasOne("DAL.Models.Users.User", "User")
                         .WithMany("Comments")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.ClientCascade);
+                        .OnDelete(DeleteBehavior.ClientCascade)
+                        .IsRequired();
 
                     b.Navigation("User");
                 });

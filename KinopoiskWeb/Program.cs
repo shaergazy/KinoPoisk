@@ -1,5 +1,6 @@
 using Common.CommonServices;
 using DAL.Models.Users;
+using Hangfire;
 using KinopoiskWeb.Extensions;
 using KinopoiskWeb.Infrastructure;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -21,6 +22,8 @@ internal class Program
 
         builder.Services.AddRazorPages();
         builder.Services.AddCommonServices(builder.Configuration);
+        builder.Services.AddHangfire(x => x.UseSqlServerStorage(builder.Configuration.GetConnectionString("Default")));
+        builder.Services.AddHangfireServer();
 
         builder.Services.AddIdentity<User, Role>(options =>
         {
@@ -75,6 +78,7 @@ internal class Program
         app.MapRazorPages();
         app.UseSerilogRequestLogging();
         app.InitializeDatabase();
+        app.UseHangfireDashboard("/dashboard");
 
         Log.Information("Application started successfully");
 

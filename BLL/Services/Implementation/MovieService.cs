@@ -21,8 +21,11 @@ namespace BLL.Services.Implementation
         private readonly IGenreService _genreService;
         private readonly IPersonService _personService;
         private readonly ILogger _logger;
+        private readonly OMDBService _omdbService;
 
-        public MovieService(IMapper mapper, ILogger<MovieService> logger, IUnitOfWork<Movie, Guid> unitOfWork, ICountryService countryService, IGenreService genreService, IPersonService personService) : base(mapper, unitOfWork)
+        public MovieService(IMapper mapper, ILogger<MovieService> logger, IUnitOfWork<Movie, Guid> unitOfWork,
+            ICountryService countryService, IGenreService genreService, IPersonService personService, OMDBService omdbService) 
+            : base(mapper, unitOfWork)
         {
             _mapper = mapper;
             _uow = unitOfWork;
@@ -41,7 +44,7 @@ namespace BLL.Services.Implementation
             using (var ms = new MemoryStream())
             {
                 document.GeneratePdf(ms);
-                _logger.LogInformation($"Gnerate Pdf file at {DateTime.Now}");
+                _logger.LogInformation($"Gnerate Pdf file at {DateTime.Now}");  
                 return ms.ToArray();
             }
         }
@@ -365,6 +368,24 @@ namespace BLL.Services.Implementation
         public IQueryable<Movie> SortByParametrs(IQueryable<Movie> entities, MovieDataTablesRequestDto request)
         {
             throw new NotImplementedException();
+        }
+
+        public async Task UpdateImdbRatings()
+        {
+            var movies = _uow.Movies.GetAll();
+            foreach (var movie in movies)
+            {
+                var updatedMovie = _omdbService.GetItemByTitle(movie.Title);
+                if (updatedMovie.ImdbRating != movie.IMDBRating.ToString())
+                {
+                    if (float.TryParse(updatedMovie.ImdbRating, out float imdbRating))
+                    {
+                        movie.IMDBRating = imdbRating;
+                    }
+                    await _uow.Movies.UpdateAsync(movie);
+                    await _uow.SaveChangesAsync();
+                }
+            }
         }
     }
 }

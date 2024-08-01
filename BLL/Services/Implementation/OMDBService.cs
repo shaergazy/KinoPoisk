@@ -1,9 +1,10 @@
 ﻿using BLL.DTO.Movie;
+using BLL.Services.Interfaces;
 using BLL.Utilities;
 using Newtonsoft.Json;
 using System.Net.Http.Headers;
 
-namespace BLL.Services
+namespace BLL.Services.Implementation
 {
     public class OMDBService
     {
@@ -19,12 +20,12 @@ namespace BLL.Services
 
         public ExternalMovieDto GetItemByTitle(string title, bool fullPlot = false)
         {
-            return GetItemByTitle(title,  null, fullPlot);
+            return GetItemByTitle(title, null, fullPlot);
         }
 
-        public ExternalMovieDto GetItemByTitle(string title,   int? year, bool fullPlot = false)
+        public ExternalMovieDto GetItemByTitle(string title, int? year, bool fullPlot = false)
         {
-            var query = QueryBuilder.GetItemByTitleQuery(title,  year, fullPlot);
+            var query = QueryBuilder.GetItemByTitleQuery(title, year, fullPlot);
 
             var item = GetOmdbDataAsync<ExternalMovieDto>(query).Result;
 
@@ -49,9 +50,9 @@ namespace BLL.Services
             return item;
         }
 
-        public SearchList GetSearchList(string query,   int page = 1)
+        public SearchList GetSearchList(string query, int page = 1)
         {
-            return GetSearchList(null, query,  page);
+            return GetSearchList(null, query, page);
         }
 
         public SearchList GetSearchList(int? year, string query, int page = 1)
@@ -68,7 +69,7 @@ namespace BLL.Services
             return searchList;
         }
 
-        private async Task<T> GetOmdbDataAsync<T>(string query)
+        public async Task<T> GetOmdbDataAsync<T>(string query)
         {
             using (var client = new HttpClient { BaseAddress = new Uri(BaseUrl) })
             {
@@ -81,7 +82,7 @@ namespace BLL.Services
 
                 if (!response.IsSuccessStatusCode)
                 {
-                    return default(T);
+                    return default;
                 }
 
                 var json = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
