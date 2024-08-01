@@ -16,63 +16,100 @@ namespace KinopoiskWeb.Pages.Movies
     {
         private readonly IMovieService _movieService;
         private readonly IMapper _mapper;
+        private readonly ILogger<DetailsModel> _logger;
 
-        public DetailsModel(IMovieService movieService, IMapper mapper)
+        public DetailsModel(IMovieService movieService, IMapper mapper, ILogger<DetailsModel> logger)
         {
             _movieService = movieService;
             _mapper = mapper;
+            _logger = logger;
         }
 
         public DetailsMovieVM Movie { get; private set; }
+
         public async Task<IActionResult> OnGetAsync(Guid id)
         {
-            Movie = _mapper.Map<DetailsMovieVM>(await _movieService.GetByIdAsync(id));
-
-            if (Movie == null)
+            try
             {
-                return NotFound();
-            }
+                Movie = _mapper.Map<DetailsMovieVM>(await _movieService.GetByIdAsync(id));
 
-            return Page();
+                if (Movie == null)
+                {
+                    _logger.LogWarning("Movie not found with id: {Id}", id);
+                    return NotFound();
+                }
+
+                _logger.LogInformation("Movie details loaded for id: {Id}", id);
+                return Page();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred while loading movie details for id: {Id}", id);
+                return StatusCode(500, "Internal server error");
+            }
         }
 
         public async Task<IActionResult> OnPostRateAsync([FromBody] RateMovieVM model)
         {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (userId == null)
+            try
             {
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                 if (userId == null)
                 {
+                    _logger.LogWarning("User not logged in while trying to rate a movie.");
                     return new JsonResult(new { success = false, redirect = Url.Page("/Account/Register") });
                 }
+
+                model.UserId = Guid.Parse(userId);
+                await _movieService.AddRatingAsync(_mapper.Map<AddMovieRating>(model));
+                _logger.LogInformation("User {UserId} rated movie {MovieId} with rating {Rating}", userId, model.MovieId, model.StarCount);
+                return new JsonResult(new { success = true });
             }
-
-            model.UserId = Guid.Parse(userId);
-
-            await _movieService.AddRatingAsync(_mapper.Map<AddMovieRating>(model));
-            return new JsonResult(new { success = true });
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred while rating the movie.");
+                return StatusCode(500, "Internal server error");
+            }
         }
 
         public async Task<JsonResult> OnPostLoadCommentsAsync(Guid id, DataTablesRequest request)
         {
-            var response = await _movieService.GetCommentsAsync(id, _mapper.Map<DataTablesRequestDto>(request));
-            var viewModel = _mapper.Map<DataTablesResponseVM<GetCommentDto>>(response);
-            return new JsonResult(viewModel);
+            try
+            {
+                var response = await _movieService.GetCommentsAsync(id, _mapper.Map<DataTablesRequestDto>(request));
+                var viewModel = _mapper.Map<DataTablesResponseVM<GetCommentDto>>(response);
+                _logger.LogInformation("Loaded comments for movie id: {Id}", id);
+                return new JsonResult(viewModel);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred while loading comments for movie id: {Id}", id);
+                return new JsonResult(new { success = false, error = "Internal server error" });
+            }
         }
 
         [Authorize]
         public async Task<IActionResult> OnPostAddCommentAsync([FromBody] AddCommentVM model)
         {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (userId == null)
+            try
             {
-                return new JsonResult(new { success = false, redirect = Url.Page("/Account/Register") });
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                if (userId == null)
+                {
+                    _logger.LogWarning("User not logged in while trying to add a comment.");
+                    return new JsonResult(new { success = false, redirect = Url.Page("/Account/Register") });
+                }
+
+                model.UserId = userId;
+                await _movieService.AddCommentAsync(_mapper.Map<AddCommentDto>(model));
+                _logger.LogInformation("User {UserId} added a comment to movie {MovieId}", userId, model.MovieId);
+                return new JsonResult(new { success = true });
             }
-
-            model.UserId = userId;
-            await _movieService.AddCommentAsync(_mapper.Map<AddCommentDo>(model));
-
-            return new JsonResult(new { success = true });
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred while adding a comment.");
+                return StatusCode(500, "Internal server error");
+            }
         }
     }
 }

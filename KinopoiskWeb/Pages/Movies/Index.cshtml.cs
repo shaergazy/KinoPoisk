@@ -1,4 +1,4 @@
-using AutoMapper;
+﻿using AutoMapper;
 using BLL.DTO;
 using BLL.Services.Interfaces;
 using DAL.Models;
@@ -12,11 +12,13 @@ namespace KinopoiskWeb.Pages.Movies
     {
         private readonly IMovieService _service;
         private readonly IMapper _mapper;
+        private readonly ILogger<IndexModel> _logger;
 
-        public IndexModel(IMovieService service, IMapper mapper)
+        public IndexModel(IMovieService service, IMapper mapper, ILogger<IndexModel> logger)
         {
             _mapper = mapper;
             _service = service;
+            _logger = logger;
         }
 
         [BindProperty]
@@ -29,26 +31,51 @@ namespace KinopoiskWeb.Pages.Movies
 
         public async Task<IActionResult> OnPostAsync()
         {
-            var dto = _mapper.Map<MovieDataTablesRequestDto>(DataTablesRequest);
-            var response = await _service.SearchAsync(dto);
-            var viewModel = _mapper.Map<DataTablesResponseVM<Movie>>(response);
-            return new JsonResult(viewModel);
+            try
+            {
+                var dto = _mapper.Map<MovieDataTablesRequestDto>(DataTablesRequest);
+                var response = await _service.SearchAsync(dto);
+                var viewModel = _mapper.Map<DataTablesResponseVM<Movie>>(response);
+                return new JsonResult(viewModel);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while searching for movies.");
+                TempData["ErrorMessage"] = "An error occurred while searching for movies.";
+                return new JsonResult(new { success = false, message = "An error occurred while searching for movies." });
+            }
         }
 
         public async Task<IActionResult> OnPostGeneratePdfAsync()
         {
-            var dto = _mapper.Map<MovieDataTablesRequestDto>(DataTablesRequest);
-            var pdfData = await _service.GeneratePdfAsync(dto);
-            return File(pdfData, "application/pdf");
+            try
+            {
+                var dto = _mapper.Map<MovieDataTablesRequestDto>(DataTablesRequest);
+                var pdfData = await _service.GeneratePdfAsync(dto);
+                return File(pdfData, "application/pdf");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while generating PDF.");
+                TempData["ErrorMessage"] = "An error occurred while generating PDF.";
+                return RedirectToPage();
+            }
         }
 
         public async Task<IActionResult> OnPostGenerateExcelAsync()
         {
-            var dto = _mapper.Map<MovieDataTablesRequestDto>(DataTablesRequest);
-            var excelData = await _service.GenerateExcelAsync(dto);
-            return File(excelData, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+            try
+            {
+                var dto = _mapper.Map<MovieDataTablesRequestDto>(DataTablesRequest);
+                var excelData = await _service.GenerateExcelAsync(dto);
+                return File(excelData, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while generating Excel.");
+                TempData["ErrorMessage"] = "An error occurred while generating Excel.";
+                return RedirectToPage();
+            }
         }
     }
 }
-
-

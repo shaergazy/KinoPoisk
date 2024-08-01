@@ -81,7 +81,7 @@ namespace BLL.DTO.Movie
         public DateTime? Date { get; set; }
     }
 
-    public class AddCommentDo
+    public class AddCommentDto
     {
         public string Text { set; get; }
         public string UserId { set; get; }

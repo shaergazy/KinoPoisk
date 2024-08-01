@@ -9,7 +9,7 @@ namespace BLL.Services.Interfaces
         Task<byte[]> GeneratePdfAsync(MovieDataTablesRequestDto dto);
         Task<byte[]> GenerateExcelAsync(MovieDataTablesRequestDto dto);
         Task AddRatingAsync(AddMovieRating dto);
-        Task AddCommentAsync(AddCommentDo dto);
+        Task AddCommentAsync(AddCommentDto dto);
         public Task ImportMovieAsync(ExternalMovieDto dto);
 
         Task<DataTablesResponse<GetCommentDto>> GetCommentsAsync(Guid id, DataTablesRequestDto request);

@@ -31,7 +31,7 @@ namespace BLL.Infrastructure
             CreateMap<Person, ListPersonDto>().ReverseMap();
             CreateMap<Person, DeletePersonDto>().ReverseMap();
 
-            CreateMap<Comment, AddCommentDo>().ReverseMap();
+            CreateMap<Comment, AddCommentDto>().ReverseMap();
             CreateMap<Comment, GetCommentDto>()
             .ForMember(x => x.UserName, opt => opt.MapFrom(src => src.User.Email)).ReverseMap();
 

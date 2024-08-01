@@ -7,6 +7,7 @@ using DAL.Models;
 using Data.Models;
 using Data.Repositories.RepositoryInterfaces;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using OfficeOpenXml;
 using QuestPDF.Fluent;
 
@@ -19,14 +20,16 @@ namespace BLL.Services.Implementation
         private readonly ICountryService _countryService;
         private readonly IGenreService _genreService;
         private readonly IPersonService _personService;
+        private readonly ILogger _logger;
 
-        public MovieService(IMapper mapper, IUnitOfWork<Movie, Guid> unitOfWork, ICountryService countryService, IGenreService genreService, IPersonService personService) : base(mapper, unitOfWork)
+        public MovieService(IMapper mapper, ILogger<MovieService> logger, IUnitOfWork<Movie, Guid> unitOfWork, ICountryService countryService, IGenreService genreService, IPersonService personService) : base(mapper, unitOfWork)
         {
             _mapper = mapper;
             _uow = unitOfWork;
             _countryService = countryService;
             _genreService = genreService;
             _personService = personService;
+            _logger = logger;
         }
 
         public async Task<byte[]> GeneratePdfAsync(MovieDataTablesRequestDto dto)
@@ -38,6 +41,7 @@ namespace BLL.Services.Implementation
             using (var ms = new MemoryStream())
             {
                 document.GeneratePdf(ms);
+                _logger.LogInformation($"Gnerate Pdf file at {DateTime.Now}");
                 return ms.ToArray();
             }
         }
@@ -78,7 +82,7 @@ namespace BLL.Services.Implementation
             }
         }
 
-        public async Task AddCommentAsync(AddCommentDo dto)
+        public async Task AddCommentAsync(AddCommentDto dto)
         {
             var comment = _mapper.Map<Comment>(dto);
             if (comment == null ) 

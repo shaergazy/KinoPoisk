@@ -1,20 +1,24 @@
-using BLL.Services.Interfaces;
 using Common.CommonServices;
 using DAL.Models.Users;
 using KinopoiskWeb.Extensions;
 using KinopoiskWeb.Infrastructure;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Identity;
 using OfficeOpenXml;
 using QuestPDF.Infrastructure;
+using Serilog;
 
 internal class Program
 {
     private static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
+        builder.Host.UseSerilog((context, loggerConfig) =>
+        {
+            loggerConfig.ReadFrom.Configuration(context.Configuration);
+        });
 
-        // Add services to the container.
+        Log.Information("Starting the application");
+
         builder.Services.AddRazorPages();
         builder.Services.AddCommonServices(builder.Configuration);
 
@@ -27,46 +31,52 @@ internal class Program
             options.Password.RequiredLength = 6;
         });
 
-        builder.Services.AddAuthentication(
-            CookieAuthenticationDefaults.AuthenticationScheme)
+        builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
             .AddCookie(opt =>
             {
                 opt.LoginPath = "/login";
                 opt.LogoutPath = "/logout";
                 opt.AccessDeniedPath = "/Account/AccessDenied";
-
             });
 
         builder.Services.AddAntiforgery(options =>
         {
             options.HeaderName = "RequestVerificationToken";
         });
+
         builder.Services.AddMemoryCache();
 
         QuestPDF.Settings.License = LicenseType.Community;
         ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
         builder.Services.ConfigMapper();
+        builder.Services.AddHttpContextAccessor();
+
         var app = builder.Build();
 
-        // Configure the HTTP request pipeline.
+        // Configure the HTTP request pipeline
         if (!app.Environment.IsDevelopment())
         {
             app.UseExceptionHandler("/Error");
-            // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
             app.UseHsts();
+            Log.Information("Production environment detected, configured exception handling and HSTS");
+        }
+        else
+        {
+            Log.Information("Development environment detected");
         }
 
         app.UseHttpsRedirection();
         app.RegisterVirtualDir(builder.Configuration);
         app.UseStaticFiles();
-
         app.UseRouting();
-
         app.UseAuthentication();
         app.UseAuthorization();
 
         app.MapRazorPages();
+        app.UseSerilogRequestLogging();
         app.InitializeDatabase();
+
+        Log.Information("Application started successfully");
 
         app.Run();
     }

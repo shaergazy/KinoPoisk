@@ -70,4 +70,10 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     @await Html.PartialAsync("Shared/_Urls")
     <script src="~/js/Movie/indexMovie.js" asp-append-version="true"></script>
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <script>
+            toastr.error('@TempData["ErrorMessage"]');
+        </script>
+    }
 }
