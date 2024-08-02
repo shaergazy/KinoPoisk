@@ -46,7 +46,6 @@ namespace BLL.Services.Implementation
             using (var ms = new MemoryStream())
             {
                 document.GeneratePdf(ms);
-                _logger.LogInformation($"Gnerate Pdf file at {DateTime.Now}");  
                 return ms.ToArray();
             }
         }

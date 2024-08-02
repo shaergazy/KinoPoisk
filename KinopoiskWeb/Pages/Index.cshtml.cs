@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using BLL.Services.Interfaces;
+using Hangfire;
 using KinopoiskWeb.ViewModels.Movie;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Caching.Memory;
@@ -56,5 +57,7 @@ public class IndexModel : PageModel
         }
 
         HighRatedMovies = cachedHighRatedMovies;
+
+        RecurringJob.AddOrUpdate("UpdateImdbRatings",() => _movieService.UpdateImdbRatings(), Cron.Daily);
     }
 }

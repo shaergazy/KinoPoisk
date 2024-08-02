@@ -72,10 +72,7 @@ internal class Program
         app.UseHttpsRedirection();
         app.RegisterVirtualDir(builder.Configuration);
         app.UseStaticFiles();
-        app.UseHangfireServer();
         app.UseHangfireDashboard("/dashboard");
-
-        RecurringJob.AddOrUpdate<IMovieService>(x => x.UpdateImdbRatings(), Cron.Daily);
 
         app.UseRouting();
         app.UseAuthentication();
