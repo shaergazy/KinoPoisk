@@ -7,6 +7,7 @@ using KinopoiskWeb.DataTables;
 using KinopoiskWeb.ViewModels.Country;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.Extensions.Logging;
 
 namespace KinopoiskWeb.Pages.Countries
 {
@@ -15,11 +16,13 @@ namespace KinopoiskWeb.Pages.Countries
     {
         private readonly ICountryService _service;
         private readonly IMapper _mapper;
+        private readonly ILogger<IndexModel> _logger;
 
-        public IndexModel(ICountryService service, IMapper mapper)
+        public IndexModel(ICountryService service, IMapper mapper, ILogger<IndexModel> logger)
         {
             _service = service;
             _mapper = mapper;
+            _logger = logger;
         }
 
         [BindProperty]
@@ -33,7 +36,6 @@ namespace KinopoiskWeb.Pages.Countries
 
         public async Task OnGetAsync()
         {
-            Countries = _mapper.Map<List<IndexCountryVM>>(_service.GetAll());
         }
 
         [BindProperty]
@@ -41,7 +43,8 @@ namespace KinopoiskWeb.Pages.Countries
 
         public async Task<IActionResult> OnPostAsync()
         {
-            var response = _mapper.Map<DataTablesResponseVM<Country>>( await _service.SearchAsync(_mapper
+            _logger.LogInformation("Handling data table request.");
+            var response = _mapper.Map<DataTablesResponseVM<Country>>(await _service.SearchAsync(_mapper
                                   .Map<DataTablesRequestDto>(DataTablesRequest)));
             return new JsonResult(response);
         }
@@ -49,21 +52,32 @@ namespace KinopoiskWeb.Pages.Countries
         public async Task<IActionResult> OnPostHandleCreateOrUpdateAsync(CountryVM country)
         {
             if (country == null)
+            {
+                _logger.LogError("Country parameter is null.");
                 throw new ArgumentNullException(nameof(country));
+            }
 
             if (country.Id == 0)
+            {
+                _logger.LogInformation("Creating new country.");
                 await _service.CreateAsync(_mapper.Map<AddCountryDto>(country));
+            }
             else
+            {
+                _logger.LogInformation("Updating country with ID {CountryId}.", country.Id);
                 await _service.UpdateAsync(_mapper.Map<EditCountryDto>(country));
+            }
 
             return RedirectToPage();
         }
 
         public async Task<JsonResult> OnGetById(int id)
         {
+            _logger.LogInformation("Fetching country with ID {CountryId}.", id);
             var country = await _service.GetByIdAsync(id);
             if (country == null)
             {
+                _logger.LogWarning("Country with ID {CountryId} not found.", id);
                 return new JsonResult(NotFound());
             }
 
@@ -72,13 +86,14 @@ namespace KinopoiskWeb.Pages.Countries
 
         public async Task<IActionResult> OnPostDeleteAsync()
         {
+            _logger.LogInformation("Deleting country with ID {CountryId}.", CountryId);
             await _service.DeleteAsync(CountryId);
-
             return RedirectToPage();
         }
 
         public JsonResult OnGetCountries(string searchTerm)
         {
+            _logger.LogInformation("Fetching countries with search term: {SearchTerm}.", searchTerm);
             var entities = _service.GetAll();
             if (!string.IsNullOrWhiteSpace(searchTerm))
             {
@@ -88,5 +103,4 @@ namespace KinopoiskWeb.Pages.Countries
             return new JsonResult(entities);
         }
     }
-
 }

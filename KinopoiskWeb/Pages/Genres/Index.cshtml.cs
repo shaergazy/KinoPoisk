@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace KinopoiskWeb.Pages.Genres
 {
@@ -17,12 +18,14 @@ namespace KinopoiskWeb.Pages.Genres
     {
         private readonly IGenreService _service;
         private readonly IMapper _mapper;
-        public IndexModel(IGenreService service, IMapper mapper)
+        private readonly ILogger<IndexModel> _logger;
+
+        public IndexModel(IGenreService service, IMapper mapper, ILogger<IndexModel> logger)
         {
             _service = service;
             _mapper = mapper;
+            _logger = logger;
         }
-
 
         [BindProperty]
         public IList<IndexGenreVM> Genres { get; set; }
@@ -35,7 +38,6 @@ namespace KinopoiskWeb.Pages.Genres
 
         public async Task OnGetAsync()
         {
-            //Genres = _mapper.Map<List<IndexGenreVM>>(_service.GetAll());
         }
 
         [BindProperty]
@@ -43,6 +45,7 @@ namespace KinopoiskWeb.Pages.Genres
 
         public async Task<IActionResult> OnPostAsync()
         {
+            _logger.LogInformation("Handling data table request.");
             var response = _mapper.Map<DataTablesResponseVM<Genre>>(await _service.SearchAsync(_mapper
                                   .Map<DataTablesRequestDto>(DataTablesRequest)));
             return new JsonResult(response);
@@ -50,9 +53,11 @@ namespace KinopoiskWeb.Pages.Genres
 
         public async Task<JsonResult> OnGetById(int id)
         {
+            _logger.LogInformation("Fetching genre with ID {GenreId}.", id);
             var genre = await _service.GetByIdAsync(id);
             if (genre == null)
             {
+                _logger.LogWarning("Genre with ID {GenreId} not found.", id);
                 return new JsonResult(NotFound());
             }
 
@@ -62,12 +67,21 @@ namespace KinopoiskWeb.Pages.Genres
         public async Task<IActionResult> OnPostHandleUpdateOrCreateAsync(GenreVM genre)
         {
             if (genre == null)
+            {
+                _logger.LogError("Genre parameter is null.");
                 throw new ArgumentNullException(nameof(genre));
+            }
 
             if (genre.Id == 0)
+            {
+                _logger.LogInformation("Creating new genre.");
                 await _service.CreateAsync(_mapper.Map<AddGenreDto>(genre));
+            }
             else
+            {
+                _logger.LogInformation("Updating genre with ID {GenreId}.", genre.Id);
                 await _service.UpdateAsync(_mapper.Map<EditGenreDto>(genre));
+            }
 
             return RedirectToPage();
         }
@@ -76,20 +90,22 @@ namespace KinopoiskWeb.Pages.Genres
         {
             try
             {
+                _logger.LogInformation("Deleting genre with ID {GenreId}.", GenreId);
                 await _service.DeleteAsync(GenreId);
                 TempData["SuccessMessage"] = "Deleted";
                 return RedirectToPage();
             }
-            catch (DbUpdateException)
+            catch (DbUpdateException ex)
             {
-                TempData["ErrorMessage"] = "Some movie has contain this genre, thatswhy you are not able to remove";
+                _logger.LogError(ex, "Error occurred while deleting genre with ID {GenreId}.", GenreId);
+                TempData["ErrorMessage"] = "Some movie contains this genre, therefore you cannot remove it.";
                 return RedirectToPage();
             }
         }
 
-
         public JsonResult OnGetGenres(string searchTerm)
         {
+            _logger.LogInformation("Fetching genres with search term: {SearchTerm}.", searchTerm);
             var genres = _service.GetAll();
             if (!string.IsNullOrWhiteSpace(searchTerm))
             {
@@ -99,6 +115,4 @@ namespace KinopoiskWeb.Pages.Genres
             return new JsonResult(genres);
         }
     }
-
-
 }

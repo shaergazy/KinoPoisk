@@ -9,10 +9,12 @@ namespace KinopoiskWeb.Pages.Account
     public class LoginModel : PageModel
     {
         private readonly SignInManager<User> _signInManager;
+        private readonly ILogger<LoginModel> _logger;
 
-        public LoginModel(SignInManager<User> signInManager)
+        public LoginModel(SignInManager<User> signInManager, ILogger<LoginModel> logger)
         {
             _signInManager = signInManager;
+            _logger = logger;
         }
 
         [BindProperty]
@@ -23,6 +25,7 @@ namespace KinopoiskWeb.Pages.Account
         public void OnGet(string returnUrl = null)
         {
             ReturnUrl = returnUrl;
+            _logger.LogInformation("Navigated to the login page.");
         }
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
@@ -31,19 +34,24 @@ namespace KinopoiskWeb.Pages.Account
 
             if (ModelState.IsValid)
             {
+                _logger.LogInformation("User {Email} attempting to log in.", Input.Email);
+
                 var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
 
                 if (result.Succeeded)
                 {
+                    _logger.LogInformation("User {Email} logged in successfully.", Input.Email);
                     return LocalRedirect(returnUrl);
                 }
                 else
                 {
+                    _logger.LogWarning("Failed login attempt for user {Email}.", Input.Email);
                     ModelState.AddModelError(string.Empty, "Invalid login attempt.");
                     return Page();
                 }
             }
 
+            _logger.LogWarning("Invalid model state while attempting to log in user {Email}.", Input.Email);
             return Page();
         }
     }
