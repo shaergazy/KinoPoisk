@@ -1,4 +1,7 @@
+using BLL.Services.Interfaces;
+using Common.Helpers;
 using DAL.Models.Users;
+using Hangfire;
 using KinopoiskWeb.ViewModels.Account;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -12,12 +15,14 @@ namespace KinopoiskWeb.Pages.Account
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
         private readonly ILogger<RegisterModel> _logger;
+        private readonly IEmailService _emailService;
 
-        public RegisterModel(UserManager<User> userManager, SignInManager<User> signInManager, ILogger<RegisterModel> logger)
+        public RegisterModel(UserManager<User> userManager, SignInManager<User> signInManager, ILogger<RegisterModel> logger, IEmailService emailService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
+            _emailService = emailService;
         }
 
         [BindProperty]
@@ -47,6 +52,9 @@ namespace KinopoiskWeb.Pages.Account
                 {
                     _logger.LogInformation("User {Email} created successfully.", Input.Email);
                     await _signInManager.SignInAsync(user, isPersistent: false);
+
+                    BackgroundJob.Enqueue(() => SendEmail(user));
+
                     return RedirectToPage("/Index");
                 }
 
@@ -59,6 +67,14 @@ namespace KinopoiskWeb.Pages.Account
 
             _logger.LogWarning("Invalid model state while attempting to register a new user.");
             return Page();
+        }
+
+        public async Task SendEmail(User user)
+        {
+            var subject = ResourceHelper.GetString("WelcomeEmailSubject");
+            var body = string.Format(ResourceHelper.GetString("WelcomeEmailBody"), user.UserName, "Kinopoiskweb");
+
+            await _emailService.SendEmailAsync(user.Email, subject, body);
         }
     }
 }

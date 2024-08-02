@@ -16,6 +16,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Repositories;
+using System.Configuration;
 using System.Data;
 namespace Common.CommonServices
 {
@@ -57,10 +58,16 @@ namespace Common.CommonServices
             var settings = configuration.GetSection(nameof(SettingsDto.ServiceUri)).Get<SettingsDto.ServiceUri>();
             AppConstants.BaseUri = settings.Self.BaseUri;
         }
+        internal static void RegisterIOptions(this IServiceCollection services, IConfiguration configuration)
+        {
+            services.Configure<SettingsDto.Mail>(x => configuration.GetSection("EmailSettings").Bind(x));
+        }
 
-        internal static void RegisterServices(this IServiceCollection services)
+        internal static void RegisterServices(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddScoped<DbContext, AppDbContext>();
+            services.RegisterIOptions(configuration);
+            services.AddTransient<IEmailService, EmailService>();
 
             services.AddScoped(typeof(IGenericRepository<,>), typeof(GenericRepository<,>));
             services.AddScoped(typeof(IUnitOfWork<,>), typeof(UnitOfWork<,>));
@@ -85,7 +92,7 @@ namespace Common.CommonServices
             RegisterAuth(services);
             RegisterJwtAuthorization(services, configuration);
             RegisterServiceUri(services, configuration);
-            RegisterServices(services);
+            RegisterServices(services, configuration);
 
             var assembly = typeof(IService).Assembly;
             var serviceInterfaces = assembly

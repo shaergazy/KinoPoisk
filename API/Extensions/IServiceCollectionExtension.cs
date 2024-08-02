@@ -30,7 +30,6 @@ internal static class IServiceCollectionExtension
         services.Configure<AuthDto.Jwt>(x => configuration.GetSection(nameof(AuthDto.Jwt)).Bind(x));
         services.Configure<SettingsDto.Cors>(x => configuration.GetSection(nameof(SettingsDto.Cors)).Bind(x));
         services.Configure<SettingsDto.ServiceUri>(x => configuration.GetSection(nameof(SettingsDto.ServiceUri)).Bind(x));
-        services.Configure<SettingsDto.Mail>(x => configuration.GetSection(nameof(SettingsDto.Mail)).Bind(x));
     }
 
     internal static void RegisterSwagger(this IServiceCollection services)
