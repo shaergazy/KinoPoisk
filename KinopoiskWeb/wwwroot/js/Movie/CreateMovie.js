@@ -61,7 +61,7 @@
     $('#addActorModal').on('shown.bs.modal', function () {
         $('#actorSelect').select2({
             ajax: {
-                url: Urls.Person.GetPeople,
+                url: Urls.Person.GetActors,
                 dataType: 'json',
                 delay: 250,
                 data: function (params) {
@@ -170,7 +170,7 @@
 
     $('#directorSelect').select2({
         ajax: {
-            url: Urls.Person.GetPeople,
+            url: Urls.Person.GetDirectors,
             dataType: 'json',
             delay: 250,
             data: function (params) {

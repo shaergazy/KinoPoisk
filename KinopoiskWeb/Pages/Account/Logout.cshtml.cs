@@ -2,7 +2,6 @@ using DAL.Models.Users;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.Extensions.Logging;
 
 namespace KinopoiskWeb.Pages.Account
 {
@@ -17,7 +16,7 @@ namespace KinopoiskWeb.Pages.Account
             _logger = logger;
         }
 
-        public async Task<IActionResult> OnPostLogoutAsync()
+        public async Task<IActionResult> OnPostLogoutAsync() 
         {
             _logger.LogInformation("User {UserId} is logging out.", User.Identity?.Name);
             await _signInManager.SignOutAsync();
