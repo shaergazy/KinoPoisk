@@ -21,12 +21,12 @@ namespace BLL.Services.Implementation
         private readonly ICountryService _countryService;
         private readonly IGenreService _genreService;
         private readonly IPersonService _personService;
-        private readonly ILogger _logger;
+        private readonly ILogger<MovieService> _logger;
         private readonly OMDBService _omdbService;
 
         public MovieService(IMapper mapper, ILogger<MovieService> logger, IUnitOfWork<Movie, Guid> unitOfWork,
-            ICountryService countryService, IGenreService genreService, IPersonService personService, OMDBService omdbService) 
-            : base(mapper, unitOfWork)
+            ICountryService countryService, IGenreService genreService, IPersonService personService, OMDBService omdbService)
+            : base(mapper, unitOfWork, logger)
         {
             _mapper = mapper;
             _uow = unitOfWork;
@@ -89,17 +89,22 @@ namespace BLL.Services.Implementation
         public async Task AddCommentAsync(AddCommentDto dto)
         {
             var comment = _mapper.Map<Comment>(dto);
-            if (comment == null ) 
+            if (comment == null)
+            {
+                _logger.LogWarning("Attempted to add a comment with null value.");
                 throw new ArgumentNullException(nameof(comment));
+            }
 
             comment.Date = DateTime.Now;
             await _uow.Comments.AddAsync(comment);
             await _uow.SaveChangesAsync();
+            _logger.LogInformation("Added comment for movie with ID {MovieId}.", comment.MovieId);
         }
 
         public override async Task<DataTablesResponse<Movie>> SearchAsync(MovieDataTablesRequestDto request)
         {
-            var entities = _uow.Repository.GetAll(); 
+            var entities = _uow.Repository.GetAll();
+            _logger.LogInformation("Retrieved all movies for search.");
 
             var recordsTotal = entities.Count();
 
@@ -110,6 +115,8 @@ namespace BLL.Services.Implementation
             entities = OrderByColumn(entities, request);
 
             var data = await GetPagedData(request, entities);
+
+            _logger.LogInformation("Returning {Count} movies after filtering.", data.Count);
 
             var datatableResponse = new DataTablesResponse<Movie>()
             {
@@ -134,6 +141,13 @@ namespace BLL.Services.Implementation
                 .ThenInclude(mp => mp.Person)
             .FirstOrDefaultAsync(x => x.Id == id);
 
+            if (entity == null)
+            {
+                _logger.LogWarning("Movie with ID {MovieId} not found.", id);
+                return null;
+            }
+
+            _logger.LogInformation("Retrieved movie with ID {MovieId}.", id);
             return _mapper.Map<GetMovieDto>(entity);
         }
 
@@ -144,11 +158,13 @@ namespace BLL.Services.Implementation
             if (existinRating != null)
             {
                 existinRating.StarCount = dto.StarCount;
+                _logger.LogInformation("Updated rating for movie {MovieId} by user {UserId}.", dto.MovieId, dto.UserId);
             }
             else
             {
                 var rating = _mapper.Map<MovieRating>(dto);
                 await _uow.Ratings.AddAsync(rating);
+                _logger.LogInformation("Added new rating for movie {MovieId} by user {UserId}.", dto.MovieId, dto.UserId);
             }
 
             await _uow.SaveChangesAsync();
@@ -162,84 +178,114 @@ namespace BLL.Services.Implementation
             {
                 movie.Rating = (float)averageRating;
                 await _uow.SaveChangesAsync();
+                _logger.LogInformation("Updated average rating for movie {MovieId} to {Rating}.", dto.MovieId, averageRating);
             }
         }
-
 
         public override IQueryable<Movie> FilterEntities(MovieDataTablesRequestDto request, IQueryable<Movie> entities = null)
         {
             var searchTerm = request.SearchTerm?.ToUpper();
             if (!string.IsNullOrWhiteSpace(request.SearchTerm))
+            {
                 entities = entities.Where(s => s.Title.ToUpper().Contains(searchTerm));
+                _logger.LogInformation("Filtered movies by search term: {SearchTerm}.", searchTerm);
+            }
 
             if (!string.IsNullOrEmpty(request.Title))
+            {
                 entities = entities.Where(m => m.Title.Contains(request.Title));
+                _logger.LogInformation("Filtered movies by title: {Title}.", request.Title);
+            }
 
             if (request.Year.HasValue)
+            {
                 entities = entities.Where(m => m.ReleasedDate.Year == request.Year);
+                _logger.LogInformation("Filtered movies by year: {Year}.", request.Year);
+            }
 
             if (request.Country.HasValue)
+            {
                 entities = entities.Where(m => m.CountryId == request.Country);
+                _logger.LogInformation("Filtered movies by country ID: {CountryId}.", request.Country);
+            }
 
             if (request.Actor.HasValue)
             {
                 entities = entities.Where(m => m.People.Any(p => p.PersonType == PersonType.Actor && p.PersonId == request.Actor));
+                _logger.LogInformation("Filtered movies by actor ID: {ActorId}.", request.Actor);
             }
 
             if (request.Director.HasValue)
             {
                 entities = entities.Where(m => m.People.Any(p => p.PersonType == PersonType.Director && p.PersonId == request.Director));
+                _logger.LogInformation("Filtered movies by director ID: {DirectorId}.", request.Director);
             }
 
             return entities;
         }
 
-
         public async Task DeleteCommentAsync(int commentId)
         {
-            await _uow.Comments.DeleteByIdAsync(commentId);
+            try
+            {
+                await _uow.Comments.DeleteByIdAsync(commentId);
+                _logger.LogInformation("Deleted comment with ID {CommentId}.", commentId);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error deleting comment with ID {CommentId}.", commentId);
+                throw;
+            }
         }
 
         public async Task<DataTablesResponse<GetCommentDto>> GetCommentsAsync(Guid id, DataTablesRequestDto request)
-            {
-                var comments = await _uow.Comments
+        {
+            var comments = await _uow.Comments
                              .Where(c => c.MovieId == id)
                              .Include(x => x.User)
                              .OrderByDescending(c => c.Date)
                              .ToListAsync();
 
-                var recordsTotal = comments.Count;
-                comments = comments.Skip(request.Start).Take(request.Length).ToList();
-                var recordsFiltered = comments.Count;
-                var data = _mapper.Map<List<GetCommentDto>>(comments);
+            var recordsTotal = comments.Count;
+            comments = comments.Skip(request.Start).Take(request.Length).ToList();
+            var recordsFiltered = comments.Count;
+            var data = _mapper.Map<List<GetCommentDto>>(comments);
 
-                var datatableResponse = new DataTablesResponse<GetCommentDto>()
-                {
-                    Draw = request.Draw,
-                    RecordsTotal = recordsTotal,
-                    RecordsFiltered = recordsFiltered,
-                    Data = data
-                };
+            var datatableResponse = new DataTablesResponse<GetCommentDto>()
+            {
+                Draw = request.Draw,
+                RecordsTotal = recordsTotal,
+                RecordsFiltered = recordsFiltered,
+                Data = data
+            };
 
-                return datatableResponse;
+            _logger.LogInformation("Retrieved {Count} comments for movie with ID {MovieId}.", data.Count, id);
+            return datatableResponse;
         }
-        
+
         public override async Task<Movie> BuildEntityForCreate(AddMovieDto dto)
         {
             if (dto.Poster == null || dto.Title == null)
+            {
+                _logger.LogWarning("Attempted to create a movie with incomplete data.");
                 throw new ArgumentNullException(nameof(dto), "You have to complete all properties");
+            }
 
             var movie = _mapper.Map<Movie>(dto);
-            movie.Poster = await   SaveFileAsync(dto.Poster);
+            movie.Poster = await SaveFileAsync(dto.Poster);
 
             var country = await _uow.Countries.FirstOrDefaultAsync(x => x.Id == dto.CountryId);
             if (country != null)
+            {
                 movie.Country = country;
+                _logger.LogInformation("Assigned country with ID {CountryId} to movie.", dto.CountryId);
+            }
 
             var genres = await _uow.Genres.GetAll()
                             .Where(g => dto.GenreIds.Contains(g.Id))
                             .ToListAsync();
             movie.Genres = genres.Select(g => new MovieGenre { Movie = movie, Genre = g }).ToList();
+            _logger.LogInformation("Assigned genres to movie.");
 
             movie.People = new List<MoviePerson>
             {
@@ -258,6 +304,7 @@ namespace BLL.Services.Implementation
                         Order = actor.Order,
                     });
                 }
+                _logger.LogInformation("Assigned actors to movie.");
             }
 
             return movie;
@@ -269,10 +316,11 @@ namespace BLL.Services.Implementation
             try
             {
                 File.Delete(movie.Poster);
+                _logger.LogInformation("Deleted poster file for movie with ID {MovieId}.", id);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                // TODO: Add logging
+                _logger.LogWarning(ex, "Failed to delete poster file for movie with ID {MovieId}.", id);
             }
             return movie;
         }
@@ -280,15 +328,24 @@ namespace BLL.Services.Implementation
         public override async Task<Movie> BuildEntityForUpdate(EditMovieDto dto)
         {
             if (dto == null)
+            {
+                _logger.LogWarning("Attempted to update a movie with null DTO.");
                 throw new ArgumentNullException(nameof(dto));
+            }
 
             var movieToUpdate = await _uow.Repository.GetByIdAsync(dto.Id);
             if (movieToUpdate == null)
+            {
+                _logger.LogWarning("Movie with ID {MovieId} not found for update.", dto.Id);
                 throw new Exception($"Movie with id {dto.Id} doesn't exist");
+            }
 
             var country = await _uow.Countries.FirstOrDefaultAsync(x => x.Id == dto.CountryId);
             if (country != null)
+            {
                 movieToUpdate.Country = country;
+                _logger.LogInformation("Updated country for movie with ID {MovieId}.", dto.Id);
+            }
 
             movieToUpdate.Title = dto.Title;
             movieToUpdate.Description = dto.Description;
@@ -299,13 +356,16 @@ namespace BLL.Services.Implementation
                 if (!string.IsNullOrEmpty(movieToUpdate.Poster))
                 {
                     File.Delete(movieToUpdate.Poster);
+                    _logger.LogInformation("Deleted old poster for movie with ID {MovieId}.", dto.Id);
                 }
 
                 movieToUpdate.Poster = await SaveFileAsync(dto.Poster);
+                _logger.LogInformation("Updated poster for movie with ID {MovieId}.", dto.Id);
             }
 
             return movieToUpdate;
         }
+
         public async Task<IEnumerable<ListMovieDto>> GetNewestMoviesAsync(int count)
         {
             var movies = await _uow.Movies.GetAll()
@@ -315,6 +375,7 @@ namespace BLL.Services.Implementation
                 .Take(count)
                 .ToListAsync();
 
+            _logger.LogInformation("Retrieved {Count} newest movies.", count);
             return _mapper.Map<List<ListMovieDto>>(movies);
         }
 
@@ -331,21 +392,20 @@ namespace BLL.Services.Implementation
                 Genres = new List<MovieGenre>(),
                 People = new List<MoviePerson>()
             };
+
             if (float.TryParse(dto.ImdbRating, NumberStyles.Float, CultureInfo.InvariantCulture, out float imdbRating))
             {
                 movie.IMDBRating = imdbRating;
             }
 
-
             await _uow.Movies.AddAsync(movie);
 
             await _countryService.ImportCountry(dto.Country, movie);
-
             await _personService.ImportPeopleAsync(dto.Actors, dto.Director, movie);
-
             await _genreService.ImportGenres(dto.Genre, movie);
 
             await _uow.SaveChangesAsync();
+            _logger.LogInformation("Imported movie with title {Title} from external source.", dto.Title);
         }
 
         private uint ParseDuration(string runtime)
@@ -353,7 +413,6 @@ namespace BLL.Services.Implementation
             var parts = runtime.Split(" ");
             return uint.TryParse(parts[0], out var duration) ? duration : 0;
         }
-
 
         public async Task<IEnumerable<ListMovieDto>> GetTopRatedMoviesAsync(int count)
         {
@@ -364,6 +423,7 @@ namespace BLL.Services.Implementation
                 .Take(count)
                 .ToListAsync();
 
+            _logger.LogInformation("Retrieved {Count} top rated movies.", count);
             return _mapper.Map<List<ListMovieDto>>(movies);
         }
 
@@ -386,6 +446,7 @@ namespace BLL.Services.Implementation
                     {
                         movie.IMDBRating = imdbRating;
                         await _uow.Movies.UpdateAsync(movie);
+                        _logger.LogInformation("Updated IMDB rating for movie with ID {MovieId} to {ImdbRating}.", movie.Id, imdbRating);
                     }
                 }
             }

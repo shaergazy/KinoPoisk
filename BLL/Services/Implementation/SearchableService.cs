@@ -4,6 +4,7 @@ using BLL.Services.Implementation;
 using BLL.Services.Interfaces;
 using Data.Repositories.RepositoryInterfaces;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System.Linq.Dynamic.Core;
 
 public class SearchableService<TListDto, TAddDto, TEditDTo, TGetDto, TEntity, TKey, TDataTableRequest>
@@ -18,15 +19,19 @@ public class SearchableService<TListDto, TAddDto, TEditDTo, TGetDto, TEntity, TK
 {
     private readonly IMapper _mapper;
     private readonly IUnitOfWork<TEntity, TKey> _unitOfWork;
+    private readonly ILogger<SearchableService<TListDto, TAddDto, TEditDTo, TGetDto, TEntity, TKey, TDataTableRequest>> _logger;
 
-    public SearchableService(IMapper mapper, IUnitOfWork<TEntity, TKey> unitOfWork) : base(mapper, unitOfWork)
+    public SearchableService(IMapper mapper, IUnitOfWork<TEntity, TKey> unitOfWork, ILogger<SearchableService<TListDto, TAddDto, TEditDTo, TGetDto, TEntity, TKey, TDataTableRequest>> logger) : base(mapper, unitOfWork, logger)
     {
         _mapper = mapper;
         _unitOfWork = unitOfWork;
+        _logger = logger;
     }
 
     public virtual async Task<DataTablesResponse<TEntity>> SearchAsync(TDataTableRequest request)
     {
+        _logger.LogDebug("Starting search with request: {Request}", request);
+
         var entities = _unitOfWork.Repository.GetAll();
 
         var recordsTotal = entities.Count();
@@ -44,15 +49,22 @@ public class SearchableService<TListDto, TAddDto, TEditDTo, TGetDto, TEntity, TK
             RecordsFiltered = recordsFiltered,
             Data = data
         };
+
+        _logger.LogDebug("Search completed. Response: {Response}", response);
+
         return response;
     }
 
     public async virtual Task<IList<TEntity>> GetPagedData(TDataTableRequest request, IQueryable<TEntity> entities)
     {
+        _logger.LogDebug("Getting paged data for request: {Request}", request);
+
         var data = await entities
             .Skip(request.Start)
             .Take(request.Length)
             .ToListAsync();
+
+        _logger.LogDebug("Paged data retrieval completed. Data count: {Count}", data.Count);
 
         return data;
     }
@@ -62,6 +74,8 @@ public class SearchableService<TListDto, TAddDto, TEditDTo, TGetDto, TEntity, TK
         var sortColumnName = request.SortColumn;
         var sortDirection = request.SortDirection;
 
+        _logger.LogDebug("Ordering by column {Column} {Direction}", sortColumnName, sortDirection);
+
         entities = entities.OrderBy($"{sortColumnName} {sortDirection}");
         return entities;
     }
@@ -70,8 +84,11 @@ public class SearchableService<TListDto, TAddDto, TEditDTo, TGetDto, TEntity, TK
     {
         if (entities == null)
         {
+            _logger.LogWarning("Entities were null in FilterEntities. Fetching all entities.");
             entities = _unitOfWork.Repository.GetAll();
         }
+
+        _logger.LogDebug("Filtering entities for request: {Request}", request);
 
         return entities;
     }

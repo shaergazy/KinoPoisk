@@ -1,8 +1,8 @@
 ﻿using BLL.DTO.Movie;
-using BLL.Services.Interfaces;
 using BLL.Utilities;
 using Newtonsoft.Json;
 using System.Net.Http.Headers;
+using Microsoft.Extensions.Logging;
 
 namespace BLL.Services.Implementation
 {
@@ -11,11 +11,13 @@ namespace BLL.Services.Implementation
         private const string BaseUrl = "http://www.omdbapi.com/?";
         private readonly string _apikey;
         private readonly bool _rottenTomatoesRatings;
+        private readonly ILogger<OMDBService> _logger;
 
-        public OMDBService(string apikey, bool rottenTomatoesRatings = false)
+        public OMDBService(string apikey, ILogger<OMDBService> logger, bool rottenTomatoesRatings = false)
         {
             _apikey = apikey;
             _rottenTomatoesRatings = rottenTomatoesRatings;
+            _logger = logger;
         }
 
         public ExternalMovieDto GetItemByTitle(string title, bool fullPlot = false)
@@ -25,29 +27,52 @@ namespace BLL.Services.Implementation
 
         public ExternalMovieDto GetItemByTitle(string title, int? year, bool fullPlot = false)
         {
-            var query = QueryBuilder.GetItemByTitleQuery(title, year, fullPlot);
-
-            var item = GetOmdbDataAsync<ExternalMovieDto>(query).Result;
-
-            if (item.Response.Equals("False"))
+            try
             {
-                throw new HttpRequestException(item.Error);
-            }
+                _logger.LogInformation("Requesting movie details by title: {Title} and year: {Year}", title, year);
+                var query = QueryBuilder.GetItemByTitleQuery(title, year, fullPlot);
 
-            return item;
+                var item = GetOmdbDataAsync<ExternalMovieDto>(query).Result;
+
+                if (item.Response.Equals("False"))
+                {
+                    _logger.LogWarning("OMDB API returned an error: {Error}", item.Error);
+                    throw new HttpRequestException(item.Error);
+                }
+
+                _logger.LogInformation("Successfully retrieved movie details for title: {Title}", title);
+                return item;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred while getting movie details by title: {Title}", title);
+                throw;
+            }
         }
 
-        public ExternalMovieDto GetItemById(string id, bool fullPlot = false)
+        public ExternalMovieDto GetItemById(string id, bool fullPlot = true)
         {
-            var query = QueryBuilder.GetItemByIdQuery(id, fullPlot);
-
-            var item = GetOmdbDataAsync<ExternalMovieDto>(query).Result;
-
-            if (item.Response.Equals("False"))
+            try
             {
-                throw new HttpRequestException(item.Error);
+                _logger.LogInformation("Requesting movie details by ID: {Id}", id);
+                var query = QueryBuilder.GetItemByIdQuery(id, fullPlot);
+
+                var item = GetOmdbDataAsync<ExternalMovieDto>(query).Result;
+
+                if (item.Response.Equals("False"))
+                {
+                    _logger.LogWarning("OMDB API returned an error: {Error}", item.Error);
+                    throw new HttpRequestException(item.Error);
+                }
+
+                _logger.LogInformation("Successfully retrieved movie details for ID: {Id}", id);
+                return item;
             }
-            return item;
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred while getting movie details by ID: {Id}", id);
+                throw;
+            }
         }
 
         public SearchList GetSearchList(string query, int page = 1)
@@ -57,46 +82,69 @@ namespace BLL.Services.Implementation
 
         public SearchList GetSearchList(int? year, string query, int page = 1)
         {
-            var editedQuery = QueryBuilder.GetSearchListQuery(year, query, page);
-
-            var searchList = GetOmdbDataAsync<SearchList>(editedQuery).Result;
-
-            if (searchList.Response.Equals("False"))
+            try
             {
-                throw new HttpRequestException(searchList.Error);
-            }
+                _logger.LogInformation("Searching for movies with query: {Query}, year: {Year}, page: {Page}", query, year, page);
+                var editedQuery = QueryBuilder.GetSearchListQuery(year, query, page);
 
-            return searchList;
+                var searchList = GetOmdbDataAsync<SearchList>(editedQuery).Result;
+
+                if (searchList.Response.Equals("False"))
+                {
+                    _logger.LogWarning("OMDB API returned an error during search: {Error}", searchList.Error);
+                    throw new HttpRequestException(searchList.Error);
+                }
+
+                _logger.LogInformation("Successfully retrieved search results for query: {Query}", query);
+                return searchList;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred while searching for movies with query: {Query}", query);
+                throw;
+            }
         }
 
         public async Task<T> GetOmdbDataAsync<T>(string query)
         {
-            using (var client = new HttpClient { BaseAddress = new Uri(BaseUrl) })
+            try
             {
-                client.DefaultRequestHeaders.Accept.Clear();
-                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                _logger.LogInformation("Sending request to OMDB API with query: {Query}", query);
 
-                var response = await client
-                    .GetAsync($"{BaseUrl}apikey={_apikey}{query}&tomatoes={_rottenTomatoesRatings}")
-                    .ConfigureAwait(false);
-
-                if (!response.IsSuccessStatusCode)
+                using (var client = new HttpClient { BaseAddress = new Uri(BaseUrl) })
                 {
-                    return default;
-                }
+                    client.DefaultRequestHeaders.Accept.Clear();
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-                var json = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-                return JsonConvert.DeserializeObject<T>(json, new JsonSerializerSettings
-                {
-                    MetadataPropertyHandling = MetadataPropertyHandling.Ignore,
-                    DateParseHandling = DateParseHandling.None,
-                    Error = delegate (object? sender, Newtonsoft.Json.Serialization.ErrorEventArgs args)
+                    var response = await client
+                        .GetAsync($"{BaseUrl}apikey={_apikey}{query}&tomatoes={_rottenTomatoesRatings}")
+                        .ConfigureAwait(false);
+
+                    if (!response.IsSuccessStatusCode)
                     {
-                        string message = args.ErrorContext.Error.Message;
-                        var currentError = message;
-                        args.ErrorContext.Handled = true;
+                        _logger.LogWarning("OMDB API request failed with status code: {StatusCode}", response.StatusCode);
+                        return default;
                     }
-                });
+
+                    var json = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                    _logger.LogInformation("Successfully retrieved response from OMDB API for query: {Query}", query);
+                    
+                    return JsonConvert.DeserializeObject<T>(json, new JsonSerializerSettings
+                    {
+                        MetadataPropertyHandling = MetadataPropertyHandling.Ignore,
+                        DateParseHandling = DateParseHandling.None,
+                        Error = delegate (object? sender, Newtonsoft.Json.Serialization.ErrorEventArgs args)
+                        {
+                            _logger.LogError("Error deserializing response from OMDB API: {ErrorMessage}", args.ErrorContext.Error.Message);
+                            args.ErrorContext.Handled = true;
+                        }
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred while sending request to OMDB API with query: {Query}", query);
+                throw;
             }
         }
     }

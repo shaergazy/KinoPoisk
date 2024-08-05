@@ -7,7 +7,7 @@ using DAL.Models;
 using Data.Models;
 using Data.Repositories.RepositoryInterfaces;
 using Microsoft.EntityFrameworkCore;
-using Repositories;
+using Microsoft.Extensions.Logging;
 using System.Linq.Dynamic.Core;
 
 namespace BLL.Services.Implementation
@@ -17,17 +17,30 @@ namespace BLL.Services.Implementation
     {
         private readonly IMapper _mapper;
         private readonly IUnitOfWork<Person, int> _uow;
+        private readonly ILogger<PersonService> _logger;
 
-        public PersonService(IMapper mapper, IUnitOfWork<Person, int> unitOfWork) : base(mapper, unitOfWork)
+        public PersonService(IMapper mapper, IUnitOfWork<Person, int> unitOfWork, ILogger<PersonService> logger)
+            : base(mapper, unitOfWork, logger)
         {
             _mapper = mapper;
             _uow = unitOfWork;
+            _logger = logger;
         }
 
         public async Task ImportPeopleAsync(string actorNames, string directorName, Movie movie)
         {
-            await ImportActorsAsync(actorNames, movie);
-            await ImportDirectorAsync(directorName, movie);
+            try
+            {
+                _logger.LogInformation("Importing people for movie: {MovieTitle}", movie.Title);
+                await ImportActorsAsync(actorNames, movie);
+                await ImportDirectorAsync(directorName, movie);
+                _logger.LogInformation("Successfully imported people for movie: {MovieTitle}", movie.Title);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred while importing people for movie: {MovieTitle}", movie.Title);
+                throw;
+            }
         }
 
         private async Task ImportActorsAsync(string actorNames, Movie movie)
@@ -36,66 +49,121 @@ namespace BLL.Services.Implementation
             uint order = 1;
             foreach (var personName in actors)
             {
-                var names = personName.Split(" ");
-                var firstName = names.First();
-                var lastName = names.Last();
-                var person = await _uow.People.FirstOrDefaultAsync(p => p.FirstName == firstName && p.LastName == lastName);
-                if (person == null)
+                try
                 {
-                    person = new Person { FirstName = firstName, LastName = lastName };
-                    await _uow.People.AddAsync(person);
+                    _logger.LogInformation("Importing actor: {PersonName}", personName);
+                    var names = personName.Split(" ");
+                    var firstName = names.First();
+                    var lastName = names.Last();
+                    var person = await _uow.People.FirstOrDefaultAsync(p => p.FirstName == firstName && p.LastName == lastName);
+                    if (person == null)
+                    {
+                        person = new Person { FirstName = firstName, LastName = lastName };
+                        await _uow.People.AddAsync(person);
+                        _logger.LogInformation("Added new actor: {PersonName}", personName);
+                    }
+                    else
+                    {
+                        _logger.LogInformation("Actor: {PersonName} already exist in database", personName);
+                    }
+                    movie.People.Add(new MoviePerson { Person = person, Order = order, PersonType = PersonType.Actor });
+                    order++;
                 }
-                movie.People.Add(new MoviePerson { Person = person, Order = order, PersonType = PersonType.Actor });
-                order++;
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Error occurred while importing actor: {PersonName}", personName);
+                    throw;
+                }
             }
         }
 
         private async Task ImportDirectorAsync(string directorName, Movie movie)
         {
-            var names = directorName.Split(" ");
-            var firstName = names.First();
-            var lastName = names.Last();
-            var director = await _uow.People.FirstOrDefaultAsync(p => p.FirstName == firstName && p.LastName == lastName);
-            if (director == null)
+            try
             {
-                director = new Person { FirstName = firstName, LastName = lastName };
-                await _uow.People.AddAsync(director);
+                _logger.LogInformation("Importing director: {DirectorName}", directorName);
+                var names = directorName.Split(" ");
+                var firstName = names.First();
+                var lastName = names.Last();
+                var director = await _uow.People.FirstOrDefaultAsync(p => p.FirstName == firstName && p.LastName == lastName);
+                if (director == null)
+                {
+                    director = new Person { FirstName = firstName, LastName = lastName };
+                    await _uow.People.AddAsync(director);
+                    _logger.LogInformation("Added new director: {DirectorName}", directorName);
+                }
+                else
+                {
+                    _logger.LogInformation("Director: {PersonName} already exist in database", directorName);
+                }
+                movie.People.Add(new MoviePerson { Person = director, PersonType = PersonType.Director });
             }
-            movie.People.Add(new MoviePerson { Person = director, PersonType = PersonType.Director });
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred while importing director: {DirectorName}", directorName);
+                throw;
+            }
         }
 
         public override IQueryable<Person> FilterEntities(DataTablesRequestDto request, IQueryable<Person>? entities = null)
         {
-            var searchTerm = request.SearchTerm;
-            if (entities == null)
-                entities = _uow.Repository.GetAll();
-
-            if (!string.IsNullOrWhiteSpace(searchTerm))
+            try
             {
-                entities = entities.Where(m => (m.FirstName + " " + m.LastName).Contains(searchTerm)
-                                            || (m.LastName + " " + m.FirstName).Contains(searchTerm));
+                _logger.LogInformation("Filtering entities with search term: {SearchTerm}", request.SearchTerm);
+                var searchTerm = request.SearchTerm;
+                if (entities == null)
+                    entities = _uow.Repository.GetAll();
+
+                if (!string.IsNullOrWhiteSpace(searchTerm))
+                {
+                    entities = entities.Where(m => (m.FirstName + " " + m.LastName).Contains(searchTerm)
+                                                || (m.LastName + " " + m.FirstName).Contains(searchTerm));
+                }
+                return entities;
             }
-            return entities;
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred while filtering entities with search term: {SearchTerm}", request.SearchTerm);
+                throw;
+            }
         }
 
         public IEnumerable<ListPersonDto> GetActors()
         {
-            var actors = _uow.Repository.GetAll()
-                                        .Include(p => p.Movies)
-                                        .ThenInclude(mp => mp.Movie)
-                                        .Where(p => p.Movies.Any(mp => mp.PersonType == DAL.Enums.PersonType.Actor))
-                                        .ToList();
-            return _mapper.Map<List<ListPersonDto>>(actors);
+            try
+            {
+                _logger.LogInformation("Fetching all actors");
+                var actors = _uow.Repository.GetAll()
+                                            .Include(p => p.Movies)
+                                            .ThenInclude(mp => mp.Movie)
+                                            .Where(p => p.Movies.Any(mp => mp.PersonType == PersonType.Actor))
+                                            .ToList();
+                return _mapper.Map<List<ListPersonDto>>(actors);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred while fetching actors");
+                throw;
+            }
         }
 
         public IEnumerable<ListPersonDto> GetDirectors()
         {
-            var directors = _uow.Repository.GetAll()
-                                       .Include(p => p.Movies)
-                                       .ThenInclude(mp => mp.Movie)
-                                       .Where(p => p.Movies.Any(mp => mp.PersonType == DAL.Enums.PersonType.Director))
-                                       .ToList();
-            return _mapper.Map<List<ListPersonDto>>(directors);
+            try
+            {
+                _logger.LogInformation("Fetching all directors");
+                var directors = _uow.Repository.GetAll()
+                                               .Include(p => p.Movies)
+                                               .ThenInclude(mp => mp.Movie)
+                                               .Where(p => p.Movies.Any(mp => mp.PersonType == PersonType.Director))
+                                               .ToList();
+                return _mapper.Map<List<ListPersonDto>>(directors);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred while fetching directors");
+                throw;
+            }
         }
     }
 }

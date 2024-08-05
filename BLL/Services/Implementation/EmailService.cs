@@ -1,12 +1,12 @@
 ﻿using BLL.Services.Interfaces;
+using Common.Helpers;
+using DAL.Models.Users;
 using DTO;
 using MailKit.Net.Smtp;
 using MailKit.Security;
-using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using MimeKit;
-using System.Net.Security;
 
 namespace BLL.Services.Implementation
 {
@@ -19,6 +19,14 @@ namespace BLL.Services.Implementation
         {
             _emailSettings = emailSettings.Value;
             _logger = logger;
+        }
+
+        public async Task SendWelcomeEmailAsync(User user)
+        {
+            var subject = ResourceHelper.GetString("WelcomeEmailSubject");
+            var body = string.Format(ResourceHelper.GetString("WelcomeEmailBody"), user.UserName, "Kinopoiskweb");
+
+            await SendEmailAsync(user.Email, subject, body);
         }
 
         public async Task SendEmailAsync(string toEmail, string subject, string body)
@@ -39,14 +47,17 @@ namespace BLL.Services.Implementation
             {
                 try
                 {
+                    _logger.LogInformation("Attempting to send email with subject '{Subject}' to '{ToEmail}'.", subject, toEmail);
+
                     await client.ConnectAsync(_emailSettings.SmtpServer, _emailSettings.Port, SecureSocketOptions.StartTls);
                     await client.AuthenticateAsync(_emailSettings.UserName, _emailSettings.Password);
                     await client.SendAsync(emailMessage);
-                    _logger.LogInformation("Email sent to {Email}", toEmail);
+
+                    _logger.LogInformation("Email successfully sent to {Email} with subject '{Subject}'.", toEmail, subject);
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError(ex, "Error sending email to {Email}", toEmail);
+                    _logger.LogError(ex, "Error sending email to {Email} with subject '{Subject}'.", toEmail, subject);
                     throw;
                 }
                 finally
