@@ -37,6 +37,46 @@ namespace BLL.Services.Implementation
             _omdbService = omdbService;
         }
 
+        public async override Task DeleteAsync(Guid id)
+        {
+            _logger.LogInformation($"Attempting to delete movie with ID: {id}");
+
+            try
+            {
+                var movie = await _uow.Movies
+                    .Include(m => m.Genres)
+                    .Include(m => m.Comments)
+                    .Include(m => m.People)
+                    .Include(m => m.Ratings)
+                    .FirstOrDefaultAsync(m => m.Id == id);
+
+                if (movie == null)
+                {
+                    _logger.LogWarning($"Movie with ID: {id} not found.");
+                    return;
+                }
+
+                _logger.LogInformation($"Deleting related entities for movie with ID: {id}");
+
+                _uow.MovieGenres.RemoveRange(movie.Genres);
+                _uow.Comments.RemoveRange(movie.Comments);
+                _uow.MoviePerson.RemoveRange(movie.People);
+                _uow.Ratings.RemoveRange(movie.Ratings);
+
+                _logger.LogInformation($"Deleting movie with ID: {id}");
+                await _uow.Movies.Remove(movie);
+
+                await _uow.SaveChangesAsync();
+
+                _logger.LogInformation($"Successfully deleted movie with ID: {id}");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Error occurred while deleting movie with ID: {id}");
+                throw;
+            }
+        }
+
         public async Task<byte[]> GeneratePdfAsync(MovieDataTablesRequestDto dto)
         {
             var response = await SearchAsync(dto);

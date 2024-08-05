@@ -16,6 +16,8 @@ public interface IGenericRepository<TEntity, TKey>
 
     public Task Remove(TEntity model);
 
+    public void RemoveRange(IEnumerable<TEntity> entities);
+
     public Task UpdateAsync(TEntity model);
 
     public Task<int> SaveChangesAsync();

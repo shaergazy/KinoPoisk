@@ -24,6 +24,9 @@ namespace KinopoiskWeb.Pages.Movies
         [BindProperty]
         public MovieDataTablesRequest DataTablesRequest { get; set; }
 
+        [BindProperty]
+        public Guid MovieId { get; set; }
+
         public void OnGet()
         {
             DataTablesRequest = new MovieDataTablesRequest();
@@ -77,5 +80,21 @@ namespace KinopoiskWeb.Pages.Movies
                 return RedirectToPage();
             }
         }
+
+        public async Task<IActionResult> OnPostDeleteAsync()
+        {
+            try
+            {
+                var d = MovieId;
+                await _service.DeleteAsync(MovieId);
+                return new JsonResult(new { success = true });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while deleting the movie.");
+                return new JsonResult(new { success = false, message = "An error occurred while deleting the movie." });
+            }
+        }
+
     }
 }

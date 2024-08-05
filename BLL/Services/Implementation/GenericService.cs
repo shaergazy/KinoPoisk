@@ -5,9 +5,6 @@ using Common.Helpers;
 using Data.Repositories.RepositoryInterfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
-using System.Collections.Generic;
-using System.IO;
-using System.Threading.Tasks;
 
 namespace BLL.Services.Implementation
 {
@@ -60,7 +57,7 @@ namespace BLL.Services.Implementation
             _logger.LogInformation("Updated entity with ID: {Id}", entity.GetType().GetProperty("Id").GetValue(entity, null));
         }
 
-        public async Task DeleteAsync(TKey id)
+        public virtual async Task DeleteAsync(TKey id)
         {
             var entity = await BuildEntityForDelete(id);
             await _unitOfWork.Repository.Remove(entity);

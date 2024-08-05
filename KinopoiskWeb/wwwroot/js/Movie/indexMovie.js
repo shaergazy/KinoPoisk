@@ -33,7 +33,7 @@
 
     $('#actorFilter').select2({
         ajax: {
-            url: Urls.Person.GetActors,
+            url: Urls.Person.Get,
             dataType: 'json',
             delay: 250,
             data: function (params) {
@@ -136,7 +136,12 @@
                 "data": null,
                 "orderable": false,
                 "render": function (data, type, row, meta) {
-                    return `<a href="/Movies/Details/${row.id}" class="btn btn-primary">Details</a>`;
+                    var actions = `<a href="/Movies/Details/${row.id}" class="btn btn-primary">Details</a>`;
+                    if (isAdmin) {
+                        actions += ` <a href="/Movies/Update/${row.id}" class="btn btn-secondary">Edit</a>`;
+                        actions += ` <button class="btn btn-danger delete-movie" data-id="${row.id}">Delete</button>`;
+                    }
+                    return actions;
                 }
             }
         ],
@@ -159,6 +164,18 @@
             topStart: 'buttons'
         }
     });
+
+    $('#moviesTable').on('click', '.delete-movie', function (e) {
+        e.preventDefault();
+        var movieId = $(this).data('id');
+        var movieName = $(this).closest('tr').find('td').eq(1).text();
+
+        $('#MovieToDelete_Id').val(movieId);
+        $('#movieNameToDelete').text(movieName);
+
+        $('#deleteMovieModal').modal('show');
+    });
+
 
     function generateReport(format) {
         $.ajax({

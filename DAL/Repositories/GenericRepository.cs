@@ -89,5 +89,10 @@ namespace Repositories
         {
             return await _dbSet.FirstOrDefaultAsync(expression);
         }
+
+        public void RemoveRange(IEnumerable<TEntity> entities)
+        {
+            _dbSet.RemoveRange(entities);
+        }
     }
 }
