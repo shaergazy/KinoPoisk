@@ -53,7 +53,7 @@ namespace KinopoiskWeb.Pages.Account
                     _logger.LogInformation("User {Email} created successfully.", Input.Email);
                     await _signInManager.SignInAsync(user, isPersistent: false);
 
-                    BackgroundJob.Enqueue(() => SendEmail(user));
+                    BackgroundJob.Enqueue(() => _emailService.SendWelcomeEmailAsync(user));
 
                     return RedirectToPage("/Index");
                 }
@@ -67,14 +67,6 @@ namespace KinopoiskWeb.Pages.Account
 
             _logger.LogWarning("Invalid model state while attempting to register a new user.");
             return Page();
-        }
-
-        public async Task SendEmail(User user)
-        {
-            var subject = ResourceHelper.GetString("WelcomeEmailSubject");
-            var body = string.Format(ResourceHelper.GetString("WelcomeEmailBody"), user.UserName, "Kinopoiskweb");
-
-            await _emailService.SendEmailAsync(user.Email, subject, body);
         }
     }
 }

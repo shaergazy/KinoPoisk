@@ -1,4 +1,3 @@
-using BLL.Services.Interfaces;
 using Common.CommonServices;
 using DAL.Models.Users;
 using Hangfire;
@@ -81,6 +80,7 @@ internal class Program
         app.MapRazorPages();
         app.UseSerilogRequestLogging();
         app.InitializeDatabase();
+        app.StartRecurringJobs();
 
         Log.Information("Application started successfully");
 

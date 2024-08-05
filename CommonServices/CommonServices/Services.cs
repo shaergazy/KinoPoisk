@@ -1,12 +1,8 @@
-﻿using BLL.DTO.Country;
-using BLL.DTO.Genre;
-using BLL.Services;
-using BLL.Services.Implementation;
+﻿using BLL.Services.Implementation;
 using BLL.Services.Interfaces;
 using Common.Helpers;
 using Common.Infrastructure;
 using DAL;
-using DAL.Models;
 using DAL.Models.Users;
 using Data.Repositories.RepositoryInterfaces;
 using DTO;
@@ -15,8 +11,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Repositories;
-using System.Configuration;
 using System.Data;
 namespace Common.CommonServices
 {
@@ -78,7 +74,11 @@ namespace Common.CommonServices
             services.AddTransient<ICountryService, CountryService>();
             services.AddTransient<IGenreService, GenreService>();
             services.AddTransient<IPersonService, PersonService>();
-            services.AddSingleton(new OMDBService("fc8e73bf"));
+            services.AddSingleton<OMDBService>(serviceProvider =>
+            {
+                var logger = serviceProvider.GetRequiredService<ILogger<OMDBService>>();
+                return new OMDBService("fc8e73bf", logger);
+            });
         }
 
         /// <summary>
