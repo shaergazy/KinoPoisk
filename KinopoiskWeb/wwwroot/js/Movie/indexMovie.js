@@ -139,7 +139,6 @@
                     var actions = `<a href="/Movies/Details/${row.id}" class="btn btn-primary">Details</a>`;
                     if (isAdmin) {
                         actions += ` <a href="/Movies/Update/${row.id}" class="btn btn-secondary">Edit</a>`;
-                        actions += ` <button class="btn btn-danger delete-movie" data-id="${row.id}">Delete</button>`;
                     }
                     return actions;
                 }
@@ -195,8 +194,7 @@
             }
         });
     }
-
-    // Function to reload table with debounce
+    
     function debounce(func, delay) {
         let debounceTimer;
         return function () {
