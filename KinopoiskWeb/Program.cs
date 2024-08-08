@@ -1,5 +1,6 @@
 using Common.CommonServices;
 using DAL.Models.Users;
+using DTO;
 using Hangfire;
 using KinopoiskWeb.Extensions;
 using KinopoiskWeb.Infrastructure;
@@ -7,6 +8,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using OfficeOpenXml;
 using QuestPDF.Infrastructure;
 using Serilog;
+using System.Configuration;
 
 internal class Program
 {

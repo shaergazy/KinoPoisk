@@ -57,6 +57,7 @@ namespace Common.CommonServices
         internal static void RegisterIOptions(this IServiceCollection services, IConfiguration configuration)
         {
             services.Configure<SettingsDto.Mail>(x => configuration.GetSection("EmailSettings").Bind(x));
+            services.Configure<SettingsDto.AuthorizeNetOptions>(x => configuration.GetSection("AuthorizeNet").Bind(x));
         }
 
         internal static void RegisterServices(this IServiceCollection services, IConfiguration configuration)
@@ -74,6 +75,7 @@ namespace Common.CommonServices
             services.AddTransient<ICountryService, CountryService>();
             services.AddTransient<IGenreService, GenreService>();
             services.AddTransient<IPersonService, PersonService>();
+            services.AddTransient<IAuthorizeNetService, AuthorizeNetService>();
             services.AddSingleton<OMDBService>(serviceProvider =>
             {
                 var logger = serviceProvider.GetRequiredService<ILogger<OMDBService>>();

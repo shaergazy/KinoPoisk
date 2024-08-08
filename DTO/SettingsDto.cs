@@ -16,6 +16,13 @@ public static class SettingsDto
         public string BaseSuffixUri { get; set; }
     }
 
+    public class AuthorizeNetOptions
+    {
+        public string ApiLoginID { get; set; }
+        public string TransactionKey { get; set; }
+    }
+
+
     public class Mail
     {
         public string DisplayName { get; set; }
