@@ -1,0 +1,23 @@
+﻿@page
+@model KinopoiskWeb.Pages.Subscriptions.SubscribeModel
+@{
+}
+<div class="container mt-5">
+    <h2 class="text-center">Subscribe to a Plan</h2>
+
+    <form method="post" class="mt-4">
+        <div class="form-group">
+            <label for="cardNumber">Card Number</label>
+            <input type="text" class="form-control" id="cardNumber" name="cardNumber" required />
+        </div>
+        <div class="form-group">
+            <label for="expirationDate">Expiration Date (MM/YY)</label>
+            <input type="text" class="form-control" id="expirationDate" name="expirationDate" required />
+        </div>
+        <div class="form-group">
+            <label for="cardCode">CVV</label>
+            <input type="text" class="form-control" id="cardCode" name="cardCode" required />
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Subscribe</button>
+    </form>
+</div>

@@ -1,3 +1,5 @@
+using AuthorizeNet.Api.Contracts.V1;
+using AuthorizeNet.Api.Controllers.Bases;
 using Common.CommonServices;
 using DAL.Models.Users;
 using DTO;
@@ -53,6 +55,7 @@ internal class Program
 
         QuestPDF.Settings.License = LicenseType.Community;
         ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+        ApiOperationBase<ANetApiRequest, ANetApiResponse>.RunEnvironment = AuthorizeNet.Environment.SANDBOX;
         builder.Services.ConfigMapper();
         builder.Services.AddHttpContextAccessor();
 

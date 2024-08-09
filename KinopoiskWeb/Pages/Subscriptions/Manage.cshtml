@@ -1,0 +1,35 @@
+﻿@page
+@model KinopoiskWeb.Pages.Subscriptions.ManageModel
+@{
+}
+<div class="container mt-5">
+    <h2 class="text-center">Manage Your Subscription</h2>
+
+    @if (Model.Subscription != null)
+    {
+        <div class="card shadow-sm mt-4">
+            <div class="card-body">
+                <h4 class="card-title">@Model.Subscription.PlanName</h4>
+                <p><strong>Status:</strong> @Model.Subscription.Status</p>
+                <p><strong>Amount:</strong> $@Model.Subscription.Amount</p>
+                <p><strong>Start Date:</strong> @Model.Subscription.StartDate.ToShortDateString()</p>
+                <p><strong>Next Billing Date:</strong> @Model.Subscription.NextBillingDate.ToString()</p>
+
+                @if (Model.Subscription.Status == "Active")
+                {
+                    <form method="post" asp-page-handler="Cancel">
+                        <button type="submit" class="btn btn-danger">Cancel Subscription</button>
+                    </form>
+                }
+                else
+                {
+                    <div class="alert alert-info mt-3">Your subscription has been cancelled.</div>
+                }
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-warning mt-4">You do not have an active subscription.</div>
+    }
+</div>

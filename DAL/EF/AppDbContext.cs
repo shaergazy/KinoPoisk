@@ -24,6 +24,7 @@ namespace DAL
         public DbSet<Comment> Comments { get; set; }
         public DbSet<Person> Persons { get; set; }
         public DbSet<MovieRating> Ratings { get; set; }
+        public DbSet<Subscription> Subscriptions { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -40,12 +41,6 @@ namespace DAL
                 .WithMany(x => x.Roles)
                 .HasForeignKey(x => x.UserId)
                 .IsRequired();
-
-            //builder.Entity<Comment>()
-            //    .HasOne(x => x.User)
-            //    .WithMany(x => x.Comments)
-            //    .HasForeignKey(x => x.UserId)
-            //    .IsRequired();
 
             builder.Entity<UserRole>()
                 .HasOne(x => x.Role)

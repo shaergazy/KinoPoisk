@@ -16,6 +16,7 @@ namespace Data.Repositories.RepositoryInterfaces
         public IGenericRepository<MovieRating, int> Ratings { get; }
         public IGenericRepository<MovieGenre, int> MovieGenres { get; }
         public IGenericRepository<User, Guid> Users { get; }
+        public IGenericRepository<Subscription, Guid> Subscriptions { get; }
         Task SaveChangesAsync();
     }
 }

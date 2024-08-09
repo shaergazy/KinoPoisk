@@ -1,6 +1,8 @@
 ﻿using AuthorizeNet.Api.Contracts.V1;
 using AuthorizeNet.Api.Controllers;
+using AuthorizeNet.Api.Controllers.Bases;
 using BLL.Services.Interfaces;
+using DAL.Models.Users;
 using Microsoft.Extensions.Options;
 using static DTO.SettingsDto;
 
@@ -13,9 +15,10 @@ namespace BLL.Services.Implementation
         public AuthorizeNetService(IOptions<AuthorizeNetOptions> options)
         {
             _options = options.Value;
+            ApiOperationBase<ANetApiRequest, ANetApiResponse>.RunEnvironment = AuthorizeNet.Environment.SANDBOX;
         }
 
-        public async Task<string> ProcessPaymentAsync(decimal amount, string cardNumber, string expirationDate, string cardCode)
+        public async Task<string> CreateSubscriptionAsync(decimal amount, string cardNumber, string expirationDate, string cardCode, short billingInterval, string billingUnit, User user)
         {
             var merchantAuthentication = new merchantAuthenticationType
             {
@@ -33,30 +36,73 @@ namespace BLL.Services.Implementation
 
             var paymentType = new paymentType { Item = creditCard };
 
-            var transactionRequest = new transactionRequestType
+            var subscription = new ARBSubscriptionType
             {
-                transactionType = transactionTypeEnum.authCaptureTransaction.ToString(),
+                name = "Monthly Subscription",
+                paymentSchedule = new paymentScheduleType
+                {
+                    interval = new paymentScheduleTypeInterval
+                    {
+                        length = billingInterval,
+                        unit = (ARBSubscriptionUnitEnum)Enum.Parse(typeof(ARBSubscriptionUnitEnum), billingUnit)
+                    },
+                    startDate = DateTime.UtcNow, 
+                    totalOccurrences = 9999 
+                },
                 amount = amount,
-                payment = paymentType
+                payment = paymentType,
+                billTo = new nameAndAddressType
+                {
+                    firstName = user.FirstName, 
+                    lastName = user.LastName,
+                }
             };
 
-            var request = new createTransactionRequest
+            var request = new ARBCreateSubscriptionRequest
             {
-                transactionRequest = transactionRequest,
-                merchantAuthentication = merchantAuthentication
+                merchantAuthentication = merchantAuthentication,
+                subscription = subscription
             };
 
-            var controller = new createTransactionController(request);
+            var controller = new ARBCreateSubscriptionController(request);
             controller.Execute();
 
             var response = controller.GetApiResponse();
 
             if (response != null && response.messages.resultCode == messageTypeEnum.Ok)
             {
-                return response.transactionResponse.transId;
+                return response.subscriptionId; // Возвращаем идентификатор подписки
             }
 
-            throw new Exception("Payment failed: " + response.messages.message[0].text);
+            throw new Exception("Subscription creation failed: " + response.messages.message[0].text);
+        }
+
+        public async Task CancelSubscriptionAsync(string subscriptionId)
+        {
+            var merchantAuthentication = new merchantAuthenticationType
+            {
+                name = _options.ApiLoginID,
+                ItemElementName = ItemChoiceType.transactionKey,
+                Item = _options.TransactionKey
+            };
+
+            var request = new ARBCancelSubscriptionRequest
+            {
+                merchantAuthentication = merchantAuthentication,
+                subscriptionId = subscriptionId
+            };
+
+            var controller = new ARBCancelSubscriptionController(request);
+            controller.Execute();
+
+            var response = controller.GetApiResponse();
+
+            if (response != null && response.messages.resultCode == messageTypeEnum.Ok)
+            {
+                return;
+            }
+
+            throw new Exception("Subscription cancellation failed: " + response.messages.message[0].text);
         }
     }
 }

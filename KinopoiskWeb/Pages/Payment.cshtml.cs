@@ -29,8 +29,8 @@ namespace KinopoiskWeb.Pages
         {
             try
             {
-                var transactionId = await _authorizeNetService.ProcessPaymentAsync(Amount, CardNumber, ExpirationDate, CardCode);
-                ViewData["Message"] = "Payment successful! Transaction ID: " + transactionId;
+                //var transactionId = await _authorizeNetService.ProcessPaymentAsync(Amount, CardNumber, ExpirationDate, CardCode);
+                //ViewData["Message"] = "Payment successful! Transaction ID: " + transactionId;
             }
             catch (Exception ex)
             {
