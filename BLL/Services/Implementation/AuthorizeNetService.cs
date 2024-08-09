@@ -1,8 +1,8 @@
 ﻿using AuthorizeNet.Api.Contracts.V1;
 using AuthorizeNet.Api.Controllers;
 using AuthorizeNet.Api.Controllers.Bases;
+using BLL.DTO;
 using BLL.Services.Interfaces;
-using DAL.Models.Users;
 using Microsoft.Extensions.Options;
 using static DTO.SettingsDto;
 
@@ -18,7 +18,7 @@ namespace BLL.Services.Implementation
             ApiOperationBase<ANetApiRequest, ANetApiResponse>.RunEnvironment = AuthorizeNet.Environment.SANDBOX;
         }
 
-        public async Task<string> CreateSubscriptionAsync(decimal amount, string cardNumber, string expirationDate, string cardCode, short billingInterval, string billingUnit, User user)
+        public async Task<string> CreateSubscriptionAsync(PaymentDetailsDto dto)
         {
             var merchantAuthentication = new merchantAuthenticationType
             {
@@ -29,9 +29,9 @@ namespace BLL.Services.Implementation
 
             var creditCard = new creditCardType
             {
-                cardNumber = cardNumber,
-                expirationDate = expirationDate,
-                cardCode = cardCode
+                cardNumber = dto.CardNumber,
+                expirationDate = dto.ExpirationDate,
+                cardCode = dto.CardCode,
             };
 
             var paymentType = new paymentType { Item = creditCard };
@@ -43,7 +43,7 @@ namespace BLL.Services.Implementation
                 {
                     interval = new paymentScheduleTypeInterval
                     {
-                        length = billingInterval,
+                        length = d,
                         unit = (ARBSubscriptionUnitEnum)Enum.Parse(typeof(ARBSubscriptionUnitEnum), billingUnit)
                     },
                     startDate = DateTime.UtcNow, 

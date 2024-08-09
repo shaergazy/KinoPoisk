@@ -7,17 +7,30 @@
 
     <form method="post" class="mt-4">
         <div class="form-group">
-            <label for="cardNumber">Card Number</label>
-            <input type="text" class="form-control" id="cardNumber" name="cardNumber" required />
+            <label asp-for="Details.PlanId" class="control-label">Subscription plan</label>
+            <select asp-for="Details.PlanId" class="form-control" id="subscriptionPlan"></select>
+            <span asp-validation-for="Details.PlanId" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Details.CardNumber" class="form-label"></label>
+            <input asp-for="Details.CardNumber" class="form-control" />
+            <span asp-validation-for="Details.CardNumber" class="text-danger"></span>
         </div>
         <div class="form-group">
-            <label for="expirationDate">Expiration Date (MM/YY)</label>
-            <input type="text" class="form-control" id="expirationDate" name="expirationDate" required />
+            <label asp-for="Details.ExpirationDate" class="form-label"></label>
+            <input asp-for="Details.ExpirationDate" class="form-control" />
+            <span asp-validation-for="Details.ExpirationDate" class="text-danger"></span>
         </div>
         <div class="form-group">
-            <label for="cardCode">CVV</label>
-            <input type="text" class="form-control" id="cardCode" name="cardCode" required />
+            <label asp-for="Details.CardCode" class="form-label"></label>
+            <input asp-for="Details.CardCode" class="form-control" />
+            <span asp-validation-for="Details.CardCode" class="text-danger"></span>
         </div>
         <button type="submit" class="btn btn-primary btn-block">Subscribe</button>
     </form>
 </div>
+@section Scripts {
+    @await Html.PartialAsync("Shared/_Urls")
+    <script src="~/js/subscription.js" asp-append-version="true"></script>
+}

@@ -3,7 +3,6 @@ using DAL.Models;
 using DAL.Models.Users;
 using Data.Models;
 using Data.Repositories.RepositoryInterfaces;
-using Microsoft.EntityFrameworkCore;
 
 namespace Repositories
 {

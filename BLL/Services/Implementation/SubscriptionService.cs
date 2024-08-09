@@ -1,4 +1,5 @@
-﻿using BLL.Services.Interfaces;
+﻿using BLL.DTO;
+using BLL.Services.Interfaces;
 using DAL.Models;
 using Data.Repositories.RepositoryInterfaces;
 
@@ -15,7 +16,7 @@ namespace BLL.Services.Implementation
             _authorizeNetService = authorizeNetService;
         }
 
-        public async Task<string> CreateSubscriptionAsync(string userId, decimal amount, string cardNumber, string expirationDate, string cardCode, short billingInterval, string billingUnit)
+        public async Task<string> CreateSubscriptionAsync(PaymentDetailsDto dto)
         {
             var user = await _uow.Users.FirstOrDefaultAsync(x => x.Id == userId);
             var subscriptionId = await _authorizeNetService.CreateSubscriptionAsync(amount, cardNumber, expirationDate, cardCode, billingInterval, billingUnit, user);

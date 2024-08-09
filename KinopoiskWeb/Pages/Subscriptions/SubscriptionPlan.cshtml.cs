@@ -22,7 +22,7 @@ namespace KinopoiskWeb.Pages.Subscriptions
 
         [BindProperty]
         public SubscriptionPlanVM NewPlan { get; set; }
-
+            
         [BindProperty]
         public SubscriptionPlanVM EditPlan { get; set; }
 
@@ -52,6 +52,13 @@ namespace KinopoiskWeb.Pages.Subscriptions
         {
             await _subscriptionPlanService.DeleteAsync(id);
             return RedirectToPage();
+        }
+
+        public async Task<IActionResult> OnGetPlansAsync()
+        {
+            var plans = _subscriptionPlanService.GetAll().ToList();
+            var planVMs = _mapper.Map<IList<SubscriptionPlanVM>>(plans);
+            return new JsonResult(planVMs);
         }
     }
 }

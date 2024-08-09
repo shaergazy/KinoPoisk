@@ -37,4 +37,8 @@ var Urls = Urls || {};
     Urls.Account = {
         Logout: '@Url.Page("/Account/Logout", new { handler = "Logout" })',
     };
+
+    Urls.Subscription = {
+        GetSubscriptionPlans: '@Url.Page("/Subscriptions/SubscriptionPlan", new { handler = "Plans" })',
+    };
 </script>

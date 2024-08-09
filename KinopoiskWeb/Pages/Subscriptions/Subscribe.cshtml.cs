@@ -1,4 +1,5 @@
 ﻿using BLL.Services.Interfaces;
+using KinopoiskWeb.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Security.Claims;
@@ -14,12 +15,13 @@ namespace KinopoiskWeb.Pages.Subscriptions
             _subscriptionService = subscriptionService;
         }
 
-        public async Task<IActionResult> OnPostAsync(string cardNumber, string expirationDate, string cardCode)
+        [BindProperty]
+        public PaymentDetailsVM Details { get; set; }
+
+        public async Task<IActionResult> OnPostAsync()
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            decimal amount = 9.99m;
-            short billingInterval = 1;
-            string billingUnit = "months";
+            Details.UserId = userId;
 
             var subscriptionId = await _subscriptionService.CreateSubscriptionAsync(userId, amount, cardNumber, expirationDate, cardCode, billingInterval, billingUnit);
 
