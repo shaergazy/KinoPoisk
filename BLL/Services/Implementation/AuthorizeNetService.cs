@@ -71,7 +71,7 @@ namespace BLL.Services.Implementation
 
             if (response != null && response.messages.resultCode == messageTypeEnum.Ok)
             {
-                return response.subscriptionId; // Возвращаем идентификатор подписки
+                return response.subscriptionId;
             }
 
             throw new Exception("Subscription creation failed: " + response.messages.message[0].text);
