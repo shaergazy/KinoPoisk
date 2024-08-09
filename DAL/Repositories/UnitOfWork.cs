@@ -21,6 +21,7 @@ namespace Repositories
         public IGenericRepository<MovieGenre, int> _movieGenreRepository;
         public IGenericRepository<User, Guid> _userRepository;
         public IGenericRepository<Subscription, Guid> _subscriptionRepository;
+        public IGenericRepository<SubscriptionPlan, int> _subscriptionPlanRepository;
 
         private IGenericRepository<TEntity, TKey> _repository;
 
@@ -46,6 +47,7 @@ namespace Repositories
         public IGenericRepository<MovieGenre, int> MovieGenres => _movieGenreRepository ??= new GenericRepository<MovieGenre, int>(_appDbContext);
 
         public IGenericRepository<Subscription, Guid> Subscriptions => _subscriptionRepository ??= new GenericRepository<Subscription, Guid>(_appDbContext);
+        public IGenericRepository<SubscriptionPlan, int> SubscriptionPlans => _subscriptionPlanRepository ??= new GenericRepository<SubscriptionPlan, int>(_appDbContext);
 
         public async Task SaveChangesAsync()
         {

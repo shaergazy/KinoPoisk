@@ -27,7 +27,6 @@ namespace BLL.Services.Implementation
                 StartDate = DateTime.UtcNow,
                 Amount = amount,
                 IsActive = true,
-                Plan = DAL.Enums.SubscriptionPlan.Monthly,
                 NextBillingDate = DateTime.UtcNow.AddMonths(billingInterval)
             };
 

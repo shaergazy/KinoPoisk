@@ -2,7 +2,7 @@
 
 namespace DAL.Enums
 {
-    public enum SubscriptionPlan
+    public enum IntervalType
     {
         [Description("Monthly")]
         Monthly = 1,

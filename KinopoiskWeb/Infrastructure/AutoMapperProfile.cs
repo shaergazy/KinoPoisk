@@ -4,7 +4,9 @@ using BLL.DTO.Country;
 using BLL.DTO.Genre;
 using BLL.DTO.Movie;
 using BLL.DTO.Person;
+using BLL.DTO.SubscriptionPlan;
 using KinopoiskWeb.DataTables;
+using KinopoiskWeb.ViewModels;
 using KinopoiskWeb.ViewModels.Country;
 using KinopoiskWeb.ViewModels.Genre;
 using KinopoiskWeb.ViewModels.Movie;
@@ -31,6 +33,11 @@ namespace KinopoiskWeb.Infrastructure
             CreateMap<IndexPersonVM, ListPersonDto>().ReverseMap();
             CreateMap<IndexPersonVM, GetPersonDto>().ReverseMap();
             CreateMap<PersonVM, EditPersonDto>().ReverseMap();
+
+            CreateMap<SubscriptionPlanVM, AddSubscriptionPlanDto>().ReverseMap();
+            CreateMap<SubscriptionPlanVM, ListSubscriptionPlanDto>().ReverseMap();
+            CreateMap<SubscriptionPlanVM, GetSubscriptionPlanDto>().ReverseMap();
+            CreateMap<SubscriptionPlanVM, EditSubscriptionPlanDto>().ReverseMap();
 
             CreateMap<DataTables.DataTablesRequest, BLL.DTO.DataTablesRequestDto>()
             .ForMember(dest => dest.SortColumn, opt => opt.MapFrom(src => src.Columns.ElementAt(src.Order.ElementAt(0).Column).Name))

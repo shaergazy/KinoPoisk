@@ -26,11 +26,11 @@ namespace KinopoiskWeb.Pages.Subscriptions
             {
                 Subscription = new SubscriptionVM
                 {
-                    PlanName = subscription.Plan.ToString(),
+                    PlanName = subscription.Plan.Name,
                     Amount = subscription.Amount,
                     StartDate = subscription.StartDate,
                     EndDate = subscription.EndDate,
-                    Status = "Active",
+                    IsActive = subscription.IsActive,
                     NextBillingDate = subscription.NextBillingDate
                 };
             }

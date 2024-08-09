@@ -10,12 +10,12 @@
         <div class="card shadow-sm mt-4">
             <div class="card-body">
                 <h4 class="card-title">@Model.Subscription.PlanName</h4>
-                <p><strong>Status:</strong> @Model.Subscription.Status</p>
+                <p><strong>Status:</strong> @Model.Subscription.IsActive</p>
                 <p><strong>Amount:</strong> $@Model.Subscription.Amount</p>
                 <p><strong>Start Date:</strong> @Model.Subscription.StartDate.ToShortDateString()</p>
                 <p><strong>Next Billing Date:</strong> @Model.Subscription.NextBillingDate.ToString()</p>
 
-                @if (Model.Subscription.Status == "Active")
+                @if (Model.Subscription.IsActive)
                 {
                     <form method="post" asp-page-handler="Cancel">
                         <button type="submit" class="btn btn-danger">Cancel Subscription</button>

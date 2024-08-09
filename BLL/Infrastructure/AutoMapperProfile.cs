@@ -3,6 +3,7 @@ using BLL.DTO.Country;
 using BLL.DTO.Genre;
 using BLL.DTO.Movie;
 using BLL.DTO.Person;
+using BLL.DTO.SubscriptionPlan;
 using DAL.Models;
 using Data.Models;
 
@@ -30,6 +31,12 @@ namespace BLL.Infrastructure
             CreateMap<Person, GetPersonDto>().ReverseMap();
             CreateMap<Person, ListPersonDto>().ReverseMap();
             CreateMap<Person, DeletePersonDto>().ReverseMap();
+
+            CreateMap<SubscriptionPlan, EditSubscriptionPlanDto>().ReverseMap();
+            CreateMap<SubscriptionPlan, AddSubscriptionPlanDto>().ReverseMap();
+            CreateMap<SubscriptionPlan, GetSubscriptionPlanDto>().ReverseMap();
+            CreateMap<SubscriptionPlan, ListSubscriptionPlanDto>().ReverseMap();
+            CreateMap<SubscriptionPlan, DeleteSubscriptionPlanDto>().ReverseMap();
 
             CreateMap<Comment, AddCommentDto>().ReverseMap();
             CreateMap<Comment, GetCommentDto>()

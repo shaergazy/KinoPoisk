@@ -13,6 +13,7 @@ namespace DAL.Models
         public DateTime? EndDate { get; set; }
         public decimal Amount { get; set; }
         public bool IsActive { get; set; }
+        public int SubscriptionPlanId { get; set; }
         public SubscriptionPlan Plan { get; set; }
         public DateTime? NextBillingDate { get; set; }
     }

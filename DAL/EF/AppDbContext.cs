@@ -4,6 +4,7 @@ using Data.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection.Emit;
 
 namespace DAL
 {
@@ -25,6 +26,7 @@ namespace DAL
         public DbSet<Person> Persons { get; set; }
         public DbSet<MovieRating> Ratings { get; set; }
         public DbSet<Subscription> Subscriptions { get; set; }
+        public DbSet<SubscriptionPlan> SubscriptionPlans { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -71,7 +73,13 @@ namespace DAL
             builder.Entity<Genre>()
                 .Property(x => x.Name)
                 .IsRequired()
-                .HasMaxLength(64);
+            .HasMaxLength(64);
+
+            builder.Entity<Subscription>()
+            .HasOne(s => s.Plan)
+            .WithMany()
+            .HasForeignKey(s => s.SubscriptionPlanId)
+            .OnDelete(DeleteBehavior.Cascade);
 
             foreach (var x in builder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
                 x.DeleteBehavior = DeleteBehavior.ClientCascade;
