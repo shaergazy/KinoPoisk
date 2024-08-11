@@ -7,8 +7,7 @@ namespace BLL.Services.Interfaces
     {
         Task<string> CreateSubscriptionAsync(PaymentDetailsDto dto);
         Task CancelSubscriptionAsync(string subscriptionId);
-        Task<Subscription> GetSubscriptionByUserIdAsync(string userId);
-        Task UpdateSubscriptionStatusAsync(string subscriptionId, string newStatus);
+        Task<GetSubscriptionDto> GetSubscriptionByUserIdAsync(string userId);
         bool IsSubscriptionActive(string userId);
     }
 

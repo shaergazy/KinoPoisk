@@ -1,6 +1,6 @@
-﻿namespace KinopoiskWeb.ViewModels
+﻿namespace BLL.DTO
 {
-    public class SubscriptionVM
+    public class GetSubscriptionDto
     {
         public Guid Id { get; set; }
         public string SubscriptionId { get; set; }

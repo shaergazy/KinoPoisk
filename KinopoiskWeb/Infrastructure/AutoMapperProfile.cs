@@ -74,6 +74,10 @@ namespace KinopoiskWeb.Infrastructure
 
             CreateMap<RateMovieVM, AddMovieRating>().ReverseMap();
 
+            CreateMap<PaymentDetailsDto, PaymentDetailsVM>().ReverseMap();
+
+            CreateMap<GetSubscriptionDto, SubscriptionVM>().ReverseMap();
+
             CreateMap<AddCommentVM, AddCommentDto>()
             .ForMember(dest => dest.Text, opt => opt.MapFrom(src => src.CommentText)).ReverseMap();
 

@@ -3,6 +3,9 @@ using AuthorizeNet.Api.Controllers;
 using AuthorizeNet.Api.Controllers.Bases;
 using BLL.DTO;
 using BLL.Services.Interfaces;
+using DAL.Enums;
+using DAL.Models;
+using DAL.Models.Users;
 using Microsoft.Extensions.Options;
 using static DTO.SettingsDto;
 
@@ -18,7 +21,7 @@ namespace BLL.Services.Implementation
             ApiOperationBase<ANetApiRequest, ANetApiResponse>.RunEnvironment = AuthorizeNet.Environment.SANDBOX;
         }
 
-        public async Task<string> CreateSubscriptionAsync(PaymentDetailsDto dto)
+        public async Task<string> CreateSubscriptionAsync(PaymentDetailsDto dto, SubscriptionPlan plan, User user)
         {
             var merchantAuthentication = new merchantAuthenticationType
             {
@@ -36,24 +39,35 @@ namespace BLL.Services.Implementation
 
             var paymentType = new paymentType { Item = creditCard };
 
+            var interval = new paymentScheduleTypeInterval();
+            switch (plan.IntervalType)
+            {
+                case IntervalType.Monthly:
+                    interval.length = 1;
+                    interval.unit = ARBSubscriptionUnitEnum.months;
+                    break;
+                case IntervalType.Yearly:
+                    interval.length = 12;
+                    interval.unit = ARBSubscriptionUnitEnum.months;
+                    break;
+                default:
+                    throw new ArgumentException("Invalid interval type");
+            }
+
             var subscription = new ARBSubscriptionType
             {
-                name = "Monthly Subscription",
+                name = plan.Name,
                 paymentSchedule = new paymentScheduleType
                 {
-                    interval = new paymentScheduleTypeInterval
-                    {
-                        length = d,
-                        unit = (ARBSubscriptionUnitEnum)Enum.Parse(typeof(ARBSubscriptionUnitEnum), billingUnit)
-                    },
-                    startDate = DateTime.UtcNow, 
-                    totalOccurrences = 9999 
+                    interval = interval,
+                    startDate = DateTime.UtcNow,
+                    totalOccurrences = 9999
                 },
-                amount = amount,
+                amount = plan.Cost,
                 payment = paymentType,
                 billTo = new nameAndAddressType
                 {
-                    firstName = user.FirstName, 
+                    firstName = user.FirstName,
                     lastName = user.LastName,
                 }
             };
@@ -76,6 +90,7 @@ namespace BLL.Services.Implementation
 
             throw new Exception("Subscription creation failed: " + response.messages.message[0].text);
         }
+
 
         public async Task CancelSubscriptionAsync(string subscriptionId)
         {

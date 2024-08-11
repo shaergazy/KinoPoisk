@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using BLL.DTO;
 using BLL.DTO.Country;
 using BLL.DTO.Genre;
 using BLL.DTO.Movie;
@@ -86,7 +87,9 @@ namespace BLL.Infrastructure
             .ForMember(dest => dest.DateRealesed, opt => opt.MapFrom(src => src.ReleasedDate))
             .ReverseMap();
 
-
+            CreateMap<Subscription, GetSubscriptionDto>()
+            .ForMember(dest => dest.SubscriptionPlanName, opt => opt.MapFrom(src => src.Plan.Name))
+            .ForMember(dest => dest.Cost, opt => opt.MapFrom(src => src.Plan.Cost));
         }
     }
 }

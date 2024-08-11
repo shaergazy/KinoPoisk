@@ -11,11 +11,8 @@ namespace DAL.Models
         public string SubscriptionId { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime? EndDate { get; set; }
-        public decimal Amount { get; set; }
         public bool IsActive { get; set; }
         public int SubscriptionPlanId { get; set; }
         public SubscriptionPlan Plan { get; set; }
-        public DateTime? NextBillingDate { get; set; }
     }
-
 }
