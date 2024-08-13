@@ -1,22 +1,20 @@
-using AuthorizeNet.Api.Contracts.V1;
+﻿using AuthorizeNet.Api.Contracts.V1;
 using AuthorizeNet.Api.Controllers.Bases;
 using Common.CommonServices;
 using DAL.Models.Users;
-using DTO;
 using Hangfire;
 using KinopoiskWeb.Extensions;
 using KinopoiskWeb.Infrastructure;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using OfficeOpenXml;
 using QuestPDF.Infrastructure;
 using Serilog;
-using System.Configuration;
 
 internal class Program
 {
     private static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
+
         builder.Host.UseSerilog((context, loggerConfig) =>
         {
             loggerConfig.ReadFrom.Configuration(context.Configuration);
@@ -24,40 +22,7 @@ internal class Program
 
         Log.Information("Starting the application");
 
-        builder.Services.AddRazorPages();
-        builder.Services.AddCommonServices(builder.Configuration);
-        builder.Services.AddHangfire(x => x.UseSqlServerStorage(builder.Configuration.GetConnectionString("Default")));
-        builder.Services.AddHangfireServer();
-
-        builder.Services.AddIdentity<User, Role>(options =>
-        {
-            options.Password.RequireDigit = false;
-            options.Password.RequireLowercase = false;
-            options.Password.RequireUppercase = false;
-            options.Password.RequireNonAlphanumeric = false;
-            options.Password.RequiredLength = 6;
-        });
-
-        builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-            .AddCookie(opt =>
-            {
-                opt.LoginPath = "/login";
-                opt.LogoutPath = "/logout";
-                opt.AccessDeniedPath = "/Account/AccessDenied";
-            });
-
-        builder.Services.AddAntiforgery(options =>
-        {
-            options.HeaderName = "RequestVerificationToken";
-        });
-
-        builder.Services.AddMemoryCache();
-
-        QuestPDF.Settings.License = LicenseType.Community;
-        ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
-        ApiOperationBase<ANetApiRequest, ANetApiResponse>.RunEnvironment = AuthorizeNet.Environment.SANDBOX;
-        builder.Services.ConfigMapper();
-        builder.Services.AddHttpContextAccessor();
+        ConfigureServices(builder.Services, builder.Configuration);
 
         var app = builder.Build();
 
@@ -79,6 +44,7 @@ internal class Program
         app.UseHangfireDashboard("/dashboard");
 
         app.UseRouting();
+
         app.UseAuthentication();
         app.UseAuthorization();
 
@@ -91,4 +57,56 @@ internal class Program
 
         app.Run();
     }
+
+    private static void ConfigureServices(IServiceCollection services, IConfiguration configuration)
+    {
+        services.AddRazorPages();
+        services.AddCommonServices(configuration);
+        services.AddHangfire(x => x.UseSqlServerStorage(configuration.GetConnectionString("Default")));
+        services.AddHangfireServer();
+
+        services.AddIdentity<User, Role>(options =>
+        {
+            options.Password.RequireDigit = false;
+            options.Password.RequireLowercase = false;
+            options.Password.RequireUppercase = false;
+            options.Password.RequireNonAlphanumeric = false;
+            options.Password.RequiredLength = 6;
+        });
+
+        services.AddAuthentication(options =>
+        {
+            options.DefaultScheme = "Cookies";
+            options.DefaultChallengeScheme = "oidc";
+        })
+        .AddCookie(opt =>
+        {
+            opt.LoginPath = "/login";
+            opt.LogoutPath = "/logout";
+            opt.AccessDeniedPath = "/Account/AccessDenied";
+        })
+        .AddOpenIdConnect("oidc", options =>
+        {
+            options.Authority = configuration["IdentityServer:Authority"];
+            options.ClientId = configuration["IdentityServer:ClientId"];
+            options.ClientSecret = configuration["IdentityServer:ClientSecret"];
+            options.ResponseType = "code";
+            options.SaveTokens = true;
+            options.GetClaimsFromUserInfoEndpoint = true;
+        });
+
+        services.AddAntiforgery(options =>
+        {
+            options.HeaderName = "RequestVerificationToken";
+        });
+
+        services.AddMemoryCache();
+
+        QuestPDF.Settings.License = LicenseType.Community;
+        ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+        ApiOperationBase<ANetApiRequest, ANetApiResponse>.RunEnvironment = AuthorizeNet.Environment.SANDBOX;
+        services.ConfigMapper();
+        services.AddHttpContextAccessor();
+    }
 }
+

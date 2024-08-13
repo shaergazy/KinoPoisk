@@ -1,16 +1,12 @@
-using BLL.DTO.Movie;
 using BLL.Services.Implementation;
 using BLL.Services.Interfaces;
-using DAL.Models;
-using Data.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Threading.Tasks;
 
 namespace KinopoiskWeb.Pages.Movies
 {
+    [Authorize(Roles = "Admin")]
     public class ImportModel : PageModel
     {
         private readonly OMDBService _omdbService;

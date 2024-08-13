@@ -62,7 +62,7 @@ namespace Common.CommonServices
 
         internal static void RegisterServices(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddScoped<DbContext, AppDbContext>();
+            services.AddScoped<DbContext>(sp => sp.GetRequiredService<AppDbContext>());
             services.RegisterIOptions(configuration);
             services.AddTransient<IEmailService, EmailService>();
 

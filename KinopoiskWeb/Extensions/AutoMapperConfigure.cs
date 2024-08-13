@@ -8,6 +8,8 @@ namespace KinopoiskWeb.Infrastructure
         {
             services.AddSingleton(_ => new MapperConfiguration(cfg =>
             {
+                cfg.AllowNullCollections = true;
+                cfg.ShouldMapMethod = (m => false);
                 cfg.AddProfile(new BLL.Infrastructure.AutoMapperProfile());
                 cfg.AddProfile(new AutoMapperProfile());
             }).CreateMapper());
