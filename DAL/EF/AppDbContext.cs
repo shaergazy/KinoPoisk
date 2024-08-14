@@ -1,7 +1,6 @@
 ﻿using DAL.Models;
 using DAL.Models.Users;
 using Data.Models;
-using IdentityServer4.EntityFramework.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -24,12 +23,6 @@ namespace DAL
         public DbSet<Subscription> Subscriptions { get; set; }
         public DbSet<SubscriptionPlan> SubscriptionPlans { get; set; }
 
-        public DbSet<PersistedGrant> PersistedGrants { get; set; }
-        public DbSet<DeviceFlowCodes> DeviceFlowCodes { get; set; }
-        public DbSet<IdentityResource> IdentityResources { get; set; }
-        public DbSet<ApiResource> ApiResources { get; set; }
-        public DbSet<Client> Clients { get; set; }
-
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -40,8 +33,6 @@ namespace DAL
         {
             base.OnModelCreating(builder);
             builder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
-            builder.Entity<DeviceFlowCodes>().HasNoKey();
-            builder.Entity<PersistedGrant>().HasNoKey();
             builder.Entity<UserRole>()
                 .HasOne(x => x.User)
                 .WithMany(x => x.Roles)

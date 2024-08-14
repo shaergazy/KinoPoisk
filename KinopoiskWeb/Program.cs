@@ -94,6 +94,7 @@ internal class Program
             options.SaveTokens = true;
             options.GetClaimsFromUserInfoEndpoint = true;
         });
+        services.AddAuthorization();
 
         services.AddAntiforgery(options =>
         {

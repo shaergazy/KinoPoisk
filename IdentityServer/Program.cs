@@ -1,5 +1,7 @@
 ﻿using DAL;
 using DAL.Models.Users;
+using IdentityServer;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -20,60 +22,39 @@ internal class Program
     static void ConfigureServices(IServiceCollection services, IConfiguration configuration)
     {
         services.AddDbContext<AppDbContext>(options =>
-            options.UseSqlServer(configuration.GetConnectionString("Default"),
-            sqlOptions => sqlOptions.MigrationsAssembly("IdentityServer")));
+            options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
 
         services.AddIdentity<User, IdentityRole>()
             .AddEntityFrameworkStores<AppDbContext>()
             .AddDefaultTokenProviders();
 
-        // Configure IdentityServer
+        var connectionString = configuration.GetConnectionString("DefaultConnection");
+
         services.AddIdentityServer()
+            .AddDeveloperSigningCredential()
             .AddConfigurationStore(options =>
             {
                 options.ConfigureDbContext = builder =>
-                    builder.UseSqlServer(configuration.GetConnectionString("Default"),
-                    sqlOptions => sqlOptions.MigrationsAssembly("IdentityServer"));
+                    builder.UseSqlServer(connectionString, sql => sql.MigrationsAssembly(typeof(Program).Assembly.FullName));
             })
             .AddOperationalStore(options =>
             {
                 options.ConfigureDbContext = builder =>
-                    builder.UseSqlServer(configuration.GetConnectionString("Default"),
-                    sqlOptions => sqlOptions.MigrationsAssembly("IdentityServer"));
+                    builder.UseSqlServer(connectionString, sql => sql.MigrationsAssembly(typeof(Program).Assembly.FullName));
+
                 options.EnableTokenCleanup = true;
-                options.TokenCleanupInterval = 3600;
+                options.TokenCleanupInterval = 3600; 
             })
-            .AddAspNetIdentity<User>()
-            .AddDeveloperSigningCredential();
+            .AddAspNetIdentity<User>();
 
-        // Add other services
-        services.AddMemoryCache();
-        services.AddRazorPages();
-        services.AddAntiforgery(options =>
+        services.AddAuthorization(options =>
         {
-            options.HeaderName = "RequestVerificationToken";
-        });
-
-        // Configure authentication
-        services.AddAuthentication(options =>
-        {
-            options.DefaultScheme = "Cookies";
-            options.DefaultChallengeScheme = "oidc";
-        })
-        .AddCookie("Cookies")
-        .AddOpenIdConnect("oidc", options =>
-        {
-            options.Authority = "https://localhost:7254";
-            options.ClientId = "your-client-id";
-            options.ClientSecret = "your-client-secret";
-            options.ResponseType = "code";
-            options.SaveTokens = true;
         });
     }
 
+
     static void Configure(WebApplication app)
     {
-        // Configure the HTTP request pipeline
         if (!app.Environment.IsDevelopment())
         {
             app.UseExceptionHandler("/Error");
@@ -85,15 +66,16 @@ internal class Program
 
         app.UseRouting();
 
+        app.UseIdentityServer();
         app.UseAuthentication();
         app.UseAuthorization();
-
-        app.UseIdentityServer(); // Ensure IdentityServer is in the pipeline
-
+        SeedData.EnsureSeedData(app);
         app.UseEndpoints(endpoints =>
         {
-            endpoints.MapRazorPages();
-            endpoints.MapControllers();
+            endpoints.MapGet("/", async context =>
+            {
+                await context.Response.WriteAsync("Hello World!");
+            });
         });
     }
 }
