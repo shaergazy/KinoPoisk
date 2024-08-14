@@ -40,10 +40,10 @@ namespace IdentityServer
             {
                 ClientId = "webapp",
                 ClientName = "Web Application",
-                AllowedGrantTypes = GrantTypes.Code,
+                AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
                 ClientSecrets = { new Secret("secret".Sha256()) },
-                RedirectUris = { "https://localhost:5002/signin-oidc" },
-                PostLogoutRedirectUris = { "https://localhost:5002/signout-callback-oidc" },
+                RedirectUris = { "https://localhost:44334/Account/Register" },
+                PostLogoutRedirectUris = { "https://localhost:44334/Account/Logout" },
                 AllowedScopes = { "openid", "profile", "api1" },
                 AllowOfflineAccess = true
             }

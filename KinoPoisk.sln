@@ -20,7 +20,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BLL", "BLL\BLL.csproj", "{2
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommonServices", "CommonServices\CommonServices.csproj", "{EFD76EB2-31FF-45A4-B957-A9F31EC64A96}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdentityServer", "IdentityServer\IdentityServer.csproj", "{2DE1C9F4-D9EA-4FF5-9C42-06003C574CF7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityServer", "IdentityServer\IdentityServer.csproj", "{2DE1C9F4-D9EA-4FF5-9C42-06003C574CF7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{BD14CE49-E4AC-48BC-BEC1-1D84BE8A504B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -60,6 +62,10 @@ Global
 		{2DE1C9F4-D9EA-4FF5-9C42-06003C574CF7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2DE1C9F4-D9EA-4FF5-9C42-06003C574CF7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2DE1C9F4-D9EA-4FF5-9C42-06003C574CF7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BD14CE49-E4AC-48BC-BEC1-1D84BE8A504B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BD14CE49-E4AC-48BC-BEC1-1D84BE8A504B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BD14CE49-E4AC-48BC-BEC1-1D84BE8A504B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BD14CE49-E4AC-48BC-BEC1-1D84BE8A504B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

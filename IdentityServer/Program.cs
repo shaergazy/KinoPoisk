@@ -1,7 +1,7 @@
 ﻿using DAL;
 using DAL.Models.Users;
 using IdentityServer;
-using Microsoft.AspNetCore.Hosting;
+using IdentityServer4.Validation;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -24,7 +24,7 @@ internal class Program
         services.AddDbContext<AppDbContext>(options =>
             options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
 
-        services.AddIdentity<User, IdentityRole>()
+        services.AddIdentity<User, Role>()
             .AddEntityFrameworkStores<AppDbContext>()
             .AddDefaultTokenProviders();
 
@@ -32,6 +32,7 @@ internal class Program
 
         services.AddIdentityServer()
             .AddDeveloperSigningCredential()
+            .AddResourceOwnerValidator<ResourceOwnerPasswordValidator>()
             .AddConfigurationStore(options =>
             {
                 options.ConfigureDbContext = builder =>
@@ -50,6 +51,11 @@ internal class Program
         services.AddAuthorization(options =>
         {
         });
+
+        services.AddControllers();
+        services.AddMvc();
+
+        services.AddScoped<IResourceOwnerPasswordValidator, ResourceOwnerPasswordValidator>();
     }
 
 
@@ -72,10 +78,7 @@ internal class Program
         SeedData.EnsureSeedData(app);
         app.UseEndpoints(endpoints =>
         {
-            endpoints.MapGet("/", async context =>
-            {
-                await context.Response.WriteAsync("Hello World!");
-            });
+            endpoints.MapDefaultControllerRoute();
         });
     }
 }
