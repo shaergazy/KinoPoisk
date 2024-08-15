@@ -93,7 +93,7 @@ namespace Common.CommonServices
         {
             RegisterConnectionString(services, configuration);
             RegisterAuth(services);
-            RegisterJwtAuthorization(services, configuration);
+            //RegisterJwtAuthorization(services, configuration);
             RegisterServiceUri(services, configuration);
             RegisterServices(services, configuration);
 

@@ -44,7 +44,6 @@ internal class Program
         app.UseHangfireDashboard("/dashboard");
 
         app.UseRouting();
-
         app.UseAuthentication();
         app.UseAuthorization();
 

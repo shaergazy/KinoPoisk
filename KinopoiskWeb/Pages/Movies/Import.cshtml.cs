@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace KinopoiskWeb.Pages.Movies
 {
-    [Authorize]
     public class ImportModel : PageModel
     {
         private readonly OMDBService _omdbService;

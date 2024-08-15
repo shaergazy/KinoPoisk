@@ -1,6 +1,7 @@
 ﻿using DAL;
 using DAL.Models.Users;
 using IdentityServer;
+using IdentityServer4.Services;
 using IdentityServer4.Validation;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -56,6 +57,7 @@ internal class Program
         services.AddMvc();
 
         services.AddScoped<IResourceOwnerPasswordValidator, ResourceOwnerPasswordValidator>();
+        services.AddTransient<IProfileService, CustomProfileService>();
     }
 
 

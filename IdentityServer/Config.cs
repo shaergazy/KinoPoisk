@@ -1,4 +1,5 @@
-﻿using IdentityServer4.Models;
+﻿using IdentityModel;
+using IdentityServer4.Models;
 
 namespace IdentityServer
 {
@@ -27,7 +28,8 @@ namespace IdentityServer
         {
             new ApiResource("api1", "My API")
             {
-                Scopes = { "api1" }
+                Scopes = { "api1" },
+                UserClaims = {JwtClaimTypes.Name, JwtClaimTypes.Role},
             }
         };
         }
@@ -39,6 +41,18 @@ namespace IdentityServer
             new Client
             {
                 ClientId = "webapp",
+                ClientName = "Web Application",
+                AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
+                ClientSecrets = { new Secret("secret".Sha256()) },
+                RedirectUris = { "https://localhost:44334/Account/Register" },
+                PostLogoutRedirectUris = { "https://localhost:44334/Account/Logout" },
+                AllowedScopes = { "openid", "profile", "api1" },
+                AllowOfflineAccess = true
+            },
+
+             new Client
+            {
+                ClientId = "webApi",
                 ClientName = "Web Application",
                 AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
                 ClientSecrets = { new Secret("secret".Sha256()) },
