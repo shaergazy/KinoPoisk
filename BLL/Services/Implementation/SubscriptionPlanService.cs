@@ -22,7 +22,7 @@ namespace BLL.Services.Implementation
 
         public override async Task<SubscriptionPlan> BuildEntityForCreate(AddSubscriptionPlanDto dto)
         {
-            if (dto.Cost == null || dto.Name == null)
+            if (dto.Name == null)
             {
                 _logger.LogWarning("Invalid AddSubscriptionPlanDto: Cost or Name is null");
                 throw new ArgumentNullException("You have to complete all properties");
@@ -43,7 +43,7 @@ namespace BLL.Services.Implementation
 
         public override async Task<SubscriptionPlan> BuildEntityForUpdate(EditSubscriptionPlanDto dto)
         {
-            if (dto.Cost == null || dto.Name == null)
+            if (dto.Name == null)
             {
                 _logger.LogWarning("Invalid EditSubscriptionPlanDto: Cost or Name is null");
                 throw new ArgumentNullException("You have to complete all properties");

@@ -10,6 +10,6 @@ namespace DAL.Models
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public DateTime BirthDate { get; set; }
-        public ICollection<MoviePerson> Movies { get;}
+        public ICollection<MoviePerson> Movies { get; set; }
     }
 }
