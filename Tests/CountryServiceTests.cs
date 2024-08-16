@@ -9,6 +9,7 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using System.Linq.Expressions;
 
+namespace Tests;
 public class CountryServiceTests
 {
     private readonly Mock<IMapper> _mapperMock;

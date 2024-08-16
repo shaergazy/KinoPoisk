@@ -1,13 +1,9 @@
-﻿namespace Tests
+﻿using BLL.DTO.Movie;
+using BLL.Services.Implementation;
+using Microsoft.Extensions.Logging;
+using Moq;
+namespace Tests
 {
-    using BLL.DTO.Movie;
-    using BLL.Services.Implementation;
-    using Microsoft.Extensions.Logging;
-    using Moq;
-    using System.Net.Http;
-    using System.Threading.Tasks;
-    using Xunit;
-
     public class OMDBServiceTests
     {
         private readonly Mock<ILogger<OMDBService>> _loggerMock;

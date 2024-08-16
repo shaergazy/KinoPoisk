@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Moq;
 using System.Linq.Expressions;
 
+namespace Tests;
 public class SubscriptionServiceTests
 {
     private readonly Mock<IUnitOfWork<Subscription, Guid>> _uowMock;

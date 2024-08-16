@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using System.Linq.Expressions;
 
+namespace Tests;
 public class SubscriptionPlanServiceTests
 {
     private readonly Mock<IMapper> _mapperMock;

@@ -10,6 +10,7 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using System.Linq.Expressions;
 
+namespace Tests;
 public class PersonServiceTests
 {
     private readonly Mock<IUnitOfWork<Person, int>> _uowMock;

@@ -7,6 +7,7 @@ using Data.Repositories.RepositoryInterfaces;
 using Microsoft.Extensions.Logging;
 using Moq;
 
+namespace Tests;
 public class GenreServiceTests
 {
     private readonly Mock<IMapper> _mapperMock;
