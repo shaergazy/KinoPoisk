@@ -77,7 +77,7 @@ namespace Common.CommonServices
             services.AddTransient<IPersonService, PersonService>();
             services.AddTransient<IAuthorizeNetService, AuthorizeNetService>();
             services.AddTransient<ISubscriptionService, SubscriptionService>();
-            services.AddSingleton<OMDBService>(serviceProvider =>
+            services.AddSingleton(serviceProvider =>
             {
                 var logger = serviceProvider.GetRequiredService<ILogger<OMDBService>>();
                 return new OMDBService("fc8e73bf", logger);

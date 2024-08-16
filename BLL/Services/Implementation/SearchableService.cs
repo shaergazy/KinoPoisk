@@ -59,10 +59,10 @@ public class SearchableService<TListDto, TAddDto, TEditDTo, TGetDto, TEntity, TK
     {
         _logger.LogDebug("Getting paged data for request: {Request}", request);
 
-        var data = await entities
+        var data = entities
             .Skip(request.Start)
             .Take(request.Length)
-            .ToListAsync();
+            .ToList();
 
         _logger.LogDebug("Paged data retrieval completed. Data count: {Count}", data.Count);
 

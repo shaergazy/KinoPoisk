@@ -24,6 +24,9 @@ public class PersonServiceTests
         var mapperConfig = new MapperConfiguration(cfg =>
         {
             cfg.CreateMap<Person, ListPersonDto>();
+            cfg.CreateMap<Person, GetPersonDto>().ReverseMap();
+            cfg.CreateMap<Person, AddPersonDto>().ReverseMap();
+            cfg.CreateMap<Person, EditPersonDto>().ReverseMap();
         });
         _mapper = mapperConfig.CreateMapper();
         _personService = new PersonService(_mapper, _uowMock.Object, _loggerMock.Object);
@@ -113,7 +116,7 @@ public class PersonServiceTests
     }
 
     [Fact]
-    public void FilterEntities_WithSearchTerm_ShouldFilterGenres()
+    public void FilterEntities_WithSearchTerm_ShouldFilterPeople()
     {
         var people = new List<Person>
         {
@@ -131,4 +134,132 @@ public class PersonServiceTests
         Assert.Equal("John", result.First().FirstName);
         _uowMock.Verify(uow => uow.Repository.GetAll(), Times.Once);
     }
+
+    [Fact]
+    public async Task SearchAsync_ShouldReturnFilteredAndPagedData()
+    {
+        var people = new List<Person>
+        {
+            new Person { FirstName = "John", LastName = "Doe", Id = 1 },
+            new Person { FirstName = "Jane", LastName = "Smith", Id = 2 },
+            new Person { FirstName = "Chris", LastName = "Nolan", Id = 3 }
+        }.AsQueryable();
+
+        var request = new DataTablesRequestDto { Start = 0, Length = 2, SearchTerm = "John" };
+
+        _uowMock.Setup(uow => uow.Repository.GetAll()).Returns(people);
+
+        var result = await _personService.SearchAsync(request);
+
+        Assert.NotNull(result);
+        Assert.Equal(1, result.RecordsFiltered);
+        Assert.Single(result.Data);
+        Assert.Equal("John", result.Data.First().FirstName);
+        _uowMock.Verify(uow => uow.Repository.GetAll(), Times.Once);
+    }
+
+    [Fact]
+    public async Task GetPagedData_ShouldReturnCorrectPage()
+    {
+        var people = new List<Person>
+        {
+            new Person { FirstName = "John", LastName = "Doe" },
+            new Person { FirstName = "Jane", LastName = "Smith" },
+            new Person { FirstName = "Chris", LastName = "Nolan" }
+        }.AsQueryable();
+
+        var request = new DataTablesRequestDto { Start = 1, Length = 2 };
+
+        _uowMock.Setup(uow => uow.Repository.GetAll()).Returns(people);
+
+        var result = await _personService.GetPagedData(request, people);
+
+        Assert.Equal(2, result.Count);
+        Assert.Equal("Jane", result[0].FirstName);
+        Assert.Equal("Chris", result[1].FirstName);
+    }
+
+    [Fact]
+    public void OrderByColumn_ShouldOrderByGivenColumn()
+    {
+        var people = new List<Person>
+        {
+            new Person { FirstName = "John", LastName = "Doe" },
+            new Person { FirstName = "Jane", LastName = "Smith" },
+            new Person { FirstName = "Chris", LastName = "Nolan" }
+        }.AsQueryable();
+
+        var request = new DataTablesRequestDto { SortColumn = "FirstName", SortDirection = "asc" };
+
+        var result = _personService.OrderByColumn(people, request);
+
+        Assert.Equal("Chris", result.First().FirstName);
+        Assert.Equal("John", result.Last().FirstName);
+    }
+
+    [Fact]
+    public void FilterEntities_ShouldFilterBySearchTerm()
+    {
+        var people = new List<Person>
+        {
+            new Person { FirstName = "John", LastName = "Doe" },
+            new Person { FirstName = "Jane", LastName = "Smith" }
+        }.AsQueryable();
+
+        var request = new DataTablesRequestDto { SearchTerm = "John" };
+
+        var result = _personService.FilterEntities(request, people);
+
+        Assert.Single(result);
+        Assert.Equal("John", result.First().FirstName);
+    }
+
+    [Fact]
+    public void GetAll_ShouldReturnMappedListOfPeople()
+    {
+        var people = new List<Person>
+        {
+            new Person { FirstName = "John", LastName = "Doe" },
+            new Person { FirstName = "Jane", LastName = "Smith" }
+        };
+
+        _uowMock.Setup(uow => uow.Repository.GetAll()).Returns(people.AsQueryable());
+
+        var result = _personService.GetAll();
+
+        Assert.NotNull(result);
+        Assert.Equal(2, result.Count());
+        _uowMock.Verify(uow => uow.Repository.GetAll(), Times.Once);
+    }
+
+    [Fact]
+    public async Task GetByIdAsync_ShouldReturnMappedPerson()
+    {
+        var person = new Person { FirstName = "John", LastName = "Doe", Id = 1 };
+
+        _uowMock.Setup(uow => uow.Repository.GetByIdAsync(It.IsAny<int>())).ReturnsAsync(person);
+
+        var result = await _personService.GetByIdAsync(1);
+
+        Assert.NotNull(result);
+        Assert.Equal("John", result.FirstName);
+        _uowMock.Verify(uow => uow.Repository.GetByIdAsync(It.IsAny<int>()), Times.Once);
+    }
+
+    [Fact]
+    public async Task UpdateAsync_ShouldUpdatePerson()
+    {
+        var editDto = new EditPersonDto { Id = 1, FirstName = "John", LastName = "UpdatedDoe" };
+        var person = new Person { FirstName = "John", LastName = "Doe", Id = 1 };
+
+        _uowMock.Setup(uow => uow.Repository.GetByIdAsync(1)).ReturnsAsync(person);
+        _uowMock.Setup(uow => uow.Repository.UpdateAsync(It.IsAny<Person>()));
+        _uowMock.Setup(uow => uow.SaveChangesAsync()).Returns(Task.FromResult(1));
+
+        await _personService.UpdateAsync(editDto);
+
+        _uowMock.Verify(uow => uow.Repository.UpdateAsync(It.IsAny<Person>()), Times.Once);
+        _uowMock.Verify(uow => uow.SaveChangesAsync(), Times.Once);
+    }
+
 }

@@ -86,12 +86,12 @@
 
             // Обработчик для кнопки "Import"
             $('.import-button').on('click', function () {
-                var imdbId = $(this).data('imdbid'); // Получаем значение атрибута data-imdbid
+                var imdbId = $(this).data('imdbid');
                 $.ajax({
                     url: Urls.Movie.Import,
                     method: 'POST',
                     contentType: 'application/json',
-                    data: JSON.stringify({ ImdbId: imdbId }), // Оборачиваем imdbId в JSON
+                    data: JSON.stringify({ ImdbId: imdbId }),
                     dataType: 'json',
                     headers: { 'RequestVerificationToken': token },
                     success: function (response) {
@@ -149,12 +149,12 @@
 
             // Обработчик для кнопки "Import"
             $('.import-button').on('click', function () {
-                var imdbId = $(this).data('imdbid'); // Получаем значение атрибута data-imdbid
+                var imdbId = $(this).data('imdbid');
                 $.ajax({
                     url: Urls.Movie.Import,
                     method: 'POST',
                     contentType: 'application/json',
-                    data: JSON.stringify({ ImdbId: imdbId }), // Оборачиваем imdbId в JSON
+                    data: JSON.stringify({ ImdbId: imdbId }),
                     dataType: 'json',
                     headers: { 'RequestVerificationToken': token },
                     success: function (response) {
@@ -175,3 +175,4 @@
         }
     }
 });
+

@@ -1,37 +1,34 @@
-﻿@* ReSharper disable Mvc.ActionNotResolved *@
-<script type="text/javascript">
+﻿<script type="text/javascript">
+    var Urls = Urls || {};
 
-var Urls = Urls || {};
-
-// Person
     Urls.Person = {
-        GetById: '@Url.Action("Index", "People", new { handler = "ById" })',
+        GetById: '@Url.Page("/People/Index", new { handler = "ById" })',
         GetPeople: '@Url.Page("/People/Index", new { handler = "People" })',
         GetActors: '@Url.Page("/People/Index", new { handler = "Actors" })',
         GetDirectors: '@Url.Page("/People/Index", new { handler = "Directors" })',
     };
 
     Urls.Country = {
-        GetById: '@Url.Action("Index", "People", new { handler = "ById" })',
+        GetById: '@Url.Page("/Countries/Index", new { handler = "ById" })',
         GetCountries: '@Url.Page("/Countries/Index", new { handler = "Countries" })',
     };
-    
+
     Urls.Genre = {
-        GetById: '@Url.Action("Index", "Genres", new { handler = "ById" })',
-        GetAll: '@Url.Action("Index", "Genres")',
+        GetById: '@Url.Page("/Genres/Index", new { handler = "ById" })',
+        GetAll: '@Url.Page("/Genres/Index")',
         GetGenres: '@Url.Page("/Genres/Index", new { handler = "Genres" })',
     };
 
     Urls.Movie = {
-        GetAll: '@Url.Action("Index", "Movies")',
-        GetPDF: '@Url.Action("Index", "Movies", new { handler = "GeneratePDF" })',
-        GetExcel: '@Url.Action("Index", "Movies", new { handler = "GenerateExcel" })',
-        LoadComments: '@Url.Action("Details", "Movies", new { handler = "LoadComments" })',
-        Rate: '@Url.Action("Details", "Movies", new { handler = "Rate" })',
-        AddComment: '@Url.Action("Details", "Movies", new { handler = "AddComment" })',
-        Import: '@Url.Action("Import", "Movies", new { handler = "Import" })',
-        Search: '@Url.Action("Import", "Movies", new { handler = "Search" })',
-        SearchById: '@Url.Action("Import", "Movies", new { handler = "SearchById" })',
+        GetAll: '@Url.Page("/Movies/Index")',
+        GetPDF: '@Url.Page("/Movies/Index", new { handler = "GeneratePDF" })',
+        GetExcel: '@Url.Page("/Movies/Index", new { handler = "GenerateExcel" })',
+        LoadComments: '@Url.Page("/Movies/Details", new { handler = "LoadComments" })',
+        Rate: '@Url.Page("/Movies/Details", new { handler = "Rate" })',
+        AddComment: '@Url.Page("/Movies/Details", new { handler = "AddComment" })',
+        Import: '@Url.Page("/Movies/Import")',
+        Search: '@Url.Page("/Movies/Import", new { handler = "Search" })',
+        SearchById: '@Url.Page("/Movies/Import", new { handler = "SearchById" })',
     };
 
     Urls.Account = {

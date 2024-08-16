@@ -25,7 +25,6 @@ public class SubscriptionPlanServiceTests
     [Fact]
     public async Task BuildEntityForCreate_Should_CreateSubscriptionPlan()
     {
-        // Arrange
         var dto = new AddSubscriptionPlanDto { Name = "Basic Plan" };
         var subscriptionPlan = new SubscriptionPlan { Name = dto.Name };
 
@@ -33,10 +32,8 @@ public class SubscriptionPlanServiceTests
             .Returns(false);
         _mapperMock.Setup(m => m.Map<SubscriptionPlan>(dto)).Returns(subscriptionPlan);
 
-        // Act
         var result = await _service.BuildEntityForCreate(dto);
 
-        // Assert
         Assert.NotNull(result);
         Assert.Equal(dto.Name, result.Name);
     }
@@ -44,32 +41,29 @@ public class SubscriptionPlanServiceTests
     [Fact]
     public async Task BuildEntityForCreate_Should_ThrowArgumentNullException_When_NameIsNull()
     {
-        // Arrange
         var dto = new AddSubscriptionPlanDto { Name = null };
 
-        // Act & Assert
         var exception = await Assert.ThrowsAsync<ArgumentNullException>(() => _service.BuildEntityForCreate(dto));
-        Assert.Equal("You have to complete all properties", exception.Message);
+
+        Assert.Equal("Value cannot be null. (Parameter 'You have to complete all properties')", exception.Message);
     }
 
     [Fact]
     public async Task BuildEntityForCreate_Should_ThrowException_When_SubscriptionPlanAlreadyExists()
     {
-        // Arrange
         var dto = new AddSubscriptionPlanDto { Name = "Existing Plan" };
 
         _uowMock.Setup(u => u.Repository.Any(It.IsAny<Expression<Func<SubscriptionPlan, bool>>>()))
             .Returns(true);
 
-        // Act & Assert
         var exception = await Assert.ThrowsAsync<Exception>(() => _service.BuildEntityForCreate(dto));
+
         Assert.Equal("SubscriptionPlan already exist", exception.Message);
     }
 
     [Fact]
     public async Task BuildEntityForUpdate_Should_UpdateSubscriptionPlan()
     {
-        // Arrange
         var dto = new EditSubscriptionPlanDto { Id = 1, Name = "Updated Plan" };
         var subscriptionPlan = new SubscriptionPlan { Id = dto.Id, Name = dto.Name };
 
@@ -77,10 +71,8 @@ public class SubscriptionPlanServiceTests
             .Returns(false);
         _mapperMock.Setup(m => m.Map<SubscriptionPlan>(dto)).Returns(subscriptionPlan);
 
-        // Act
         var result = await _service.BuildEntityForUpdate(dto);
 
-        // Assert
         Assert.NotNull(result);
         Assert.Equal(dto.Name, result.Name);
     }
@@ -88,25 +80,22 @@ public class SubscriptionPlanServiceTests
     [Fact]
     public async Task BuildEntityForUpdate_Should_ThrowArgumentNullException_When_NameIsNull()
     {
-        // Arrange
         var dto = new EditSubscriptionPlanDto { Id = 1, Name = null };
 
-        // Act & Assert
         var exception = await Assert.ThrowsAsync<ArgumentNullException>(() => _service.BuildEntityForUpdate(dto));
-        Assert.Equal("Value can not be null", exception.Message);
+        Assert.Equal("Value cannot be null. (Parameter 'You have to complete all properties')", exception.Message);
     }
 
     [Fact]
     public async Task BuildEntityForUpdate_Should_ThrowException_When_SubscriptionPlanAlreadyExists()
     {
-        // Arrange
         var dto = new EditSubscriptionPlanDto { Id = 1, Name = "Existing Plan" };
 
         _uowMock.Setup(u => u.Repository.Any(It.IsAny<Expression<Func<SubscriptionPlan, bool>>>()))
             .Returns(true);
 
-        // Act & Assert
         var exception = await Assert.ThrowsAsync<Exception>(() => _service.BuildEntityForUpdate(dto));
+
         Assert.Equal("SubscriptionPlan already exist", exception.Message);
     }
 }
