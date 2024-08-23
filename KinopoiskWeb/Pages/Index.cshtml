@@ -3,6 +3,26 @@
 @{
     ViewData["Title"] = "Home Page";
 }
+@if (User.Identity.IsAuthenticated)
+{
+    <div id="chatWindow" class="chat-window">
+        <div class="chat-header">
+            <span>Support Chat</span>
+            <button id="closeChat">X</button>
+        </div>
+        <div id="chatMessages" class="chat-messages"></div>
+
+        @if (User.IsInRole("Admin"))
+        {
+            <input type="text" id="userInput" placeholder="Enter username to respond" />
+        }
+
+        <div class="chat-input">
+            <input type="text" id="messageInput" placeholder="Type your message..." />
+            <button id="sendButton">Send</button>
+        </div>
+    </div>
+}
 
 <h1>Top 10 Newest Movies</h1>
 @foreach (var movie in Model.NewestMovies)
@@ -76,7 +96,13 @@
     </div>
 }
 
-@section Scripts {
+@section Scripts{
     @await Html.PartialAsync("Shared/_Urls")
     <script src="~/js/index.js" asp-append-version="true"></script>
+    <script src="~/js/supportChat.js" asp-append-version="true"></script>
+    <script src="~/js/supportChatAdmin.js" asp-append-version="true"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/3.1.18/signalr.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>   
+
 }
+

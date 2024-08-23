@@ -4,6 +4,7 @@ using Common.CommonServices;
 using DAL.Models.Users;
 using Hangfire;
 using KinopoiskWeb.Extensions;
+using KinopoiskWeb.Hubs;
 using KinopoiskWeb.Infrastructure;
 using OfficeOpenXml;
 using QuestPDF.Infrastructure;
@@ -51,6 +52,7 @@ internal class Program
         app.UseSerilogRequestLogging();
         app.InitializeDatabase();
         app.StartRecurringJobs();
+        app.MapHub<SupportChatHub>("/supportChatHub");
 
         Log.Information("Application started successfully");
 
@@ -60,6 +62,7 @@ internal class Program
     private static void ConfigureServices(IServiceCollection services, IConfiguration configuration)
     {
         services.AddRazorPages();
+        services.AddSignalR();
         services.AddCommonServices(configuration);
         services.AddHangfire(x => x.UseSqlServerStorage(configuration.GetConnectionString("Default")));
         services.AddHangfireServer();
