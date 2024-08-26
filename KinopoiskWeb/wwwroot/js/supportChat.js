@@ -1,9 +1,12 @@
 ﻿$(document).ready(function () {
     const connection = new signalR.HubConnectionBuilder()
         .withUrl("/supportChatHub")
-        .withAutomaticReconnect() 
+        .withAutomaticReconnect()
         .configureLogging(signalR.LogLevel.Information)
         .build();
+
+    // Clear any existing handlers to prevent duplication
+    connection.off("ReceiveMessage");
 
     connection.on("ReceiveMessage", function (user, message) {
         const msg = $("<div></div>").text(user + ": " + message);
@@ -17,6 +20,10 @@
 
     connection.onreconnected(function (connectionId) {
         console.log(`Reconnected: ${connectionId}`);
+        connection.invoke("UpdateConnectionId")
+            .catch(function (err) {
+                console.error(`Failed to update connection: ${err}`);
+            });
     });
 
     connection.onclose(function (error) {

@@ -25,7 +25,7 @@ namespace KinopoiskWeb.Pages.Movies
             _logger = logger;
         }
 
-        public DetailsMovieVM Movie { get; private set; }
+        public DetailsMovieVM Movie { get; set; }
 
         public async Task<IActionResult> OnGetAsync(Guid id)
         {

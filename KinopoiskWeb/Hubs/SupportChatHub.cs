@@ -1,28 +1,31 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using DAL.Models.Users;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.SignalR;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 
 namespace KinopoiskWeb.Hubs
 {
     [Authorize]
     public class SupportChatHub : Hub
     {
-        private static ConcurrentDictionary<string, string> userConnections = new ConcurrentDictionary<string, string>();
-        private static List<string> adminConnections = new List<string>();
+        private static ConcurrentDictionary<string, string> adminConnections = new ConcurrentDictionary<string, string>();
+        private readonly UserManager<User> _userManager;
 
+        public SupportChatHub(UserManager<User> userManager)
+        {
+            _userManager = userManager;
+        }
         public override async Task OnConnectedAsync()
         {
-            var user = Context.User.Identity.Name;
+            var userName = Context.User.Identity.Name;
 
             if (Context.User.IsInRole("Admin"))
             {
-                adminConnections.Add(Context.ConnectionId);
-                Console.WriteLine($"Admin connected: {user} with ConnectionId: {Context.ConnectionId}");
-            }
-            else
-            {
-                userConnections[user] = Context.ConnectionId;
-                Console.WriteLine($"User connected: {user} with ConnectionId: {Context.ConnectionId}");
+                adminConnections.TryAdd(userName, Context.UserIdentifier);
+
+                Console.WriteLine($"Admin connected: {userName} with ConnectionId: {Context.ConnectionId}");
             }
 
             await base.OnConnectedAsync();
@@ -30,31 +33,20 @@ namespace KinopoiskWeb.Hubs
 
         public override async Task OnDisconnectedAsync(Exception exception)
         {
-            if (Context.User.IsInRole("Admin"))
-            {
-                adminConnections.Remove(Context.ConnectionId);
-            }
-            var user = Context.User.Identity.Name;
-            userConnections.TryRemove(user, out _);
-
-            Console.WriteLine($"User disconnected: {user}");
-
             await base.OnDisconnectedAsync(exception);
         }
 
         public async Task SendMessageToAdmin(string message)
         {
-            var user = Context.User.Identity.Name;
+            var userId = Context.User.Identity.Name;
 
             if (adminConnections.Any())
             {
-                Console.WriteLine($"Sending message from {user} to Admins: {message}");
-                foreach(var connection in adminConnections)
+                Console.WriteLine($"Sending message from {userId} to Admins: {message}");
+
+                foreach (var adminId in adminConnections.Values)
                 {
-                    if(connection != null)
-                    {
-                        await Clients.Client(connection).SendAsync("ReceiveMessage", user, message);
-                    }
+                    await Clients.User(adminId).SendAsync("ReceiveMessage", userId, message);
                 }
             }
             else
@@ -65,31 +57,17 @@ namespace KinopoiskWeb.Hubs
 
         public async Task SendMessageToUser(string userName, string message)
         {
+            var user = await _userManager.FindByNameAsync(userName);
+            var suser = Clients.User(user.Id);
             if (Context.User.IsInRole("Admin"))
             {
-                var userConnectionId = userConnections.GetValueOrDefault(userName);
-
-                if (userConnectionId != null)
-                {
-                    Console.WriteLine($"Admin sending message to {userName}: {message}");
-                    await Clients.Client(userConnectionId).SendAsync("ReceiveMessage", "Admin", message);
-                }
-                else
-                {
-                    Console.WriteLine($"User {userName} not found.");
-                }
+                Console.WriteLine($"Admin sending message to {userName}: {message}");
+                await Clients.User(user.Id).SendAsync("ReceiveMessage", "Admin", message);
             }
             else
             {
                 Console.WriteLine("Unauthorized attempt to send message to user.");
             }
         }
-
-        public async Task GetActiveUsers()
-        {
-            var users = userConnections.Keys.ToList();
-            await Clients.Caller.SendAsync("ReceiveActiveUsers", users);
-        }
-
     }
 }
