@@ -1,6 +1,8 @@
 ﻿$(document).ready(function () {
     const connection = new signalR.HubConnectionBuilder()
         .withUrl("/supportChatHub")
+        .withAutomaticReconnect() 
+        .configureLogging(signalR.LogLevel.Information)
         .build();
 
     connection.on("ReceiveMessage", function (user, message) {
@@ -9,19 +11,38 @@
         $("#chatMessages").scrollTop($("#chatMessages")[0].scrollHeight);
     });
 
-    connection.start().catch(function (err) {
-        console.error(err.toString());
+    connection.onreconnecting(function (error) {
+        console.log(`Attempting to reconnect: ${error}`);
     });
+
+    connection.onreconnected(function (connectionId) {
+        console.log(`Reconnected: ${connectionId}`);
+    });
+
+    connection.onclose(function (error) {
+        console.error(`Connection closed: ${error}`);
+    });
+
+    connection.start()
+        .then(function () {
+            console.log("Connected to SupportChatHub");
+        })
+        .catch(function (err) {
+            console.error(`Connection failed: ${err}`);
+        });
 
     $("#sendButton").click(function (event) {
         const message = $("#messageInput").val();
         if (message.trim() === "") return;
 
-        // Regular user sends message to admin
-        connection.invoke("SendMessageToAdmin", message).catch(function (err) {
-            console.error(err.toString());
-        });
-        $("#messageInput").val("");
+        connection.invoke("SendMessageToAdmin", message)
+            .then(function () {
+                $("#messageInput").val("");
+            })
+            .catch(function (err) {
+                console.error(`Failed to send message: ${err}`);
+            });
+
         event.preventDefault();
     });
 

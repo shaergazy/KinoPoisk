@@ -1,5 +1,6 @@
 using BLL.Services.Interfaces;
 using Common.Helpers;
+using DAL.Enums;
 using DAL.Models.Users;
 using Hangfire;
 using KinopoiskWeb.ViewModels.Account;
@@ -48,6 +49,7 @@ namespace KinopoiskWeb.Pages.Account
                 };
 
                 var result = await _userManager.CreateAsync(user, Input.Password);
+                await _userManager.AddToRoleAsync(user, RoleType.User.ToString());
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User {Email} created successfully.", Input.Email);

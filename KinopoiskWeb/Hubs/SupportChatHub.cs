@@ -48,11 +48,14 @@ namespace KinopoiskWeb.Hubs
 
             if (adminConnections.Any())
             {
-                var adminConnectionId = adminConnections.First();
-
-                Console.WriteLine($"Sending message from {user} to Admin: {message}");
-
-                await Clients.Client(adminConnectionId).SendAsync("ReceiveMessage", user, message);
+                Console.WriteLine($"Sending message from {user} to Admins: {message}");
+                foreach(var connection in adminConnections)
+                {
+                    if(connection != null)
+                    {
+                        await Clients.Client(connection).SendAsync("ReceiveMessage", user, message);
+                    }
+                }
             }
             else
             {
@@ -81,5 +84,12 @@ namespace KinopoiskWeb.Hubs
                 Console.WriteLine("Unauthorized attempt to send message to user.");
             }
         }
+
+        public async Task GetActiveUsers()
+        {
+            var users = userConnections.Keys.ToList();
+            await Clients.Caller.SendAsync("ReceiveActiveUsers", users);
+        }
+
     }
 }
