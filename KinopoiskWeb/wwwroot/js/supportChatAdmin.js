@@ -1,17 +1,27 @@
 ﻿$(document).ready(function () {
     const connection = new signalR.HubConnectionBuilder()
         .withUrl("/supportChatHub")
+        .withAutomaticReconnect()
+        .configureLogging(signalR.LogLevel.Information)
         .build();
 
-    let selectedUser = null;
+    connection.serverTimeoutInMilliseconds = 1000 * 60 * 10;
 
-    // Обработка получения сообщений
+    let selectedUser = null;
+    let messageHistory = {}; 
+
     connection.on("ReceiveMessage", function (user, message) {
         console.log('Received message from', user, ':', message);
-        addMessageToChat(user, message);
-
-        if (selectedUser !== user) {
-            addToUserList(user);
+        
+        if (!messageHistory[user]) {
+            messageHistory[user] = [];
+        }
+        messageHistory[user].push({ user, message });
+        
+        if (selectedUser === user) {
+            addMessageToChat(user, message);
+        } else {
+            addToUserList(user); 
         }
     });
 
@@ -27,7 +37,8 @@
             userItem.click(function () {
                 selectedUser = $(this).data("user");
                 $("#chatUserName").text(selectedUser);
-                $("#chatMessages").empty(); // Очистить сообщения при смене пользователя
+                
+                loadChatHistory(selectedUser);
             });
             $("#userList").append(userItem);
         }
@@ -45,15 +56,30 @@
         }).catch(function (err) {
             console.error('Failed to send message:', err.toString());
         });
+        
+        if (!messageHistory[selectedUser]) {
+            messageHistory[selectedUser] = [];
+        }
+        messageHistory[selectedUser].push({ user: "Admin", message });
 
         addMessageToChat("Admin", message);
-        $("#messageInput").val(""); // Очистить поле ввода
+        $("#messageInput").val("");
         event.preventDefault();
     });
 
     function addMessageToChat(user, message) {
         const msg = $("<div></div>").text(user + ": " + message);
         $("#chatMessages").append(msg);
-        $("#chatMessages").scrollTop($("#chatMessages")[0].scrollHeight); // Автопрокрутка до последнего сообщения
+        $("#chatMessages").scrollTop($("#chatMessages")[0].scrollHeight);
+    }
+
+    function loadChatHistory(user) {
+        $("#chatMessages").empty(); 
+
+        if (messageHistory[user]) {
+            messageHistory[user].forEach(function (msg) {
+                addMessageToChat(msg.user, msg.message);
+            });
+        }
     }
 });

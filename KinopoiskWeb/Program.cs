@@ -62,7 +62,11 @@ internal class Program
     private static void ConfigureServices(IServiceCollection services, IConfiguration configuration)
     {
         services.AddRazorPages();
-        services.AddSignalR();
+        services.AddSignalR(options =>
+        {
+            options.KeepAliveInterval = TimeSpan.FromMinutes(2);
+            options.ClientTimeoutInterval = TimeSpan.FromMinutes(5);
+        });
         services.AddCommonServices(configuration);
         services.AddHangfire(x => x.UseSqlServerStorage(configuration.GetConnectionString("Default")));
         services.AddHangfireServer();
