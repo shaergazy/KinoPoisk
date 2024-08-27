@@ -1,8 +1,11 @@
 using BLL.Services.Implementation;
 using BLL.Services.Interfaces;
+using DAL.Models;
+using KinopoiskWeb.Hubs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.SignalR;
 
 namespace KinopoiskWeb.Pages.Movies
 {
@@ -12,12 +15,14 @@ namespace KinopoiskWeb.Pages.Movies
         private readonly OMDBService _omdbService;
         private readonly IMovieService _movieService;
         private readonly ILogger<ImportModel> _logger;
+        private readonly IHubContext<NotificationHub> _hubContext;
 
-        public ImportModel(OMDBService omdbService, IMovieService movieService, ILogger<ImportModel> logger)
+        public ImportModel(OMDBService omdbService, IMovieService movieService, ILogger<ImportModel> logger, IHubContext<NotificationHub> hubContext)
         {
             _omdbService = omdbService;
             _movieService = movieService;
             _logger = logger;
+            _hubContext = hubContext;
         }
 
         public async Task<IActionResult> OnGetSearchAsync(string title, int? year, string plot)
@@ -86,6 +91,9 @@ namespace KinopoiskWeb.Pages.Movies
                 await _movieService.ImportMovieAsync(item);
 
                 _logger.LogInformation("Successfully imported movie with IMDb ID: {ImdbId}", request.ImdbId);
+
+                await _hubContext.Clients.All.SendAsync("ReceiveNotification", $"Don't miss out! The new movie '{item.Title}' has just been added.");
+
                 return new JsonResult(new { success = true, movie = item });
             }
             catch (Exception ex)

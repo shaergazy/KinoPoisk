@@ -1,6 +1,4 @@
-﻿using DAL.Models.Users;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using System.Collections.Concurrent;
 
@@ -33,6 +31,7 @@ namespace KinopoiskWeb.Hubs
                 _logger.LogInformation("User connected: {UserName} with ConnectionId: {ConnectionId}", userName, Context.ConnectionId);
             }
 
+            await UpdateAllClientsUserList();
             await base.OnConnectedAsync();
         }
 
@@ -51,6 +50,7 @@ namespace KinopoiskWeb.Hubs
                 _logger.LogInformation("User disconnected: {UserName}", userName);
             }
 
+            await UpdateAllClientsUserList();
             await base.OnDisconnectedAsync(exception);
         }
 
@@ -91,6 +91,12 @@ namespace KinopoiskWeb.Hubs
             {
                 _logger.LogWarning("Unauthorized attempt to send message to user.");
             }
+        }
+
+        private async Task UpdateAllClientsUserList()
+        {
+            var allUsers = userConnections.Keys.ToList();
+            await Clients.All.SendAsync("UpdateUserList", allUsers);
         }
     }
 }

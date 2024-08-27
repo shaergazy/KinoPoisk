@@ -48,7 +48,9 @@
             const msg = $("<div></div>").text("Failed to connect. Please refresh the page.");
             $("#chatMessages").append(msg);
         });
-        
+    connection.on("UpdateUserList", function (users) {
+        console.log('Updating user list:', users);
+    });
     $("#sendButton").click(function (event) {
         const message = $("#messageInput").val();
         if (message.trim() === "") return;

@@ -53,6 +53,7 @@ internal class Program
         app.InitializeDatabase();
         app.StartRecurringJobs();
         app.MapHub<SupportChatHub>("/supportChatHub");
+        app.MapHub<NotificationHub>("/notificationHub");
 
         Log.Information("Application started successfully");
 

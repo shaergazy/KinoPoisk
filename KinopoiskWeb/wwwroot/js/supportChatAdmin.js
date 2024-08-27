@@ -8,21 +8,29 @@
     connection.serverTimeoutInMilliseconds = 1000 * 60 * 10;
 
     let selectedUser = null;
-    let messageHistory = {}; 
+    let messageHistory = {};
 
     connection.on("ReceiveMessage", function (user, message) {
         console.log('Received message from', user, ':', message);
-        
+
         if (!messageHistory[user]) {
             messageHistory[user] = [];
         }
         messageHistory[user].push({ user, message });
-        
+
         if (selectedUser === user) {
             addMessageToChat(user, message);
         } else {
-            addToUserList(user); 
+            addToUserList(user);
         }
+    });
+
+    connection.on("UpdateUserList", function (users) {
+        console.log('Updating user list:', users);
+        $("#userList").empty();
+        users.forEach(function (user) {
+            addToUserList(user);
+        });
     });
 
     connection.start().then(function () {
@@ -37,7 +45,7 @@
             userItem.click(function () {
                 selectedUser = $(this).data("user");
                 $("#chatUserName").text(selectedUser);
-                
+
                 loadChatHistory(selectedUser);
             });
             $("#userList").append(userItem);
@@ -56,7 +64,7 @@
         }).catch(function (err) {
             console.error('Failed to send message:', err.toString());
         });
-        
+
         if (!messageHistory[selectedUser]) {
             messageHistory[selectedUser] = [];
         }
@@ -74,7 +82,7 @@
     }
 
     function loadChatHistory(user) {
-        $("#chatMessages").empty(); 
+        $("#chatMessages").empty();
 
         if (messageHistory[user]) {
             messageHistory[user].forEach(function (msg) {
