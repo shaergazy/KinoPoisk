@@ -3,26 +3,23 @@
 @{
 }
 <div class="admin-chat-container">
-    <div class="chat-list">
-        <h3>Active Chats</h3>
-        <ul id="userList">
+    <div class="admin-chat-list">
+        <h3 class="admin-chat-list-header">Active Chats</h3>
+        <ul id="adminUserList" class="admin-user-list">
         </ul>
     </div>
 
-    <div class="chat-window">
-        <div class="chat-header">
-            <span id="chatUserName">Select a user</span>
+    <div class="admin-chat-window">
+        <div class="admin-chat-header">
+            <span id="adminChatUserName">Select a user</span>
         </div>
-        <div id="chatMessages" class="chat-messages"></div>
-        <div class="chat-input">
-            <input type="text" id="messageInput" placeholder="Type your message..." />
-            <button id="sendButton">Send</button>
+        <div id="adminChatMessages" class="admin-chat-messages"></div>
+        <div class="admin-chat-input">
+            <input type="text" id="adminMessageInput" placeholder="Type your message..." />
+            <button id="adminSendButton">Send</button>
         </div>
     </div>
 </div>
-
-
-
 
 @section Scripts {
     <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/3.1.18/signalr.min.js"></script>

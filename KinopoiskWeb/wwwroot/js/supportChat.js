@@ -82,4 +82,14 @@
                 console.error(`Failed to stop connection: ${err}`);
             });
     });
+
+    $("#chatIcon").click(function () {
+        $("#chatIcon").hide();
+        $("#chatWindow").show();
+    });
+    
+    $("#closeChat").click(function () {
+        $("#chatWindow").hide();
+        $("#chatIcon").show();
+    });
 });

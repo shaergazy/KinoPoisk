@@ -8,12 +8,12 @@ connection.on("ReceiveNotification", function (message) {
         "debug": false,
         "newestOnTop": true,
         "progressBar": true,
-        "positionClass": "toast-top-right", // Позиция уведомления
+        "positionClass": "toast-top-right",
         "preventDuplicates": false,
         "onclick": null,
         "showDuration": "300",
         "hideDuration": "1000",
-        "timeOut": "5000", // Время до исчезновения (в миллисекундах)
+        "timeOut": "5000",
         "extendedTimeOut": "1000",
         "showEasing": "swing",
         "hideEasing": "linear",
@@ -21,7 +21,7 @@ connection.on("ReceiveNotification", function (message) {
         "hideMethod": "fadeOut"
     };
 
-    toastr.success(message); // Показать уведомление
+    toastr.success(message);
 });
 
 connection.start().catch(function (err) {

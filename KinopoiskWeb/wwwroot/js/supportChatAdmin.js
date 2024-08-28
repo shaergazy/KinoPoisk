@@ -27,7 +27,7 @@
 
     connection.on("UpdateUserList", function (users) {
         console.log('Updating user list:', users);
-        $("#userList").empty();
+        $("#adminUserList").empty();
         users.forEach(function (user) {
             addToUserList(user);
         });
@@ -40,20 +40,20 @@
     });
 
     function addToUserList(user) {
-        if ($("#userList").find("li[data-user='" + user + "']").length === 0) {
+        if ($("#adminUserList").find("li[data-user='" + user + "']").length === 0) {
             const userItem = $("<li data-user='" + user + "'></li>").text(user);
             userItem.click(function () {
                 selectedUser = $(this).data("user");
-                $("#chatUserName").text(selectedUser);
+                $("#adminChatUserName").text(selectedUser);
 
                 loadChatHistory(selectedUser);
             });
-            $("#userList").append(userItem);
+            $("#adminUserList").append(userItem);
         }
     }
 
-    $("#sendButton").click(function (event) {
-        const message = $("#messageInput").val();
+    $("#adminSendButton").click(function (event) {
+        const message = $("#adminMessageInput").val();
         if (message.trim() === "" || !selectedUser) {
             console.warn('No message or no selected user.');
             return;
@@ -71,18 +71,19 @@
         messageHistory[selectedUser].push({ user: "Admin", message });
 
         addMessageToChat("Admin", message);
-        $("#messageInput").val("");
+
+        $("#adminMessageInput").val("");
         event.preventDefault();
     });
 
     function addMessageToChat(user, message) {
         const msg = $("<div></div>").text(user + ": " + message);
-        $("#chatMessages").append(msg);
-        $("#chatMessages").scrollTop($("#chatMessages")[0].scrollHeight);
+        $("#adminChatMessages").append(msg);
+        $("#adminChatMessages").scrollTop($("#adminChatMessages")[0].scrollHeight);
     }
 
     function loadChatHistory(user) {
-        $("#chatMessages").empty();
+        $("#adminChatMessages").empty();
 
         if (messageHistory[user]) {
             messageHistory[user].forEach(function (msg) {
