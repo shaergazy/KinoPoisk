@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Localization
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -79,6 +80,21 @@
             &copy; 2024 - KinopoiskWeb - <a asp-area="" asp-page="/Privacy">Privacy</a>
         </div>
     </footer>
+
+    @using Microsoft.AspNetCore.Localization
+    @{
+        var cultureFeature = Context.Features.Get<IRequestCultureFeature>();
+        var currentCulture = cultureFeature?.RequestCulture.Culture.Name;
+    }
+
+    <form asp-page="/SetLanguage" method="post">
+        <select name="culture" onchange="this.form.submit();">
+            <option value="en" selected="@(currentCulture == "en" ? "selected" : "")">English</option>
+            <option value="ru" selected="@(currentCulture == "ru" ? "selected" : "")">Русский</option>
+        </select>
+        <input type="hidden" name="returnUrl" value="@Context.Request.Path" />
+    </form>
+
 
     
     <div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModallLabel" aria-hidden="true">

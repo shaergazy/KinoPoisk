@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Localization;
 
 namespace KinopoiskWeb.Pages.Genres
 {
@@ -19,12 +20,14 @@ namespace KinopoiskWeb.Pages.Genres
         private readonly IGenreService _service;
         private readonly IMapper _mapper;
         private readonly ILogger<IndexModel> _logger;
+        private readonly IStringLocalizer<IndexModel> _localizer;
 
-        public IndexModel(IGenreService service, IMapper mapper, ILogger<IndexModel> logger)
+        public IndexModel(IGenreService service, IMapper mapper, ILogger<IndexModel> logger, IStringLocalizer<IndexModel> localizer)
         {
             _service = service;
             _mapper = mapper;
             _logger = logger;
+            _localizer = localizer;
         }
 
         [BindProperty]
@@ -92,13 +95,13 @@ namespace KinopoiskWeb.Pages.Genres
             {
                 _logger.LogInformation("Deleting genre with ID {GenreId}.", GenreId);
                 await _service.DeleteAsync(GenreId);
-                TempData["SuccessMessage"] = "Deleted";
+                TempData["SuccessMessage"] = _localizer["Deleted"];
                 return RedirectToPage();
             }
             catch (DbUpdateException ex)
             {
                 _logger.LogError(ex, "Error occurred while deleting genre with ID {GenreId}.", GenreId);
-                TempData["ErrorMessage"] = "Some movie contains this genre, therefore you cannot remove it.";
+                TempData["ErrorMessage"] = _localizer["DeleteGenreError"];
                 return RedirectToPage();
             }
         }

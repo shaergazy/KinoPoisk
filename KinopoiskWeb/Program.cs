@@ -6,9 +6,13 @@ using Hangfire;
 using KinopoiskWeb.Extensions;
 using KinopoiskWeb.Hubs;
 using KinopoiskWeb.Infrastructure;
+using Microsoft.AspNetCore.Localization;
+using Microsoft.AspNetCore.Mvc.Razor;
+using Microsoft.Extensions.Options;
 using OfficeOpenXml;
 using QuestPDF.Infrastructure;
 using Serilog;
+using System.Globalization;
 
 internal class Program
 {
@@ -38,7 +42,8 @@ internal class Program
         {
             Log.Information("Development environment detected");
         }
-
+        var localizationOptions = app.Services.GetService<IOptions<RequestLocalizationOptions>>().Value;
+        app.UseRequestLocalization(localizationOptions);
         app.UseHttpsRedirection();
         app.RegisterVirtualDir(builder.Configuration);
         app.UseStaticFiles();
@@ -105,6 +110,27 @@ internal class Program
         });
 
         services.AddMemoryCache();
+
+        services.AddLocalization(options => options.ResourcesPath = "Resources");
+
+        services.Configure<RequestLocalizationOptions>(options =>
+        {
+            var supportedCultures = new[]
+            {
+            new CultureInfo("en"),
+            new CultureInfo("ru")
+        };
+
+            options.DefaultRequestCulture = new RequestCulture("en");
+            options.SupportedCultures = supportedCultures;
+            options.SupportedUICultures = supportedCultures;
+
+            options.RequestCultureProviders.Insert(0, new QueryStringRequestCultureProvider());
+        });
+
+        services.AddControllersWithViews()
+            .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
+            .AddDataAnnotationsLocalization();
 
         QuestPDF.Settings.License = LicenseType.Community;
         ExcelPackage.LicenseContext = LicenseContext.NonCommercial;

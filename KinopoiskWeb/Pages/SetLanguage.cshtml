@@ -1,0 +1,13 @@
+﻿@page
+@model KinopoiskWeb.Pages.SetLanguageModel
+@{
+    Layout = null;
+}
+
+<form method="post" id="setLanguageForm">
+    <select name="culture" onchange="document.getElementById('setLanguageForm').submit();">
+        <option value="en" selected="@Model.IsSelected("en")">English</option>
+        <option value="ru" selected="@Model.IsSelected("ru")">Русский</option>
+    </select>
+    <input type="hidden" name="returnUrl" value="@Model.ReturnUrl" />
+</form>

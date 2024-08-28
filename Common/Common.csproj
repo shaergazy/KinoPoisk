@@ -36,4 +36,8 @@
     </EmbeddedResource>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Resources\Pages\Genres\" />
+  </ItemGroup>
+
 </Project>
