@@ -5,8 +5,6 @@
         .configureLogging(signalR.LogLevel.Information)
         .build();
 
-    connection.serverTimeoutInMilliseconds = 1000 * 60 * 10;
-
     let selectedUser = null;
     let messageHistory = {};
 
@@ -79,8 +77,13 @@
     function addMessageToChat(user, message) {
         const msg = $("<div></div>").text(user + ": " + message);
         $("#adminChatMessages").append(msg);
-        $("#adminChatMessages").scrollTop($("#adminChatMessages")[0].scrollHeight);
+
+        const chatMessages = $("#adminChatMessages")[0];
+        if (chatMessages) {
+            $("#adminChatMessages").scrollTop(chatMessages.scrollHeight);
+        }
     }
+
 
     function loadChatHistory(user) {
         $("#adminChatMessages").empty();
