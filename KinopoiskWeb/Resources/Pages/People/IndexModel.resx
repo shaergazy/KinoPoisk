@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -117,64 +117,58 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Close" xml:space="preserve">
-    <value>Закрыть</value>
+  <data name="PageTitle">
+    <value>People</value>
   </data>
-  <data name="AreYouSureLogout" xml:space="preserve">
-    <value>Вы уверены, что хотите выйти из своей учетной записи {0}?</value>
+  <data name="PageHeading">
+    <value>People</value>
   </data>
-  <data name="Cancel" xml:space="preserve">
-    <value>Отмена</value>
+  <data name="CreateNewPersonButton">
+    <value>Create New Person</value>
   </data>
-  <data name="Yes" xml:space="preserve">
-    <value>Да</value>
+  <data name="FirstNameColumn">
+    <value>First Name</value>
   </data>
-  <data name="Send" xml:space="preserve">
-    <value>Отправить</value>
+  <data name="LastNameColumn">
+    <value>Last Name</value>
   </data>
-  <data name="SupportChat" xml:space="preserve">
-    <value>Чат поддержки</value>
+  <data name="BirthDateColumn">
+    <value>Birth Date</value>
   </data>
-  <data name="Genres" xml:space="preserve">
-    <value>Жанры</value>
+  <data name="CreatePersonModalTitle">
+    <value>Create New Person</value>
   </data>
-  <data name="Countries" xml:space="preserve">
-    <value>Страны</value>
+  <data name="CloseButton">
+    <value>Close</value>
   </data>
-  <data name="CreateMovie" xml:space="preserve">
-    <value>Создать фильм</value>
+  <data name="SaveButton">
+    <value>Save</value>
   </data>
-  <data name="Home" xml:space="preserve">
-    <value>Домой</value>
+  <data name="EditPersonModalTitle">
+    <value>Edit Person</value>
   </data>
-  <data name="Movies" xml:space="preserve">
-    <value>Фильмы</value>
+  <data name="FirstNameLabel">
+    <value>First Name</value>
   </data>
-  <data name="People" xml:space="preserve">
-    <value>Люди</value>
+  <data name="LastNameLabel">
+    <value>Last Name</value>
   </data>
-  <data name="Privacy" xml:space="preserve">
-    <value>Конфиденциальность</value>
+  <data name="BirthDateLabel">
+    <value>Birth Date</value>
   </data>
-  <data name="Login" xml:space="preserve">
-    <value>Авторизоваться</value>
+  <data name="CancelButton">
+    <value>Cancel</value>
   </data>
-  <data name="Logout" xml:space="preserve">
-    <value>Выход</value>
+  <data name="SaveChangesButton">
+    <value>Save changes</value>
   </data>
-  <data name="Register" xml:space="preserve">
-    <value>Зарегистрироваться</value>
+  <data name="DeletePersonModalTitle">
+    <value>Delete Person</value>
   </data>
-  <data name="Are you sure you want to log out of your account" xml:space="preserve">
-    <value>Вы уверены, что хотите выйти из своей учетной записи</value>
+  <data name="DeleteConfirmationMessage">
+    <value>Are you sure you want to delete the person</value>
   </data>
-  <data name="Email" xml:space="preserve">
-    <value>Электронная почта</value>
-  </data>
-  <data name="Password" xml:space="preserve">
-    <value>Пароль</value>
-  </data>
-  <data name="SignIn" xml:space="preserve">
-    <value>Войти</value>
+  <data name="DeleteButton">
+    <value>Delete</value>
   </data>
 </root>
