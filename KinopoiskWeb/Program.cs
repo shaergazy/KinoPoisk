@@ -113,6 +113,10 @@ internal class Program
 
         services.AddLocalization(options => options.ResourcesPath = "Resources");
 
+        services.AddMvc()
+        .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
+        .AddDataAnnotationsLocalization();
+
         services.Configure<RequestLocalizationOptions>(options =>
         {
             var supportedCultures = new[]

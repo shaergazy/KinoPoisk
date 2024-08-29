@@ -136,7 +136,7 @@
     <value>Актер</value>
   </data>
   <data name="Director" xml:space="preserve">
-    <value>Директор</value>
+    <value>Режиссёр</value>
   </data>
   <data name="Movies" xml:space="preserve">
     <value>Фильмы</value>

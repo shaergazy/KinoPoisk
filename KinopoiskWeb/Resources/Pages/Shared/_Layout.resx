@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -117,22 +117,64 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Director" xml:space="preserve">
-    <value>Режиссёр</value>
+  <data name="Close" xml:space="preserve">
+    <value>Close</value>
   </data>
-  <data name="Duration" xml:space="preserve">
-    <value>Продолжительность: {0} мин</value>
+  <data name="AreYouSureLogout" xml:space="preserve">
+    <value>Are you sure you want to log out of your account {0}?</value>
   </data>
-  <data name="HomePageTitle" xml:space="preserve">
-    <value>Домашняя страница</value>
+  <data name="Cancel" xml:space="preserve">
+    <value>Cancel</value>
   </data>
-  <data name="Starring" xml:space="preserve">
-    <value>В главных ролях: {0}</value>
+  <data name="Yes" xml:space="preserve">
+    <value>Yes</value>
   </data>
-  <data name="Top10HighRatedMovies" xml:space="preserve">
-    <value>10 лучших фильмов с высоким рейтингом</value>
+  <data name="Send" xml:space="preserve">
+    <value>Send</value>
   </data>
-  <data name="Top10NewestMovies" xml:space="preserve">
-    <value>10 самых новых фильмов</value>
+  <data name="SupportChat" xml:space="preserve">
+    <value>Support chat</value>
+  </data>
+  <data name="Are you sure you want to log out of your account" xml:space="preserve">
+    <value>Are you sure you want to log out of your account</value>
+  </data>
+  <data name="Countries" xml:space="preserve">
+    <value>Countries</value>
+  </data>
+  <data name="CreateMovie" xml:space="preserve">
+    <value>Create movie</value>
+  </data>
+  <data name="Email" xml:space="preserve">
+    <value>Email</value>
+  </data>
+  <data name="Genres" xml:space="preserve">
+    <value>Genres</value>
+  </data>
+  <data name="Home" xml:space="preserve">
+    <value>Home</value>
+  </data>
+  <data name="Login" xml:space="preserve">
+    <value>Login</value>
+  </data>
+  <data name="Logout" xml:space="preserve">
+    <value>Logout</value>
+  </data>
+  <data name="Movies" xml:space="preserve">
+    <value>Movies</value>
+  </data>
+  <data name="Password" xml:space="preserve">
+    <value>Password</value>
+  </data>
+  <data name="People" xml:space="preserve">
+    <value>People</value>
+  </data>
+  <data name="Privacy" xml:space="preserve">
+    <value>Privacy</value>
+  </data>
+  <data name="Register" xml:space="preserve">
+    <value>Register</value>
+  </data>
+  <data name="SignIn" xml:space="preserve">
+    <value>Sign in</value>
   </data>
 </root>

@@ -1,4 +1,6 @@
 ﻿@using Microsoft.AspNetCore.Localization
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -22,27 +24,27 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Index">Home</a>
+                            <a class="nav-link text-dark" asp-area="" asp-page="/Index">@Localizer["Home"]</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Privacy">Privacy</a>
+                            <a class="nav-link text-dark" asp-area="" asp-page="/Privacy">@Localizer["Privacy"]</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Movies/Index">Movies</a>
+                            <a class="nav-link text-dark" asp-area="" asp-page="/Movies/Index">@Localizer["Movies"]</a>
                         </li>
                         @if (User.IsInRole("Admin"))
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-page="/Genres/Index">Genres</a>
+                                <a class="nav-link text-dark" asp-area="" asp-page="/Genres/Index">@Localizer["Genres"]</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-page="/Countries/Index">Countries</a>
+                                <a class="nav-link text-dark" asp-area="" asp-page="/Countries/Index">@Localizer["Countries"]</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-page="/People/Index">People</a>
+                                <a class="nav-link text-dark" asp-area="" asp-page="/People/Index">@Localizer["People"]</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-page="/Movies/Create">CreateMovie</a>
+                                <a class="nav-link text-dark" asp-area="" asp-page="/Movies/Create">@Localizer["CreateMovie"]</a>
                             </li>
                         }
                     </ul>
@@ -50,7 +52,7 @@
                         @if (User.Identity.IsAuthenticated)
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" data-bs-toggle="modal" data-bs-target="#logoutModal">Log out</a>
+                                <a class="nav-link text-dark" data-bs-toggle="modal" data-bs-target="#logoutModal">@Localizer["Logout"]</a>
                             </li>
 
 
@@ -58,10 +60,10 @@
                         else
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" data-bs-toggle="modal" data-bs-target="#loginModal">Log in</a>
+                                <a class="nav-link text-dark" data-bs-toggle="modal" data-bs-target="#loginModal">@Localizer["Login"]</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-page="/Account/Register">Register</a>
+                                <a class="nav-link text-dark" asp-area="" asp-page="/Account/Register">@Localizer["Register"]</a>
                             </li>
                         }
                     </ul>
@@ -77,7 +79,7 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2024 - KinopoiskWeb - <a asp-area="" asp-page="/Privacy">Privacy</a>
+            &copy; 2024 - KinopoiskWeb - <a asp-area="" asp-page="/Privacy">@Localizer["Privacy"]</a>
         </div>
     </footer>
 
@@ -106,7 +108,7 @@
                 </div>
                 <div class="modal-body">
                     <form method="post" asp-page="/Account/Logout" asp-page-handler="Logout">
-                        <p>Are you sure you want to log out of your account @User.Identity.Name?</p>
+                        <p>@Localizer["Are you sure you want to log out of your account"] @User.Identity.Name?</p>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                             <button type="submit" class="btn btn-danger">Yes</button>
@@ -122,17 +124,17 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="loginModalLabel">Sign In</h5>
+                    <h5 class="modal-title" id="loginModalLabel">@Localizer["SignIn"]</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <form method="post" asp-area="" asp-page="/Account/Login">
                         <div class="mb-3">
-                            <label for="email" class="form-label">Email address</label>
+                            <label for="email" class="form-label">@Localizer["Email"]</label>
                             <input type="email" class="form-control" id="email" name="Email" required>
                         </div>
                         <div class="mb-3">
-                            <label for="password" class="form-label">Password</label>
+                            <label for="password" class="form-label">@Localizer["Password"]</label>
                             <input type="password" class="form-control" id="password" name="Password" required>
                         </div>
                         <button type="submit" class="btn btn-primary">Sign In</button>
@@ -149,14 +151,14 @@
 
         <div id="chatWindow" class="chat-window" style="display: none;">
             <div class="chat-header">
-                <span>Support Chat</span>
+                <span>@Localizer["SupportChat"]</span>
                 <button id="closeChat">X</button>
             </div>
             <div id="chatMessages" class="chat-messages"></div>
 
             <div class="chat-input">
                 <input type="text" id="messageInput" placeholder="Type your message..." />
-                <button id="sendButton">Send</button>
+                <button id="sendButton">@Localizer["Send"]</button>
             </div>
         </div>
     }

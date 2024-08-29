@@ -54,21 +54,12 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>IndexModel.resx</DependentUpon>
     </Compile>
-    <Compile Update="Resources\Pages\Movies\ImportModel.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>ImportModel.resx</DependentUpon>
-    </Compile>
   </ItemGroup>
 
   <ItemGroup>
     <EmbeddedResource Update="Resources\Pages\Genres\IndexModel.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>IndexModel.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Resources\Pages\Movies\ImportModel.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>ImportModel.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
 

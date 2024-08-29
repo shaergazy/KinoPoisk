@@ -117,22 +117,58 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Director" xml:space="preserve">
+  <data name="CreateMovie.Title" xml:space="preserve">
+    <value>Создать фильм</value>
+  </data>
+  <data name="CreateMovie.Heading" xml:space="preserve">
+    <value>Создать фильм</value>
+  </data>
+  <data name="CreateMovie.PosterLabel" xml:space="preserve">
+    <value>Постер</value>
+  </data>
+  <data name="CreateMovie.TitleLabel" xml:space="preserve">
+    <value>Заголовок</value>
+  </data>
+  <data name="CreateMovie.DescriptionLabel" xml:space="preserve">
+    <value>Описание</value>
+  </data>
+  <data name="CreateMovie.ReleasedDateLabel" xml:space="preserve">
+    <value>Дата выпущена</value>
+  </data>
+  <data name="CreateMovie.CountryLabel" xml:space="preserve">
+    <value>Страна</value>
+  </data>
+  <data name="CreateMovie.GenresLabel" xml:space="preserve">
+    <value>Жанры</value>
+  </data>
+  <data name="CreateMovie.DurationLabel" xml:space="preserve">
+    <value>Продолжительность</value>
+  </data>
+  <data name="CreateMovie.IMDBRatingLabel" xml:space="preserve">
+    <value>IMDB Рейтинг</value>
+  </data>
+  <data name="CreateMovie.DirectorLabel" xml:space="preserve">
     <value>Режиссёр</value>
   </data>
-  <data name="Duration" xml:space="preserve">
-    <value>Продолжительность: {0} мин</value>
+  <data name="CreateMovie.CreateButton" xml:space="preserve">
+    <value>Создать</value>
   </data>
-  <data name="HomePageTitle" xml:space="preserve">
-    <value>Домашняя страница</value>
+  <data name="CreateMovie.AddActorButton" xml:space="preserve">
+    <value>Добавить актера</value>
   </data>
-  <data name="Starring" xml:space="preserve">
-    <value>В главных ролях: {0}</value>
+  <data name="CreateMovie.AddActorModalTitle" xml:space="preserve">
+    <value>Добавить актера</value>
   </data>
-  <data name="Top10HighRatedMovies" xml:space="preserve">
-    <value>10 лучших фильмов с высоким рейтингом</value>
+  <data name="CreateMovie.ActorLabel" xml:space="preserve">
+    <value>Актер</value>
   </data>
-  <data name="Top10NewestMovies" xml:space="preserve">
-    <value>10 самых новых фильмов</value>
+  <data name="CreateMovie.ActorOrderLabel" xml:space="preserve">
+    <value>Порядок</value>
+  </data>
+  <data name="CreateMovie.CloseButton" xml:space="preserve">
+    <value>Закрыть</value>
+  </data>
+  <data name="CreateMovie.SaveButton" xml:space="preserve">
+    <value>Сохранить</value>
   </data>
 </root>

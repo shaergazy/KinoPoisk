@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -117,22 +117,58 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Director" xml:space="preserve">
-    <value>Режиссёр</value>
+  <data name="CreateMovie.Title" xml:space="preserve">
+    <value>Create Movie</value>
   </data>
-  <data name="Duration" xml:space="preserve">
-    <value>Продолжительность: {0} мин</value>
+  <data name="CreateMovie.Heading" xml:space="preserve">
+    <value>Create Movie</value>
   </data>
-  <data name="HomePageTitle" xml:space="preserve">
-    <value>Домашняя страница</value>
+  <data name="CreateMovie.PosterLabel" xml:space="preserve">
+    <value>Poster</value>
   </data>
-  <data name="Starring" xml:space="preserve">
-    <value>В главных ролях: {0}</value>
+  <data name="CreateMovie.TitleLabel" xml:space="preserve">
+    <value>Title</value>
   </data>
-  <data name="Top10HighRatedMovies" xml:space="preserve">
-    <value>10 лучших фильмов с высоким рейтингом</value>
+  <data name="CreateMovie.DescriptionLabel" xml:space="preserve">
+    <value>Description</value>
   </data>
-  <data name="Top10NewestMovies" xml:space="preserve">
-    <value>10 самых новых фильмов</value>
+  <data name="CreateMovie.ReleasedDateLabel" xml:space="preserve">
+    <value>Date released</value>
+  </data>
+  <data name="CreateMovie.CountryLabel" xml:space="preserve">
+    <value>Country</value>
+  </data>
+  <data name="CreateMovie.GenresLabel" xml:space="preserve">
+    <value>Genres</value>
+  </data>
+  <data name="CreateMovie.DurationLabel" xml:space="preserve">
+    <value>Duration</value>
+  </data>
+  <data name="CreateMovie.IMDBRatingLabel" xml:space="preserve">
+    <value>IMDB rating</value>
+  </data>
+  <data name="CreateMovie.DirectorLabel" xml:space="preserve">
+    <value>Director</value>
+  </data>
+  <data name="CreateMovie.CreateButton" xml:space="preserve">
+    <value>Create</value>
+  </data>
+  <data name="CreateMovie.AddActorButton" xml:space="preserve">
+    <value>Add actor</value>
+  </data>
+  <data name="CreateMovie.AddActorModalTitle" xml:space="preserve">
+    <value>Add Actor</value>
+  </data>
+  <data name="CreateMovie.ActorLabel" xml:space="preserve">
+    <value>Actor</value>
+  </data>
+  <data name="CreateMovie.ActorOrderLabel" xml:space="preserve">
+    <value>Order</value>
+  </data>
+  <data name="CreateMovie.CloseButton" xml:space="preserve">
+    <value>Close</value>
+  </data>
+  <data name="CreateMovie.SaveButton" xml:space="preserve">
+    <value>Save</value>
   </data>
 </root>

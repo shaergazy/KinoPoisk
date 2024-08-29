@@ -117,22 +117,52 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Director" xml:space="preserve">
-    <value>Режиссёр</value>
+  <data name="Close" xml:space="preserve">
+    <value>Закрыть</value>
   </data>
-  <data name="Duration" xml:space="preserve">
-    <value>Продолжительность: {0} мин</value>
+  <data name="AreYouSureLogout" xml:space="preserve">
+    <value>Вы уверены, что хотите выйти из своей учетной записи {0}?</value>
   </data>
-  <data name="HomePageTitle" xml:space="preserve">
-    <value>Домашняя страница</value>
+  <data name="Cancel" xml:space="preserve">
+    <value>Отмена</value>
   </data>
-  <data name="Starring" xml:space="preserve">
-    <value>В главных ролях: {0}</value>
+  <data name="Yes" xml:space="preserve">
+    <value>Да</value>
   </data>
-  <data name="Top10HighRatedMovies" xml:space="preserve">
-    <value>10 лучших фильмов с высоким рейтингом</value>
+  <data name="Send" xml:space="preserve">
+    <value>Отправить</value>
   </data>
-  <data name="Top10NewestMovies" xml:space="preserve">
-    <value>10 самых новых фильмов</value>
+  <data name="SupportChat" xml:space="preserve">
+    <value>Чат поддержки</value>
+  </data>
+  <data name="Genres" xml:space="preserve">
+    <value>Жанры</value>
+  </data>
+  <data name="Countries" xml:space="preserve">
+    <value>Страны</value>
+  </data>
+  <data name="CreateMovie" xml:space="preserve">
+    <value>Создать фильм</value>
+  </data>
+  <data name="Home" xml:space="preserve">
+    <value>Домой</value>
+  </data>
+  <data name="Movies" xml:space="preserve">
+    <value>Фильмы</value>
+  </data>
+  <data name="People" xml:space="preserve">
+    <value>Люди</value>
+  </data>
+  <data name="Privacy" xml:space="preserve">
+    <value>Конфиденциальность</value>
+  </data>
+  <data name="Login" xml:space="preserve">
+    <value>Авторизоваться</value>
+  </data>
+  <data name="Logout" xml:space="preserve">
+    <value>Выход</value>
+  </data>
+  <data name="Register" xml:space="preserve">
+    <value>Зарегистрироваться</value>
   </data>
 </root>

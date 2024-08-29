@@ -124,7 +124,7 @@
     <value>Страна</value>
   </data>
   <data name="Director" xml:space="preserve">
-    <value>Директор</value>
+    <value>Режиссёр</value>
   </data>
   <data name="Duration" xml:space="preserve">
     <value>Продолжительность</value>
