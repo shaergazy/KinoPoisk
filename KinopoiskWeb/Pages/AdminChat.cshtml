@@ -1,22 +1,24 @@
 ﻿@page
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
 @model KinopoiskWeb.Pages.AdminChatModel
 @{
 }
 <div class="admin-chat-container">
     <div class="admin-chat-list">
-        <h3 class="admin-chat-list-header">Active Chats</h3>
+        <h3 class="admin-chat-list-header">@Localizer["ActiveChats"]</h3>
         <ul id="adminUserList" class="admin-user-list">
         </ul>
     </div>
 
     <div class="admin-chat-window">
         <div class="admin-chat-header">
-            <span id="adminChatUserName">Select a user</span>
+            <span id="adminChatUserName">@Localizer["SelectUser"]</span>
         </div>
         <div id="adminChatMessages" class="admin-chat-messages"></div>
         <div class="admin-chat-input">
-            <input type="text" id="adminMessageInput" placeholder="Type your message..." />
-            <button id="adminSendButton">Send</button>
+            <input type="text" id="adminMessageInput" placeholder="@Localizer["TypeMessage"]" />
+            <button id="adminSendButton">@Localizer["Send"]</button>
         </div>
     </div>
 </div>

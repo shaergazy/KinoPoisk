@@ -1,33 +1,35 @@
 ﻿@page
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<Pages.Subscriptions.SubscribeModel> Localizer
 @model KinopoiskWeb.Pages.Subscriptions.SubscribeModel
 @{
 }
 <div class="container mt-5">
-    <h2 class="text-center">Subscribe to a Plan</h2>
+    <h2 class="text-center">@Localizer["SubscribeToAPlan"]</h2>
 
     <form method="post" class="mt-4">
         <div class="form-group">
-            <label asp-for="Details.PlanId" class="control-label">Subscription plan</label>
+            <label asp-for="Details.PlanId" class="control-label">@Localizer["SubscriptionPlan"]</label>
             <select asp-for="Details.PlanId" class="form-control" id="subscriptionPlan"></select>
             <span asp-validation-for="Details.PlanId" class="text-danger"></span>
         </div>
 
         <div class="form-group">
-            <label asp-for="Details.CardNumber" class="form-label"></label>
+            <label asp-for="Details.CardNumber" class="form-label">@Localizer["CardNumber"]</label>
             <input asp-for="Details.CardNumber" class="form-control" />
             <span asp-validation-for="Details.CardNumber" class="text-danger"></span>
         </div>
         <div class="form-group">
-            <label asp-for="Details.ExpirationDate" class="form-label"></label>
+            <label asp-for="Details.ExpirationDate" class="form-label">@Localizer["ExpirationDate"]</label>
             <input asp-for="Details.ExpirationDate" class="form-control" />
             <span asp-validation-for="Details.ExpirationDate" class="text-danger"></span>
         </div>
         <div class="form-group">
-            <label asp-for="Details.CardCode" class="form-label"></label>
+            <label asp-for="Details.CardCode" class="form-label">@Localizer["CardCode"]</label>
             <input asp-for="Details.CardCode" class="form-control" />
             <span asp-validation-for="Details.CardCode" class="text-danger"></span>
         </div>
-        <button type="submit" class="btn btn-primary btn-block">Subscribe</button>
+        <button type="submit" class="btn btn-primary btn-block">@Localizer["Subscribe"]</button>
     </form>
 </div>
 @section Scripts {

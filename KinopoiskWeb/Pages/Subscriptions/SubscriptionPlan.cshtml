@@ -1,18 +1,20 @@
 ﻿@page
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<Pages.Subscriptions.SubscriptionPlanModel> Localizer
 @model KinopoiskWeb.Pages.Subscriptions.SubscriptionPlanModel
 @{
 }
 <div class="mb-3">
-    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createModal">Create New Plan</button>
+    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createModal">@Localizer["CreateNewPlan"]</button>
 </div>
 
 <table class="table">
     <thead>
         <tr>
-            <th>Name</th>
-            <th>Cost</th>
-            <th>Interval</th>
-            <th>Actions</th>
+            <th>@Localizer["Name"]</th>
+            <th>@Localizer["Cost"]</th>
+            <th>@Localizer["Interval"]</th>
+            <th>@Localizer["Actions"]</th>
         </tr>
     </thead>
     <tbody>
@@ -23,8 +25,8 @@
                 <td>@plan.Cost.ToString("C")</td>
                 <td>@plan.IntervalType</td>
                 <td>
-                    <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editModal-@plan.Id">Edit</button>
-                    <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal-@plan.Id">Delete</button>
+                    <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editModal-@plan.Id">@Localizer["Edit"]</button>
+                    <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal-@plan.Id">@Localizer["Delete"]</button>
                 </td>
             </tr>
         }
@@ -36,32 +38,32 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="createModalLabel">Create New Plan</h5>
+                <h5 class="modal-title" id="createModalLabel">@Localizer["CreateNewPlan"]</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <form method="post" asp-page-handler="CreateOrUpdate">
                     <div class="mb-3">
-                        <label asp-for="NewPlan.Name" class="form-label"></label>
+                        <label asp-for="NewPlan.Name" class="form-label">@Localizer["PlanName"]</label>
                         <input asp-for="NewPlan.Name" class="form-control" />
                         <span asp-validation-for="NewPlan.Name" class="text-danger"></span>
                     </div>
                     <div class="mb-3">
-                        <label asp-for="NewPlan.Cost" class="form-label"></label>
+                        <label asp-for="NewPlan.Cost" class="form-label">@Localizer["Cost"]</label>
                         <input asp-for="NewPlan.Cost" class="form-control" />
                         <span asp-validation-for="NewPlan.Cost" class="text-danger"></span>
                     </div>
                     <div class="mb-3">
-                        <label asp-for="NewPlan.IntervalType" class="form-label"></label>
+                        <label asp-for="NewPlan.IntervalType" class="form-label">@Localizer["IntervalType"]</label>
                         <select asp-for="NewPlan.IntervalType" class="form-select">
-                            <option value="Monthly">Monthly</option>
-                            <option value="Yearly">Yearly</option>
+                            <option value="Monthly">@Localizer["Monthly"]</option>
+                            <option value="Yearly">@Localizer["Yearly"]</option>
                         </select>
                         <span asp-validation-for="NewPlan.IntervalType" class="text-danger"></span>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Save</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">@Localizer["Close"]</button>
+                        <button type="submit" class="btn btn-primary">@Localizer["Save"]</button>
                     </div>
                 </form>
             </div>
@@ -76,32 +78,32 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="editModalLabel-@plan.Id">Edit Plan</h5>
+                    <h5 class="modal-title" id="editModalLabel-@plan.Id">@Localizer["EditPlan"]</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <form method="post" asp-page-handler="CreateOrUpdate" asp-route-id="@plan.Id">
                         <div class="mb-3">
-                            <label asp-for="EditPlan.Name" class="form-label"></label>
+                            <label asp-for="EditPlan.Name" class="form-label">@Localizer["PlanName"]</label>
                             <input asp-for="EditPlan.Name" class="form-control" value="@plan.Name" />
                             <span asp-validation-for="EditPlan.Name" class="text-danger"></span>
                         </div>
                         <div class="mb-3">
-                            <label asp-for="EditPlan.Cost" class="form-label"></label>
+                            <label asp-for="EditPlan.Cost" class="form-label">@Localizer["Cost"]</label>
                             <input asp-for="EditPlan.Cost" class="form-control" value="@plan.Cost" />
                             <span asp-validation-for="EditPlan.Cost" class="text-danger"></span>
                         </div>
                         <div class="mb-3">
-                            <label asp-for="EditPlan.IntervalType" class="form-label"></label>
+                            <label asp-for="EditPlan.IntervalType" class="form-label">@Localizer["IntervalType"]</label>
                             <select asp-for="EditPlan.IntervalType" class="form-select">
-                                <option value="1">Monthly</option>
-                                <option value="2">Yearly</option>
+                                <option value="1">@Localizer["Monthly"]</option>
+                                <option value="2">@Localizer["Yearly"]</option>
                             </select>
                             <span asp-validation-for="EditPlan.IntervalType" class="text-danger"></span>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary">Save</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">@Localizer["Close"]</button>
+                            <button type="submit" class="btn btn-primary">@Localizer["SaveChanges"]</button>
                         </div>
                     </form>
                 </div>
@@ -117,16 +119,16 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="deleteModalLabel-@plan.Id">Delete Plan</h5>
+                    <h5 class="modal-title" id="deleteModalLabel-@plan.Id">@Localizer["DeletePlan"]</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <p>Are you sure you want to delete the plan "@plan.Name"?</p>
+                    <p>@Localizer["ConfirmDeletePlan", plan.Name]</p>
                 </div>
                 <div class="modal-footer">
                     <form method="post" asp-page-handler="Delete" asp-route-id="@plan.Id">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-danger">Delete</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">@Localizer["Close"]</button>
+                        <button type="submit" class="btn btn-danger">@Localizer["Delete"]</button>
                     </form>
                 </div>
             </div>

@@ -4,6 +4,7 @@
 @model KinopoiskWeb.Pages.Countries.IndexModel
 @{
     ViewData["Title"] = Localizer["Countries"];
+    var currentCulture = System.Globalization.CultureInfo.CurrentCulture.Name;
 }
 <head>
 
@@ -127,7 +128,8 @@
         @await Html.PartialAsync("Shared/_Urls")
         <script src="~/js/country.js" asp-append-version="true"></script>
         <partial name="_ValidationScriptsPartial" />
-        <script src="https://cdn.datatables.net/2.0.8/js/dataTables.js"></script>
+        <script src="https://cdn.datatables.net/2.0.8/js/dataTables.js">var currenCulture = @currentCulture</script>
+        <script>var currentCulture = @currentCulture</script>
     }
 
 </body>
