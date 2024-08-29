@@ -1,5 +1,8 @@
 ﻿@page "{id:guid}"
+@using Microsoft.Extensions.Localization
 @model KinopoiskWeb.Pages.Movies.DetailsModel
+@inject IStringLocalizer<Pages.Movies.DetailsModel> Localizer
+
 @{
     ViewData["Title"] = Model.Movie.Title;
     string posterUrl = Model.Movie.Poster;
@@ -18,13 +21,13 @@
         </div>
         <div class="col-md-8 movie-details">
             <h1>@Model.Movie.Title</h1>
-            <p><strong>Release Date:</strong> @Model.Movie.ReleasedDate.ToString("dd/MM/yyyy")</p>
-            <p><strong>Country:</strong> @Model.Movie.Country</p>
-            <p><strong>Director:</strong> @Model.Movie.Director</p>
-            <p><strong>Duration:</strong> @Model.Movie.Duration minutes</p>
-            <p><strong>IMDB Rating:</strong> @Model.Movie.IMDBRating</p>
-            <p><strong>Genres:</strong> @string.Join(", ", @Model.Movie.Genres)</p>
-            <h2>Actors</h2>
+            <p><strong>@Localizer["Release Date"]:</strong> @Model.Movie.ReleasedDate.ToString("dd/MM/yyyy")</p>
+            <p><strong>@Localizer["Country"]:</strong> @Model.Movie.Country</p>
+            <p><strong>@Localizer["Director"]:</strong> @Model.Movie.Director</p>
+            <p><strong>@Localizer["Duration"]:</strong> @Model.Movie.Duration @Localizer["minutes"]</p>
+            <p><strong>@Localizer["IMDB Rating"]:</strong> @Model.Movie.IMDBRating</p>
+            <p><strong>@Localizer["Genres"]:</strong> @string.Join(", ", @Model.Movie.Genres)</p>
+            <h2>@Localizer["Actors"]</h2>
             <ul class="actors-list">
                 @foreach (var actor in Model.Movie.Actors)
                 {
@@ -33,7 +36,7 @@
             </ul>
             <div class="row">
                 <div class="col-12">
-                    <p><strong>Rating:</strong></p>
+                    <p><strong>@Localizer["Rating"]:</strong></p>
                     <div class="rating" id="rating-@Model.Movie.Id" data-movie-id="@Model.Movie.Id" data-rating="@Model.Movie.Rating">
                         @for (int i = 1; i <= 10; i++)
                         {
@@ -48,7 +51,7 @@
     <div class="row">
         <div class="col-12">
             <div class="description-section">
-                <h2>Description</h2>
+                <h2>@Localizer["Description"]</h2>
                 <p>@Model.Movie.Description</p>
             </div>
         </div>
@@ -56,7 +59,7 @@
     <div class="row">
         <div class="col-12">
             <div class="comments-section">
-                <h2>Comments</h2>
+                <h2>@Localizer["Comments"]</h2>
                 <table id="commentsTable" class="table-bordered" width="100%">
                     <thead>
                         <tr>
@@ -74,10 +77,10 @@
             <div class="col-12">
                 <form id="add-comment-form">
                     <div class="form-group">
-                        <label for="comment">Add a comment:</label>
+                        <label for="comment">@Localizer["Add a comment"]:</label>
                         <textarea id="comment" class="form-control" rows="3"></textarea>
                     </div>
-                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <button type="submit" class="btn btn-primary">@Localizer["Submit"]</button>
                 </form>
             </div>
         </div>
@@ -86,7 +89,8 @@
     {
         <div class="row">
             <div class="col-12">
-                <p>Please <a href="/Account/Register">register</a> or <a href="/Account/Login">login</a> to leave a comment.</p>
+                <p>@Localizer["Please register or login to leave a comment"]</p>
+                <p>@Localizer["Please"] <a href="/Account/Register">@Localizer["register"]</a> @Localizer["or"] <a href="/Account/Login">@Localizer["login"]</a> @Localizer["to leave a comment"]</p>
             </div>
         </div>
     }

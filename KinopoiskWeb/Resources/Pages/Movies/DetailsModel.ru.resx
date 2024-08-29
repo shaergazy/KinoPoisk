@@ -117,46 +117,61 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="ReleaseDate" xml:space="preserve">
+    <value>Дата выпуска</value>
+  </data>
+  <data name="Country" xml:space="preserve">
+    <value>Страна</value>
+  </data>
+  <data name="Director" xml:space="preserve">
+    <value>Директор</value>
+  </data>
+  <data name="Duration" xml:space="preserve">
+    <value>Продолжительность</value>
+  </data>
+  <data name="Minutes" xml:space="preserve">
+    <value>минуты</value>
+  </data>
+  <data name="IMDBRating" xml:space="preserve">
+    <value>IMDB Рейтинг</value>
+  </data>
   <data name="Genres" xml:space="preserve">
     <value>Жанры</value>
   </data>
-  <data name="Create New Genre" xml:space="preserve">
-    <value>Создать новый жанр</value>
+  <data name="Actors" xml:space="preserve">
+    <value>Актеры</value>
   </data>
-  <data name="Name" xml:space="preserve">
-    <value>Имя</value>
+  <data name="Rating" xml:space="preserve">
+    <value>Рейтинг</value>
   </data>
-  <data name="Are you sure you want to delete the genre" xml:space="preserve">
-    <value>Вы уверены, что хотите удалить жанр</value>
+  <data name="Description" xml:space="preserve">
+    <value>Описание</value>
   </data>
-  <data name="Deleted" xml:space="preserve">
-    <value>Удален</value>
+  <data name="Comments" xml:space="preserve">
+    <value>Комментарии</value>
   </data>
-  <data name="Some movie contains this genre, therefore you cannot remove it" xml:space="preserve">
-    <value>Некоторый фильм содержит этот жанр, поэтому вы не можете его удалить</value>
+  <data name="AddAComment" xml:space="preserve">
+    <value>Добавить комментарий</value>
   </data>
-  <data name="Close" xml:space="preserve">
-    <value>Закрывать</value>
+  <data name="Submit" xml:space="preserve">
+    <value>Представлять на рассмотрение</value>
   </data>
-  <data name="Save" xml:space="preserve">
-    <value>Сохранять</value>
+  <data name="PleaseRegisterOrLoginToLeaveAComment" xml:space="preserve">
+    <value>Пожалуйста, зарегистрируйтесь или войдите, чтобы оставить комментарий</value>
   </data>
-  <data name="Save changes" xml:space="preserve">
-    <value>Сохранить изменения</value>
+  <data name="Please" xml:space="preserve">
+    <value>Пожалуйста</value>
   </data>
-  <data name="Cancel" xml:space="preserve">
-    <value>Отмена</value>
+  <data name="Register" xml:space="preserve">
+    <value>зарегистрировать</value>
   </data>
-  <data name="Edit Genre" xml:space="preserve">
-    <value>Редактировать жанр</value>
+  <data name="Or" xml:space="preserve">
+    <value>или</value>
   </data>
-  <data name="Delete Genre" xml:space="preserve">
-    <value>Удалить жанр</value>
+  <data name="Login" xml:space="preserve">
+    <value>авторизоваться</value>
   </data>
-  <data name="Genre deleted succesfully" xml:space="preserve">
-    <value>Жанр удален успешно</value>
-  </data>
-  <data name="Delete" xml:space="preserve">
-    <value>Удалить</value>
+  <data name="ToLeaveAComment" xml:space="preserve">
+    <value>оставить комментарий</value>
   </data>
 </root>

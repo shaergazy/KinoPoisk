@@ -117,46 +117,52 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Genres" xml:space="preserve">
-    <value>Жанры</value>
+  <data name="ImportMovie.Title" xml:space="preserve">
+    <value>Импорт фильма</value>
   </data>
-  <data name="Create New Genre" xml:space="preserve">
-    <value>Создать новый жанр</value>
+  <data name="ImportMovie.Heading" xml:space="preserve">
+    <value>Импорт фильма</value>
   </data>
-  <data name="Name" xml:space="preserve">
-    <value>Имя</value>
+  <data name="ImportMovie.SearchMovies" xml:space="preserve">
+    <value>Поиск фильмов</value>
   </data>
-  <data name="Are you sure you want to delete the genre" xml:space="preserve">
-    <value>Вы уверены, что хотите удалить жанр</value>
+  <data name="ImportMovie.ByTitle" xml:space="preserve">
+    <value>По заголовку</value>
   </data>
-  <data name="Deleted" xml:space="preserve">
-    <value>Удален</value>
+  <data name="ImportMovie.TitleLabel" xml:space="preserve">
+    <value>Заголовок</value>
   </data>
-  <data name="Some movie contains this genre, therefore you cannot remove it" xml:space="preserve">
-    <value>Некоторый фильм содержит этот жанр, поэтому вы не можете его удалить</value>
+  <data name="ImportMovie.TitlePlaceholder" xml:space="preserve">
+    <value>Заголовок</value>
   </data>
-  <data name="Close" xml:space="preserve">
-    <value>Закрывать</value>
+  <data name="ImportMovie.YearLabel" xml:space="preserve">
+    <value>Год</value>
   </data>
-  <data name="Save" xml:space="preserve">
-    <value>Сохранять</value>
+  <data name="ImportMovie.Year" xml:space="preserve">
+    <value>Год</value>
   </data>
-  <data name="Save changes" xml:space="preserve">
-    <value>Сохранить изменения</value>
+  <data name="ImportMovie.PlotLabel" xml:space="preserve">
+    <value>Сюжет</value>
   </data>
-  <data name="Cancel" xml:space="preserve">
-    <value>Отмена</value>
+  <data name="ImportMovie.PlotShort" xml:space="preserve">
+    <value>Короткий</value>
   </data>
-  <data name="Edit Genre" xml:space="preserve">
-    <value>Редактировать жанр</value>
+  <data name="ImportMovie.PlotFull" xml:space="preserve">
+    <value>Полный</value>
   </data>
-  <data name="Delete Genre" xml:space="preserve">
-    <value>Удалить жанр</value>
+  <data name="ImportMovie.SearchButton" xml:space="preserve">
+    <value>Поиск</value>
   </data>
-  <data name="Genre deleted succesfully" xml:space="preserve">
-    <value>Жанр удален успешно</value>
+  <data name="ImportMovie.ResetButton" xml:space="preserve">
+    <value>Перезагрузить</value>
   </data>
-  <data name="Delete" xml:space="preserve">
-    <value>Удалить</value>
+  <data name="ImportMovie.ByID" xml:space="preserve">
+    <value>По Id</value>
+  </data>
+  <data name="ImportMovie.IMDbIDLabel" xml:space="preserve">
+    <value>IMDB ID</value>
+  </data>
+  <data name="ImportMovie.IMDbIDPlaceholder" xml:space="preserve">
+    <value>IMDB ID</value>
   </data>
 </root>

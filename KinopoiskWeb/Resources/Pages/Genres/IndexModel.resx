@@ -156,4 +156,7 @@
   <data name="Genre deleted succesfully" xml:space="preserve">
     <value>The genre is remote successfully</value>
   </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
 </root>

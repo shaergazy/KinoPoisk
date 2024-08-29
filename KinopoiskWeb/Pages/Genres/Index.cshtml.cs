@@ -5,11 +5,9 @@ using BLL.Services.Interfaces;
 using DAL.Models;
 using KinopoiskWeb.DataTables;
 using KinopoiskWeb.ViewModels.Genre;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Localization;
 
 namespace KinopoiskWeb.Pages.Genres

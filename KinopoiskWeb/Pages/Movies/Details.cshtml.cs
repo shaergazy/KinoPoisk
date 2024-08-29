@@ -7,7 +7,10 @@ using KinopoiskWeb.ViewModels.Movie;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.Extensions.Logging;
+using System;
 using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace KinopoiskWeb.Pages.Movies
 {
@@ -31,13 +34,8 @@ namespace KinopoiskWeb.Pages.Movies
         {
             try
             {
-                Movie = _mapper.Map<DetailsMovieVM>(await _movieService.GetByIdAsync(id));
 
-                if (Movie == null)
-                {
-                    _logger.LogWarning("Movie not found with id: {Id}", id);
-                    return NotFound();
-                }
+                Movie = await GetMovieDetailsAsync(id);
 
                 _logger.LogInformation("Movie details loaded for id: {Id}", id);
                 return Page();
@@ -49,19 +47,34 @@ namespace KinopoiskWeb.Pages.Movies
             }
         }
 
+        public async Task<DetailsMovieVM> GetMovieDetailsAsync(Guid id)
+        {
+            var movieDto = await _movieService.GetByIdAsync(id);
+
+            if (movieDto == null)
+            {
+                _logger.LogWarning("Movie not found with id: {Id}", id);
+                throw new Exception("Movie not found");
+            }
+            return _mapper.Map<DetailsMovieVM>(movieDto);
+        }
+
         public async Task<IActionResult> OnPostRateAsync([FromBody] RateMovieVM model)
         {
             try
             {
                 var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                if (userId == null)
+
+                // Проверка, что пользователь аутентифицирован
+                if (string.IsNullOrEmpty(userId) || !Guid.TryParse(userId, out var parsedUserId))
                 {
-                    _logger.LogWarning("User not logged in while trying to rate a movie.");
+                    _logger.LogWarning("User not logged in or invalid UserId while trying to rate a movie.");
                     return new JsonResult(new { success = false, redirect = Url.Page("/Account/Register") });
                 }
 
-                model.UserId = Guid.Parse(userId);
+                model.UserId = parsedUserId;
                 await _movieService.AddRatingAsync(_mapper.Map<AddMovieRating>(model));
+
                 _logger.LogInformation("User {UserId} rated movie {MovieId} with rating {Rating}", userId, model.MovieId, model.StarCount);
                 return new JsonResult(new { success = true });
             }
@@ -76,8 +89,10 @@ namespace KinopoiskWeb.Pages.Movies
         {
             try
             {
+                Movie = await GetMovieDetailsAsync(id);
                 var response = await _movieService.GetCommentsAsync(id, _mapper.Map<DataTablesRequestDto>(request));
                 var viewModel = _mapper.Map<DataTablesResponseVM<GetCommentDto>>(response);
+
                 _logger.LogInformation("Loaded comments for movie id: {Id}", id);
                 return new JsonResult(viewModel);
             }
@@ -94,7 +109,9 @@ namespace KinopoiskWeb.Pages.Movies
             try
             {
                 var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                if (userId == null)
+
+                // Проверка, что пользователь аутентифицирован
+                if (string.IsNullOrEmpty(userId))
                 {
                     _logger.LogWarning("User not logged in while trying to add a comment.");
                     return new JsonResult(new { success = false, redirect = Url.Page("/Account/Register") });
@@ -102,6 +119,7 @@ namespace KinopoiskWeb.Pages.Movies
 
                 model.UserId = userId;
                 await _movieService.AddCommentAsync(_mapper.Map<AddCommentDto>(model));
+
                 _logger.LogInformation("User {UserId} added a comment to movie {MovieId}", userId, model.MovieId);
                 return new JsonResult(new { success = true });
             }

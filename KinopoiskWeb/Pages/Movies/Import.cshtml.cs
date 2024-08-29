@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.SignalR;
 
 namespace KinopoiskWeb.Pages.Movies
 {
-    [Authorize]
+    //[Authorize]
     public class ImportModel : PageModel
     {
         private readonly OMDBService _omdbService;

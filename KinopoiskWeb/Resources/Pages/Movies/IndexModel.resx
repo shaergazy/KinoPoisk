@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -117,46 +117,68 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Genres" xml:space="preserve">
-    <value>Жанры</value>
-  </data>
-  <data name="Create New Genre" xml:space="preserve">
-    <value>Создать новый жанр</value>
-  </data>
-  <data name="Name" xml:space="preserve">
-    <value>Имя</value>
-  </data>
-  <data name="Are you sure you want to delete the genre" xml:space="preserve">
-    <value>Вы уверены, что хотите удалить жанр</value>
-  </data>
-  <data name="Deleted" xml:space="preserve">
-    <value>Удален</value>
-  </data>
-  <data name="Some movie contains this genre, therefore you cannot remove it" xml:space="preserve">
-    <value>Некоторый фильм содержит этот жанр, поэтому вы не можете его удалить</value>
-  </data>
-  <data name="Close" xml:space="preserve">
-    <value>Закрывать</value>
-  </data>
-  <data name="Save" xml:space="preserve">
-    <value>Сохранять</value>
-  </data>
-  <data name="Save changes" xml:space="preserve">
-    <value>Сохранить изменения</value>
-  </data>
-  <data name="Cancel" xml:space="preserve">
-    <value>Отмена</value>
-  </data>
-  <data name="Edit Genre" xml:space="preserve">
-    <value>Редактировать жанр</value>
-  </data>
-  <data name="Delete Genre" xml:space="preserve">
-    <value>Удалить жанр</value>
-  </data>
-  <data name="Genre deleted succesfully" xml:space="preserve">
-    <value>Жанр удален успешно</value>
-  </data>
-  <data name="Delete" xml:space="preserve">
-    <value>Удалить</value>
-  </data>
+ <data name="Title" xml:space="preserve">
+  <value>Title</value>
+</data>
+<data name="Enter title" xml:space="preserve">
+  <value>Enter title</value>
+</data>
+<data name="Released year" xml:space="preserve">
+  <value>Released year</value>
+</data>
+<data name="All Years" xml:space="preserve">
+  <value>All Years</value>
+</data>
+<data name="Country" xml:space="preserve">
+  <value>Country</value>
+</data>
+<data name="Actor" xml:space="preserve">
+  <value>Actor</value>
+</data>
+<data name="Director" xml:space="preserve">
+  <value>Director</value>
+</data>
+<data name="Movies" xml:space="preserve">
+  <value>Movies</value>
+</data>
+<data name="Id" xml:space="preserve">
+  <value>Id</value>
+</data>
+<data name="Poster" xml:space="preserve">
+  <value>Poster</value>
+</data>
+<data name="Description" xml:space="preserve">
+  <value>Description</value>
+</data>
+<data name="Released Date" xml:space="preserve">
+  <value>Released Date</value>
+</data>
+<data name="Duration" xml:space="preserve">
+  <value>Duration</value>
+</data>
+<data name="IMDB Rating" xml:space="preserve">
+  <value>IMDB Rating</value>
+</data>
+<data name="Actions" xml:space="preserve">
+  <value>Actions</value>
+</data>
+<data name="Delete Movie" xml:space="preserve">
+  <value>Delete Movie</value>
+</data>
+<data name="Close" xml:space="preserve">
+  <value>Close</value>
+</data>
+<data name="Are you sure you want to delete the movie" xml:space="preserve">
+  <value>Are you sure you want to delete the movie</value>
+</data>
+<data name="Cancel" xml:space="preserve">
+  <value>Cancel</value>
+</data>
+<data name="Delete" xml:space="preserve">
+  <value>Delete</value>
+</data>
+<data name="ErrorMessage" xml:space="preserve">
+  <value>Error occurred</value>
+</data>
+
 </root>

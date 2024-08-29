@@ -3,12 +3,14 @@ using BLL.Services.Interfaces;
 using KinopoiskWeb.ViewModels.Movie;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Localization;
 
+namespace KinopoiskWeb.Pages;
 public class IndexModel : PageModel
 {
     private readonly IMovieService _movieService;
     private readonly IMapper _mapper;
-    private readonly IMemoryCache _cache; 
+    private readonly IMemoryCache _cache;
 
     private const string NewestMoviesCacheKey = "NewestMovies";
     private const string HighRatedMoviesCacheKey = "HighRatedMovies";

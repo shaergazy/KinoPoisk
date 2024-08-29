@@ -1,28 +1,30 @@
 ﻿@page
+@using Microsoft.Extensions.Localization
 @model KinopoiskWeb.Pages.Movies.ImportModel
+@inject IStringLocalizer<Pages.Movies.ImportModel> Localizer
 @{
-    ViewData["Title"] = "Import Movie";
+    ViewData["Title"] = "ImportMovie.Title";
 }
 <head>
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
 </head>
-<h1>Import Movie</h1>
+<h1>@Localizer["ImportMovie.Heading"]</h1>
 
 <div>
-    <h2>Search Movies</h2>
+    <h2>@Localizer["ImportMovie.SearchMovies"]</h2>
     <form id="search-form-title" class="form-inline mb-3">
         <fieldset>
-            <legend>By Title</legend>
+            <legend>@Localizer["ImportMovie.ByTitle"]</legend>
             <div class="form-row align-items-center">
                 <div class="col-auto">
-                    <label for="title" class="sr-only">Title</label>
-                    <input type="text" id="title" class="form-control mb-2" placeholder="Title" />
+                    <label for="title" class="sr-only">@Localizer["ImportMovie.TitleLabel"]</label>
+                    <input type="text" id="title" class="form-control mb-2" placeholder="@Localizer["ImportMovie.TitlePlaceholder"]" />
                 </div>
                 <div class="col-auto">
-                    <label for="year" class="sr-only">Year</label>
+                    <label for="year" class="sr-only">@Localizer["ImportMovie.YearLabel"]</label>
                     <select id="year" class="form-control mb-2">
-                        <option value="">Year</option>
+                        <option value="">@Localizer["ImportMovie.Year"]</option>
                         @for (int year = DateTime.Now.Year; year >= 1900; year--)
                         {
                             <option value="@year">@year</option>
@@ -30,17 +32,17 @@
                     </select>
                 </div>
                 <div class="col-auto">
-                    <label for="plot" class="sr-only">Plot</label>
+                    <label for="plot" class="sr-only">@Localizer["ImportMovie.PlotLabel"]</label>
                     <select id="plot" class="form-control mb-2">
-                        <option value="short">Short</option>
-                        <option value="full">Full</option>
+                        <option value="short">@Localizer["ImportMovie.PlotShort"]</option>
+                        <option value="full">@Localizer["ImportMovie.PlotFull"]</option>
                     </select>
                 </div>
                 <div class="col-auto">
-                    <button type="button" id="search-button-title" class="btn btn-primary mb-2">Search</button>
+                    <button type="button" id="search-button-title" class="btn btn-primary mb-2">@Localizer["ImportMovie.SearchButton"]</button>
                 </div>
                 <div class="col-auto">
-                    <button type="button" id="reset-button-title" class="btn btn-secondary mb-2 ml-2">Reset</button>
+                    <button type="button" id="reset-button-title" class="btn btn-secondary mb-2 ml-2">@Localizer["ImportMovie.ResetButton"]</button>
                 </div>
             </div>
         </fieldset>
@@ -48,16 +50,16 @@
 
     <form id="search-form-id" class="form-inline">
         <fieldset>
-            <legend>By ID</legend>
+            <legend>@Localizer["ImportMovie.ByID"]</legend>
             <div class="form-row align-items-center">
                 <div class="col-auto">
-                    <label for="imdbId" class="sr-only">IMDb ID</label>
-                    <input type="text" id="imdbId" class="form-control mb-2" placeholder="IMDb ID" />
+                    <label for="imdbId" class="sr-only">@Localizer["ImportMovie.IMDbIDLabel"]</label>
+                    <input type="text" id="imdbId" class="form-control mb-2" placeholder="@Localizer["ImportMovie.IMDbIDPlaceholder"]" />
                 </div>
                 <div class="col-auto">
-                    <label for="year-id" class="sr-only">Year</label>
+                    <label for="year-id" class="sr-only">@Localizer["ImportMovie.YearLabel"]</label>
                     <select id="year-id" class="form-control mb-2">
-                        <option value="">Year</option>
+                        <option value="">@Localizer["ImportMovie.Year"]</option>
                         @for (int year = DateTime.Now.Year; year >= 1900; year--)
                         {
                             <option value="@year">@year</option>
@@ -65,17 +67,17 @@
                     </select>
                 </div>
                 <div class="col-auto">
-                    <label for="plot-id" class="sr-only">Plot</label>
+                    <label for="plot-id" class="sr-only">@Localizer["ImportMovie.PlotLabel"]</label>
                     <select id="plot-id" class="form-control mb-2">
-                        <option value="short">Short</option>
-                        <option value="full">Full</option>
+                        <option value="short">@Localizer["ImportMovie.PlotShort"]</option>
+                        <option value="full">@Localizer["ImportMovie.PlotFull"]</option>
                     </select>
                 </div>
                 <div class="col-auto">
-                    <button type="button" id="search-button-id" class="btn btn-primary mb-2">Search</button>
+                    <button type="button" id="search-button-id" class="btn btn-primary mb-2">@Localizer["ImportMovie.SearchButton"]</button>
                 </div>
                 <div class="col-auto">
-                    <button type="button" id="reset-button-id" class="btn btn-secondary mb-2 ml-2">Reset</button>
+                    <button type="button" id="reset-button-id" class="btn btn-secondary mb-2 ml-2">@Localizer["ImportMovie.ResetButton"]</button>
                 </div>
             </div>
         </fieldset>
