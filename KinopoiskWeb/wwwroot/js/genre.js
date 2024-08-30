@@ -7,6 +7,9 @@
             type: 'POST',
             headers: { 'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val() }
         },
+        "language": {
+            "url": `/js/locals/datatables/${currentCulture}.json`
+        },
         "columns": [
             { "name": "Id", "data": "id", "visible": false },
             { "name": "Name", "data": "name" },

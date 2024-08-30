@@ -1,15 +1,4 @@
 ﻿$(document).ready(function () {
-    var languageUrl = '';
-    switch (currentCulture) {
-        case 'ru':
-            languageUrl = '//cdn.datatables.net/plug-ins/1.10.21/i18n/Russian.json';
-            break;
-        case 'fr-FR':
-            languageUrl = '//cdn.datatables.net/plug-ins/1.10.21/i18n/French.json';
-            break;
-        default:
-            languageUrl = '//cdn.datatables.net/plug-ins/1.10.21/i18n/English.json';
-    }
     $('#CountryTable').DataTable({
         "processing": true,
         "serverSide": true,
@@ -19,7 +8,7 @@
             headers: { 'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val() }
         },
         "language": {
-            "url": languageUrl
+            "url": `/js/locals/datatables/${currentCulture}.json`
         },
         "columns": [
             { "name": "Id", "data": "id", "visible": false },
