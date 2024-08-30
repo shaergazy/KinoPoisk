@@ -1,7 +1,7 @@
 ﻿$(document).ready(function () {
     var token = $('input[name="__RequestVerificationToken"]').val();
     if (!token) {
-        console.error("CSRF token not found.");
+        console.error(getTranslation("errors.csrf_token_not_found"));
         return;
     }
 
@@ -27,7 +27,7 @@
             },
             minimumInputLength: 3
         },
-        placeholder: 'Select country',
+        placeholder: getTranslation("select2.country_placeholder"),
         allowClear: true
     });
 
@@ -53,7 +53,7 @@
             },
             minimumInputLength: 3
         },
-        placeholder: 'Select actor',
+        placeholder: getTranslation("select2.actor_placeholder"),
         allowClear: true
     });
 
@@ -79,7 +79,7 @@
             },
             minimumInputLength: 3
         },
-        placeholder: 'Select director',
+        placeholder: getTranslation("select2.director_placeholder"),
         allowClear: true
     });
 
@@ -109,7 +109,7 @@
                 "name": 'Poster',
                 "data": 'poster',
                 "render": function (data, type, row, meta) {
-                    return data ? `<img src="${data}" alt="Poster" width="50" height="75" />` : '';
+                    return data ? `<img src="${data}" alt="${getTranslation("table.poster")}" width="50" height="75" />` : '';
                 }
             },
             { "name": 'Title', "data": 'title' },
@@ -124,7 +124,7 @@
                         return `
                             <span class="short-text">${shortText}...</span>
                             <span class="full-text" style="display: none;">${fullText}</span>
-                            <a href="#" class="more-link">more</a>
+                            <a href="#" class="more-link">${getTranslation("dataTable.more")}</a>
                         `;
                     } else {
                         return data;
@@ -139,9 +139,9 @@
                 "data": null,
                 "orderable": false,
                 "render": function (data, type, row, meta) {
-                    var actions = `<a href="/Movies/Details/${row.id}" class="btn btn-primary">Details</a>`;
+                    var actions = `<a href="/Movies/Details/${row.id}" class="btn btn-primary">${getTranslation("dataTable.details")}</a>`;
                     if (isAdmin) {
-                        actions += ` <a href="/Movies/Update/${row.id}" class="btn btn-secondary">Edit</a>`;
+                        actions += ` <a href="/Movies/Update/${row.id}" class="btn btn-secondary">${getTranslation("dataTable.edit")}</a>`;
                     }
                     return actions;
                 }
@@ -150,13 +150,13 @@
         "order": [[0, "desc"]],
         "buttons": [
             {
-                text: 'Export as PDF',
+                text: getTranslation("dataTable.export_pdf"),
                 action: function () {
                     generateReport('pdf');
                 }
             },
             {
-                text: 'Export as Excel',
+                text: getTranslation("dataTable.export_excel"),
                 action: function () {
                     generateReport('excel');
                 }
@@ -178,7 +178,6 @@
         $('#deleteMovieModal').modal('show');
     });
 
-
     function generateReport(format) {
         $.ajax({
             url: format === 'pdf' ? Urls.Movie.GetPDF : Urls.Movie.GetExcel,
@@ -197,7 +196,7 @@
             }
         });
     }
-    
+
     function debounce(func, delay) {
         let debounceTimer;
         return function () {
@@ -226,11 +225,11 @@
         if ($fullText.is(':visible')) {
             $shortText.show();
             $fullText.hide();
-            $link.text('more');
+            $link.text(getTranslation("dataTable.more"));
         } else {
             $shortText.hide();
             $fullText.show();
-            $link.text('less');
+            $link.text(getTranslation("dataTable.less"));
         }
     });
 });

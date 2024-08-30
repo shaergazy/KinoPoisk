@@ -1,4 +1,5 @@
 ﻿$(document).ready(function () {
+    loadTranslations(currentCulture);
     $('#CountryTable').DataTable({
         "processing": true,
         "serverSide": true,
@@ -18,15 +19,15 @@
                 "name": "FlagLink",
                 "data": "flagLink",
                 "render": function (data, type, row, meta) {
-                    return `<img src="${data}" alt="Flag" style="width: 50px; height: auto;" />`;
+                    return `<img src="${data}" alt="${getTranslation('table.flag')}" style="width: 50px; height: auto;" />`;
                 }
             },
             {
                 "data": null,
                 "render": function (data, type, row, meta) {
                     return `
-                        <button class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#editCountryModal" data-id="${row.id}">Edit</button>
-                        <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteCountryModal" data-id="${row.id}" data-name="${row.name}">Delete</button>
+                        <button class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#editCountryModal" data-id="${row.id}">${getTranslation('dataTable.edit')}</button>
+                        <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteCountryModal" data-id="${row.id}" data-name="${row.name}">${getTranslation('dataTable.delete')}</button>
                     `;
                 },
                 "sortable": false
@@ -34,6 +35,7 @@
         ],
         "order": [[0, "desc"]]
     });
+
     $('#editCountryModal').on('show.bs.modal', function (event) {
         var button = $(event.relatedTarget);
         var countryId = button.data('id');
@@ -48,7 +50,7 @@
                 $('#editCountryFlagLink').val(data.flagLink);
             },
             error: function (error) {
-                console.error('Error:', error);
+                console.error(getTranslation('error.search'), error);
             }
         });
     });
@@ -60,5 +62,6 @@
         var modal = $(this);
         modal.find('.modal-body input#CountryToDelete_Id').val(id);
         modal.find('.modal-body #countryNameToDelete').text(name);
+        modal.find('.modal-footer .btn-danger').text(getTranslation('button.delete'));
     });
 });

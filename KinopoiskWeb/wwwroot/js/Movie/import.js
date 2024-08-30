@@ -1,6 +1,6 @@
 ﻿$(document).ready(function () {
     var token = $('input[name="__RequestVerificationToken"]').val();
-
+    loadTranslations(currentCulture);
     // Поиск по заголовку
     $('#search-button-title').on('click', function () {
         var title = $('#title').val();
@@ -15,12 +15,12 @@
             data: data,
             headers: { 'RequestVerificationToken': token },
             success: function (response) {
-                console.log("Response from Search by Title:", response);
+                console.log(getTranslation('notification.search_success'), response);
                 populateResults(response);
             },
             error: function (xhr, status, error) {
-                console.error("Error in Search by Title request:", status, error);
-                toastr.error('Error in Search by Title request: ' + error);
+                console.error(getTranslation('error.search'), status, error);
+                toastr.error(getTranslation('error.search') + ': ' + error);
             }
         });
     });
@@ -45,12 +45,12 @@
             data: data,
             headers: { 'RequestVerificationToken': token },
             success: function (response) {
-                console.log("Response from Search by ID:", response);
+                console.log(getTranslation('notification.search_success_by_id'), response);
                 populateResultsById(response);
             },
             error: function (xhr, status, error) {
-                console.error("Error in Search by ID request:", status, error);
-                toastr.error('Error in Search by ID request: ' + error);
+                console.error(getTranslation('error.search_by_id'), status, error);
+                toastr.error(getTranslation('error.search_by_id') + ': ' + error);
             }
         });
     });
@@ -68,7 +68,7 @@
 
         if (response && response.success && response.movies && response.movies.searchResults && response.movies.searchResults.length > 0) {
             var table = $('<table>').addClass('table');
-            table.append('<thead><tr><th>IMDB Id</th><th>Title</th><th>Year</th><th>Poster</th><th>Action</th></tr></thead>');
+            table.append('<thead><tr><th>' + getTranslation('table.imdb_id') + '</th><th>' + getTranslation('table.title') + '</th><th>' + getTranslation('table.year') + '</th><th>' + getTranslation('table.poster') + '</th><th>' + getTranslation('table.action') + '</th></tr></thead>');
             var tbody = $('<tbody>');
 
             response.movies.searchResults.forEach(function (movie) {
@@ -77,7 +77,7 @@
                 row.append($('<td>').text(movie.title));
                 row.append($('<td>').text(movie.year));
                 row.append($('<td>').html('<img src="' + movie.poster + '" alt="' + movie.title + '" class="img-thumbnail" width="100" />'));
-                row.append($('<td>').append('<button class="btn btn-success import-button" data-imdbid="' + movie.imdbId + '">Import</button>'));
+                row.append($('<td>').append('<button class="btn btn-success import-button" data-imdbid="' + movie.imdbId + '">' + getTranslation('button.import') + '</button>'));
                 tbody.append(row);
             });
 
@@ -96,19 +96,19 @@
                     headers: { 'RequestVerificationToken': token },
                     success: function (response) {
                         if (response.success) {
-                            toastr.success('Movie imported successfully!');
+                            toastr.success(getTranslation('notification.import_success'));
                         } else {
-                            toastr.error('Error importing movie: ' + response.error);
+                            toastr.error(getTranslation('error.import') + ': ' + response.error);
                         }
                     },
                     error: function (xhr, status, error) {
-                        toastr.error('Error importing movie: ' + error);
+                        toastr.error(getTranslation('error.import') + ': ' + error);
                     }
                 });
             });
         } else {
-            resultsDiv.append($('<p>').text('No movies found.'));
-            toastr.info('No movies found.');
+            resultsDiv.append($('<p>').text(getTranslation('result.no_movies')));
+            toastr.info(getTranslation('notification.no_movies'));
         }
     }
 
@@ -127,19 +127,19 @@
                     <div class="col-md-8">
                         <div class="card-body">
                             <h5 class="card-title">${movie.title}</h5>
-                            <p class="card-text"><strong>Year:</strong> ${movie.year}</p>
-                            <p class="card-text"><strong>Rated:</strong> ${movie.rated}</p>
-                            <p class="card-text"><strong>Released:</strong> ${movie.released}</p>
-                            <p class="card-text"><strong>Runtime:</strong> ${movie.runtime}</p>
-                            <p class="card-text"><strong>Genre:</strong> ${movie.genre}</p>
-                            <p class="card-text"><strong>Director:</strong> ${movie.director}</p>
-                            <p class="card-text"><strong>Writer:</strong> ${movie.writer}</p>
-                            <p class="card-text"><strong>Actors:</strong> ${movie.actors}</p>
-                            <p class="card-text"><strong>Plot:</strong> ${movie.plot}</p>
-                            <p class="card-text"><strong>Language:</strong> ${movie.language}</p>
-                            <p class="card-text"><strong>Country:</strong> ${movie.country}</p>
-                            <p class="card-text"><strong>IMDB Rating:</strong> ${movie.imdbRating}</p>
-                            <button class="btn btn-success import-button" data-imdbid="${movie.imdbId}">Import</button>
+                            <p class="card-text"><strong>${getTranslation('movie.year')}:</strong> ${movie.year}</p>
+                            <p class="card-text"><strong>${getTranslation('movie.rated')}:</strong> ${movie.rated}</p>
+                            <p class="card-text"><strong>${getTranslation('movie.released')}:</strong> ${movie.released}</p>
+                            <p class="card-text"><strong>${getTranslation('movie.runtime')}:</strong> ${movie.runtime}</p>
+                            <p class="card-text"><strong>${getTranslation('movie.genre')}:</strong> ${movie.genre}</p>
+                            <p class="card-text"><strong>${getTranslation('movie.director')}:</strong> ${movie.director}</p>
+                            <p class="card-text"><strong>${getTranslation('movie.writer')}:</strong> ${movie.writer}</p>
+                            <p class="card-text"><strong>${getTranslation('movie.actors')}:</strong> ${movie.actors}</p>
+                            <p class="card-text"><strong>${getTranslation('movie.plot')}:</strong> ${movie.plot}</p>
+                            <p class="card-text"><strong>${getTranslation('movie.language')}:</strong> ${movie.language}</p>
+                            <p class="card-text"><strong>${getTranslation('movie.country')}:</strong> ${movie.country}</p>
+                            <p class="card-text"><strong>${getTranslation('movie.imdbRating')}:</strong> ${movie.imdbRating}</p>
+                            <button class="btn btn-success import-button" data-imdbid="${movie.imdbId}">${getTranslation('button.import')}</button>
                         </div>
                     </div>
                 </div>
@@ -147,7 +147,6 @@
         `;
             resultsDiv.append(details);
 
-            // Обработчик для кнопки "Import"
             $('.import-button').on('click', function () {
                 var imdbId = $(this).data('imdbid');
                 $.ajax({
@@ -159,20 +158,19 @@
                     headers: { 'RequestVerificationToken': token },
                     success: function (response) {
                         if (response.success) {
-                            toastr.success('Movie imported successfully!');
+                            toastr.success(getTranslation('notification.import_success'));
                         } else {
-                            toastr.error('Error importing movie: ' + response.error);
+                            toastr.error(getTranslation('error.import') + ': ' + response.error);
                         }
                     },
                     error: function (xhr, status, error) {
-                        toastr.error('Error importing movie: ' + error);
+                        toastr.error(getTranslation('error.import') + ': ' + error);
                     }
                 });
             });
         } else {
-            resultsDiv.append($('<p>').text('No movie found.'));
-            toastr.info('No movie found.');
+            resultsDiv.append($('<p>').text(getTranslation('result.no_movie')));
+            toastr.info(getTranslation('notification.no_movie'));
         }
     }
 });
-

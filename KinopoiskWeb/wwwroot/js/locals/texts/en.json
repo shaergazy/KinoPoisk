@@ -1,0 +1,65 @@
+{
+  "movie": {
+    "select_actor": "Select actor",
+    "select_order": "Select order",
+    "actor_already_added": "Actor already added.",
+    "order": "Order",
+    "delete_actor": "Delete actor",
+    "select_genre_placeholder": "Select genre",
+    "year": "Year",
+    "rated": "Rated",
+    "released": "Release Date",
+    "runtime": "Runtime",
+    "genre": "Genre",
+    "director": "Director",
+    "writer": "Writer",
+    "actors": "Actors",
+    "plot": "Plot",
+    "language": "Language",
+    "country": "Country",
+    "imdbRating": "IMDB Rating"
+  },
+  "select": {
+    "country": "Select country",
+    "genre": "Select genre",
+    "director": "Select director"
+  },
+  "button": {
+    "save_actor": "Save actor",
+    "more": "More",
+    "less": "Less",
+    "import": "Import"
+  },
+  "error": {
+    "actor_already_added": "Actor already added",
+    "select_actor": "Please select an actor.",
+    "select_order": "Please select an order.",
+    "empty_comment": "Comment cannot be empty.",
+    "adding_comment": "Error adding comment",
+    "rating": "Error sending rating",
+    "search": "Search error",
+    "search_by_id": "Search by ID error",
+    "import": "Error importing movie"
+  },
+  "notification": {
+    "rating_success": "Rating successfully submitted!",
+    "comment_added": "Comment successfully added.",
+    "search_success": "Search results successfully received!",
+    "search_success_by_id": "Search results by ID successfully received!",
+    "import_success": "Movie successfully imported!",
+    "no_movies": "No movies found.",
+    "no_movie": "No movie found."
+  },
+  "order": "Order",
+  "table": {
+    "imdb_id": "IMDB ID",
+    "title": "Title",
+    "year": "Year",
+    "poster": "Poster",
+    "action": "Action"
+  },
+  "result": {
+    "no_movies": "No movies found.",
+    "no_movie": "No movie found."
+  }
+}

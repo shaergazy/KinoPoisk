@@ -150,7 +150,7 @@
   <data name="Comments" xml:space="preserve">
     <value>Комментарии</value>
   </data>
-  <data name="AddAComment" xml:space="preserve">
+  <data name="AddComment" xml:space="preserve">
     <value>Добавить комментарий</value>
   </data>
   <data name="Submit" xml:space="preserve">

@@ -1,44 +1,44 @@
 ﻿const DATE_FORMAT = 'DD/MM/YYYY';
 
 $(document).ready(function () {
-    var maxLength = 1000; // Максимальная длина сокращенного текста
+    loadTranslations(currentCulture).done(function () {
 
     function toggleDescription(description, movieId) {
-        var fullText = description.data('fullText') || description.text().trim();
+        const fullText = description.data('fullText') || description.text().trim();
         description.data('fullText', fullText); // Сохраняем полный текст в data атрибуте
 
         if (fullText.length > maxLength) {
-            var truncatedText = fullText.substring(0, maxLength) + '...';
-            description.html(truncatedText + ' <span class="more" id="more-' + movieId + '">more</span>');
+            const truncatedText = fullText.substring(0, maxLength) + '...';
+            description.html(truncatedText + ' <span class="more" id="more-' + movieId + '">' + getTranslation('button.more') + '</span>');
         }
     }
 
     $('.description').each(function () {
-        var description = $(this);
-        var movieId = description.attr('id') ? description.attr('id').split('-')[1] : null;
+        const description = $(this);
+        const movieId = description.attr('id') ? description.attr('id').split('-')[1] : null;
         if (movieId) {
             toggleDescription(description, movieId);
         }
     });
 
     $('#moviesTable').on('click', '.more', function () {
-        var description = $(this).parent();
-        var movieId = $(this).attr('id').split('-')[1];
-        var fullText = description.data('fullText');
+        const description = $(this).parent();
+        const movieId = $(this).attr('id').split('-')[1];
+        const fullText = description.data('fullText');
 
-        description.html(fullText + ' <span class="less" id="less-' + movieId + '">less</span>');
+        description.html(fullText + ' <span class="less" id="less-' + movieId + '">' + getTranslation('button.less') + '</span>');
     });
 
     $('#moviesTable').on('click', '.less', function () {
-        var description = $(this).parent();
-        var movieId = $(this).attr('id').split('-')[1];
+        const description = $(this).parent();
+        const movieId = $(this).attr('id').split('-')[1];
         toggleDescription(description, movieId);
     });
 
     function updateStars(ratingElement) {
-        var rating = ratingElement.data('rating');
+        const rating = ratingElement.data('rating');
         ratingElement.find('span').each(function () {
-            var starValue = $(this).data('value');
+            const starValue = $(this).data('value');
             if (starValue <= rating) {
                 $(this).css('color', '#f5b301');
             } else {
@@ -46,19 +46,18 @@ $(document).ready(function () {
             }
         });
     }
-
-    // Обновление звезд для всех элементов рейтинга
+    
     $('.rating').each(function () {
         updateStars($(this));
     });
 
-    var token = $('input[name="__RequestVerificationToken"]').val();
+    const token = $('input[name="__RequestVerificationToken"]').val();
 
     $('.rating span').on('click', function () {
-        var movieId = $(this).closest('.rating').data('movie-id');
-        var ratingValue = $(this).data('value');
+        const movieId = $(this).closest('.rating').data('movie-id');
+        const ratingValue = $(this).data('value');
 
-        var formData = {
+        const formData = {
             MovieId: movieId,
             StarCount: ratingValue
         };
@@ -73,21 +72,21 @@ $(document).ready(function () {
             data: JSON.stringify(formData),
             success: function (response) {
                 if (response.success) {
-                    toastr.success('Rating submitted successfully!');
+                    toastr.success(getTranslation('notification.rating_success'));
                     updateStars($(this).closest('.rating').data('rating', ratingValue));
                 } else if (response.redirect) {
                     window.location.href = response.redirect;
                 }
             },
             error: function (xhr, status, error) {
-                toastr.error('Error submitting rating: ' + error);
+                toastr.error(getTranslation('error.rating') + ': ' + error);
             }
         });
     });
 
     $('.rating span').hover(
         function () {
-            var hoverValue = $(this).data('value');
+            const hoverValue = $(this).data('value');
             $(this).prevAll().addBack().css('color', '#f5b301');
         },
         function () {
@@ -95,13 +94,13 @@ $(document).ready(function () {
         }
     );
 
-    var movieId = $('.rating').data('movie-id');
+    const movieId = $('.rating').data('movie-id');
 
-    var table = $('#commentsTable').DataTable({
+    const table = $('#commentsTable').DataTable({
         "processing": true,
         "serverSide": true,
         "searching": false,
-        "paging": true, 
+        "paging": true,
         "info": false,
         "ajax": {
             "url": Urls.Movie.LoadComments + `/${movieId}`,
@@ -113,6 +112,9 @@ $(document).ready(function () {
         "scrollY": "200px",
         "scrollCollapse": true,
         "deferRender": true,
+        "language": {
+            "url": `/js/locals/datatables/${currentCulture}.json`
+        },
         "columns": [
             { "data": "userName" },
             { "data": "text" },
@@ -122,14 +124,14 @@ $(document).ready(function () {
 
     $('#add-comment-form').on('submit', function (event) {
         event.preventDefault();
-        var comment = $('#comment').val();
+        const comment = $('#comment').val();
 
         if (comment.trim() === '') {
-            toastr.error('Comment cannot be empty.');
+            toastr.error(getTranslation('error.empty_comment'));
             return;
         }
 
-        var formData = {
+        const formData = {
             MovieId: movieId,
             CommentText: comment
         };
@@ -146,14 +148,15 @@ $(document).ready(function () {
                 if (response.success) {
                     $('#comments-list').append(`<li>${comment}</li>`);
                     $('#comment').val('');
-                    toastr.success('Comment added successfully.');
+                    toastr.success(getTranslation('notification.comment_added'));
                 } else if (response.redirect) {
                     window.location.href = response.redirect;
                 }
             },
             error: function (xhr, status, error) {
-                toastr.error('Error adding comment: ' + error);
+                toastr.error(getTranslation('error.adding_comment') + ': ' + error);
             }
         });
+    });
     });
 });

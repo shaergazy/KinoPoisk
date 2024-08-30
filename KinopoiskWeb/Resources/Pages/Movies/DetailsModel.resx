@@ -118,61 +118,60 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="ReleaseDate" xml:space="preserve">
-  <value>Release Date</value>
-</data>
-<data name="Country" xml:space="preserve">
-  <value>Country</value>
-</data>
-<data name="Director" xml:space="preserve">
-  <value>Director</value>
-</data>
-<data name="Duration" xml:space="preserve">
-  <value>Duration</value>
-</data>
-<data name="Minutes" xml:space="preserve">
-  <value>minutes</value>
-</data>
-<data name="IMDBRating" xml:space="preserve">
-  <value>IMDB Rating</value>
-</data>
-<data name="Genres" xml:space="preserve">
-  <value>Genres</value>
-</data>
-<data name="Actors" xml:space="preserve">
-  <value>Actors</value>
-</data>
-<data name="Rating" xml:space="preserve">
-  <value>Rating</value>
-</data>
-<data name="Description" xml:space="preserve">
-  <value>Description</value>
-</data>
-<data name="Comments" xml:space="preserve">
-  <value>Comments</value>
-</data>
-<data name="AddAComment" xml:space="preserve">
-  <value>Add a comment</value>
-</data>
-<data name="Submit" xml:space="preserve">
-  <value>Submit</value>
-</data>
-<data name="PleaseRegisterOrLoginToLeaveAComment" xml:space="preserve">
-  <value>Please register or login to leave a comment</value>
-</data>
-<data name="Please" xml:space="preserve">
-  <value>Please</value>
-</data>
-<data name="Register" xml:space="preserve">
-  <value>register</value>
-</data>
-<data name="Or" xml:space="preserve">
-  <value>or</value>
-</data>
-<data name="Login" xml:space="preserve">
-  <value>login</value>
-</data>
-<data name="ToLeaveAComment" xml:space="preserve">
-  <value>to leave a comment</value>
-</data>
-
+    <value>Release Date</value>
+  </data>
+  <data name="Country" xml:space="preserve">
+    <value>Country</value>
+  </data>
+  <data name="Director" xml:space="preserve">
+    <value>Director</value>
+  </data>
+  <data name="Duration" xml:space="preserve">
+    <value>Duration</value>
+  </data>
+  <data name="Minutes" xml:space="preserve">
+    <value>minutes</value>
+  </data>
+  <data name="IMDBRating" xml:space="preserve">
+    <value>IMDB Rating</value>
+  </data>
+  <data name="Genres" xml:space="preserve">
+    <value>Genres</value>
+  </data>
+  <data name="Actors" xml:space="preserve">
+    <value>Actors</value>
+  </data>
+  <data name="Rating" xml:space="preserve">
+    <value>Rating</value>
+  </data>
+  <data name="Description" xml:space="preserve">
+    <value>Description</value>
+  </data>
+  <data name="Comments" xml:space="preserve">
+    <value>Comments</value>
+  </data>
+  <data name="AddComment" xml:space="preserve">
+    <value>Add a comment</value>
+  </data>
+  <data name="Submit" xml:space="preserve">
+    <value>Submit</value>
+  </data>
+  <data name="PleaseRegisterOrLoginToLeaveAComment" xml:space="preserve">
+    <value>Please register or login to leave a comment</value>
+  </data>
+  <data name="Please" xml:space="preserve">
+    <value>Please</value>
+  </data>
+  <data name="Register" xml:space="preserve">
+    <value>register</value>
+  </data>
+  <data name="Or" xml:space="preserve">
+    <value>or</value>
+  </data>
+  <data name="Login" xml:space="preserve">
+    <value>login</value>
+  </data>
+  <data name="ToLeaveAComment" xml:space="preserve">
+    <value>to leave a comment</value>
+  </data>
 </root>

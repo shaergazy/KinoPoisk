@@ -56,7 +56,7 @@
             </div>
         </div>
     </div>
-    <div class="row">
+    @* <div class="row">
         <div class="col-12">
             <div class="comments-section">
                 <h2>@Localizer["Comments"]</h2>
@@ -70,14 +70,14 @@
                 </table>
             </div>
         </div>
-    </div>
+    </div> *@
     @if (User.Identity.IsAuthenticated)
     {
         <div class="row">
             <div class="col-12">
                 <form id="add-comment-form">
                     <div class="form-group">
-                        <label for="comment">@Localizer["Add a comment"]:</label>
+                        <label for="comment">@Localizer["AddComment"]:</label>
                         <textarea id="comment" class="form-control" rows="3"></textarea>
                     </div>
                     <button type="submit" class="btn btn-primary">@Localizer["Submit"]</button>

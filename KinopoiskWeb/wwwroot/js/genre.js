@@ -17,8 +17,8 @@
                 "data": null,
                 "render": function (data, type, row, meta) {
                     return `
-                        <button class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#editGenreModal" data-id="${row.id}">Edit</button>
-                        <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteGenreModal" data-id="${row.id}" data-name="${row.name}">Delete</button>
+                        <button class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#editGenreModal" data-id="${row.id}">${getTranslation('dataTable.edit')}</button>
+                        <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteGenreModal" data-id="${row.id}" data-name="${row.name}">${getTranslation('dataTable.delete')}</button>
                     `;
                 },
                 "sortable": false
@@ -52,10 +52,15 @@
         modal.find('.modal-body input#GenreToDelete_Id').val(id);
         modal.find('.modal-body #genreNameToDelete').text(name);
     });
+
     if (successMessage) {
-        toastr.success(successMessage);
+        toastr.success(getTranslation('notification.success'));
     }
     if (errorMessage) {
-        toastr.error(errorMessage);
+        toastr.error(getTranslation('error.generic'));
     }
 });
+
+
+
+

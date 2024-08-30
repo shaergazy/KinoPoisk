@@ -1,0 +1,79 @@
+{
+  "movie": {
+    "select_actor": "Выберите актера",
+    "select_order": "Выберите порядок",
+    "actor_already_added": "Актер уже добавлен.",
+    "order": "Порядок",
+    "delete_actor": "Удалить актера",
+    "select_genre_placeholder": "Выберите жанр",
+    "year": "Год",
+    "rated": "Рейтинг",
+    "released": "Дата выпуска",
+    "runtime": "Время",
+    "genre": "Жанр",
+    "director": "Режиссер",
+    "writer": "Сценарист",
+    "actors": "Актеры",
+    "plot": "Сюжет",
+    "language": "Язык",
+    "country": "Страна",
+    "imdbRating": "Рейтинг IMDB"
+  },
+  "select": {
+    "country": "Выберите страну",
+    "genre": "Выберите жанр",
+    "director": "Выберите режиссера"
+  },
+  "button": {
+    "save_actor": "Сохранить актера",
+    "more": "Еще",
+    "less": "Меньше",
+    "import": "Импортировать"
+  },
+  "error": {
+    "actor_already_added": "Актер уже добавлен",
+    "select_actor": "Пожалуйста, выберите актера.",
+    "select_order": "Пожалуйста, выберите порядок.",
+    "empty_comment": "Комментарий не может быть пустым.",
+    "adding_comment": "Ошибка при добавлении комментария",
+    "rating": "Ошибка при отправке рейтинга",
+    "search": "Ошибка поиска",
+    "search_by_id": "Ошибка поиска по ID",
+    "import": "Ошибка импорта фильма"
+  },
+  "notification": {
+    "rating_success": "Рейтинг успешно отправлен!",
+    "comment_added": "Комментарий успешно добавлен.",
+    "search_success": "Результаты поиска получены успешно!",
+    "search_success_by_id": "Результаты поиска по ID получены успешно!",
+    "import_success": "Фильм успешно импортирован!",
+    "no_movies": "Фильмы не найдены.",
+    "no_movie": "Фильм не найден."
+  },
+  "order": "Порядок",
+  "table": {
+    "imdb_id": "IMDB ID",
+    "title": "Название",
+    "year": "Год",
+    "poster": "Постер",
+    "action": "Действие"
+  },
+  "result": {
+    "no_movies": "Фильмы не найдены.",
+    "no_movie": "Фильм не найден."
+  },
+  "select2": {
+    "country_placeholder": "Выберите страну",
+    "actor_placeholder": "Выберите актера",
+    "director_placeholder": "Выберите режиссера"
+  },
+  "dataTable": {
+    "details": "Подробнее",
+    "edit": "Редактировать",
+    "export_pdf": "Экспортировать в PDF",
+    "export_excel": "Экспортировать в Excel",
+    "more": "Еще",
+    "less": "Меньше",
+    "delete": "Удалить"
+  }
+}
