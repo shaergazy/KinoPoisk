@@ -1,4 +1,5 @@
 ﻿$(document).ready(function () {
+    loadTranslations(currentCulture);
     $('#GenreTable').DataTable({
         "processing": true,
         "serverSide": true,
@@ -39,7 +40,7 @@
                 $('#editGenreName').val(data.name);
             },
             error: function (error) {
-                console.error('Error:', error);
+                console.error(getTranslation('error.loading'), error);
             }
         });
     });
@@ -57,10 +58,6 @@
         toastr.success(getTranslation('notification.success'));
     }
     if (errorMessage) {
-        toastr.error(getTranslation('error.generic'));
+        toastr.error(getTranslation('notification.error'));
     }
 });
-
-
-
-

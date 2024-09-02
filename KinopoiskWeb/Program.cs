@@ -57,6 +57,7 @@ internal class Program
         app.UseSerilogRequestLogging();
         app.InitializeDatabase();
         app.StartRecurringJobs();
+
         app.MapHub<SupportChatHub>("/supportChatHub");
         app.MapHub<NotificationHub>("/notificationHub");
 
@@ -67,7 +68,9 @@ internal class Program
 
     private static void ConfigureServices(IServiceCollection services, IConfiguration configuration)
     {
-        services.AddRazorPages();
+        services.AddRazorPages()
+            .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
+            .AddDataAnnotationsLocalization(); ;
         services.AddSignalR();
         services.AddCommonServices(configuration);
         services.AddHangfire(x => x.UseSqlServerStorage(configuration.GetConnectionString("Default")));
@@ -125,9 +128,12 @@ internal class Program
             new CultureInfo("ru")
         };
 
-            options.DefaultRequestCulture = new RequestCulture("en");
+            options.DefaultRequestCulture = new RequestCulture("ru");
             options.SupportedCultures = supportedCultures;
             options.SupportedUICultures = supportedCultures;
+            var culture = CultureInfo.CurrentCulture;
+            Log.Information("Current culture: {Culture}", culture);
+
 
             options.RequestCultureProviders.Insert(0, new QueryStringRequestCultureProvider());
         });

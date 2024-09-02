@@ -9,7 +9,7 @@
     let messageHistory = {};
 
     connection.on("ReceiveMessage", function (user, message) {
-        console.log('Received message from', user, ':', message);
+        console.log(getTranslation('notification.received_message_from'), user, ':', message);
 
         if (!messageHistory[user]) {
             messageHistory[user] = [];
@@ -24,7 +24,7 @@
     });
 
     connection.on("UpdateUserList", function (users) {
-        console.log('Updating user list:', users);
+        console.log(getTranslation('notification.updating_user_list'), users);
         $("#adminUserList").empty();
         users.forEach(function (user) {
             addToUserList(user);
@@ -32,9 +32,9 @@
     });
 
     connection.start().then(function () {
-        console.log('Connected to SignalR hub');
+        console.log(getTranslation('notification.connected_to_signalr_hub'));
     }).catch(function (err) {
-        console.error('Connection error:', err.toString());
+        console.error(getTranslation('error.connection_error'), err.toString());
     });
 
     function addToUserList(user) {
@@ -53,22 +53,22 @@
     $("#adminSendButton").click(function (event) {
         const message = $("#adminMessageInput").val();
         if (message.trim() === "" || !selectedUser) {
-            console.warn('No message or no selected user.');
+            console.warn(getTranslation('warning.no_message_or_no_selected_user'));
             return;
         }
 
         connection.invoke("SendMessageToUser", selectedUser, message).then(function () {
-            console.log('Message sent to', selectedUser);
+            console.log(getTranslation('notification.message_sent_to'), selectedUser);
         }).catch(function (err) {
-            console.error('Failed to send message:', err.toString());
+            console.error(getTranslation('error.failed_to_send_message'), err.toString());
         });
 
         if (!messageHistory[selectedUser]) {
             messageHistory[selectedUser] = [];
         }
-        messageHistory[selectedUser].push({ user: "Admin", message });
+        messageHistory[selectedUser].push({ user: getTranslation('admin'), message });
 
-        addMessageToChat("Admin", message);
+        addMessageToChat(getTranslation('admin'), message);
 
         $("#adminMessageInput").val("");
         event.preventDefault();
@@ -83,7 +83,6 @@
             $("#adminChatMessages").scrollTop(chatMessages.scrollHeight);
         }
     }
-
 
     function loadChatHistory(user) {
         $("#adminChatMessages").empty();

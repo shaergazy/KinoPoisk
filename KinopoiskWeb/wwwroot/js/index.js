@@ -1,13 +1,13 @@
 ﻿$(document).ready(function () {
-    var maxLength = 1000; // Максимальная длина сокращенного текста
-
+    var maxLength = 1000;
+    loadTranslations(currentCulture);
     function toggleDescription(description, movieId) {
         var fullText = description.data('fullText') || description.text().trim();
-        description.data('fullText', fullText); // Сохраняем полный текст в data атрибуте
+        description.data('fullText', fullText);
 
         if (fullText.length > maxLength) {
             var truncatedText = fullText.substring(0, maxLength) + '...';
-            description.html(truncatedText + ' <span class="more" id="more-' + movieId + '">more</span>');
+            description.html(truncatedText + ` <span class="more" id="more-${movieId}">${getTranslation('dataTable.more')}</span>`);
         }
     }
 
@@ -24,7 +24,7 @@
         var movieId = $(this).attr('id').split('-')[1];
         var fullText = description.data('fullText');
 
-        description.html(fullText + ' <span class="less" id="less-' + movieId + '">less</span>');
+        description.html(fullText + ` <span class="less" id="less-${movieId}">${getTranslation('dataTable.less')}</span>`);
     });
 
     $('#moviesTable').on('click', '.less', function () {
@@ -32,8 +32,7 @@
         var movieId = $(this).attr('id').split('-')[1];
         toggleDescription(description, movieId);
     });
-
-    // Добавление рейтинга
+    
     $('.rating').each(function () {
         var ratingValue = parseFloat($(this).data('rating'));
         $(this).find('span').each(function (index) {
@@ -45,8 +44,7 @@
 });
 
 function addRating(movieId, rating) {
-    // Логика добавления рейтинга (например, отправка на сервер)
-    console.log(`Рейтинг фильма ${movieId} составляет ${rating} звезд`);
+    console.log(`${getTranslation('rating.rating_for_movie')} ${movieId} ${getTranslation('rating.is')} ${rating} ${getTranslation('rating.stars')}`);
 }
 
 function addComment(movieId) {
@@ -60,7 +58,6 @@ function addComment(movieId) {
     }
 }
 
-// Function to update the stars based on the current rating
 function updateStars(ratingElement) {
     var rating = ratingElement.data('rating');
     ratingElement.find('span').each(function () {
@@ -73,15 +70,12 @@ function updateStars(ratingElement) {
     });
 }
 
-// Update stars for all movie ratings
 $('.rating').each(function () {
     updateStars($(this));
 });
 
-// Get CSRF token
 var token = $('input[name="__RequestVerificationToken"]').val();
 
-// Handle star click event
 $('.rating span').on('click', function () {
     var movieId = $(this).closest('.rating').attr('id').split('-')[1];
     var ratingValue = $(this).data('value');
@@ -101,21 +95,20 @@ $('.rating span').on('click', function () {
         data: JSON.stringify(formData),
         success: function (response) {
             if (response.success) {
-                alert('Rating submitted successfully!');
-                location.reload(); // Reload the page to update the rating
+                alert(getTranslation('notification.rating_success'));
+                location.reload(); 
             } else if (response.redirect) {
                 window.location.href = response.redirect;
             } else {
-                alert('Failed to submit rating.');
+                alert(getTranslation('error.rating_failed'));
             }
         },
         error: function (xhr, status, error) {
-            alert('Error submitting rating: ' + error);
+            alert(getTranslation('error.rating_submission') + error);
         }
     });
 });
 
-// Handle star hover event
 $('.rating span').hover(
     function () {
         var hoverValue = $(this).data('value');

@@ -6,7 +6,7 @@
         .build();
 
     let lastMessage = null;
-    
+
     connection.on("ReceiveMessage", function (user, message) {
         const newMessage = `${user}: ${message}`;
 
@@ -18,44 +18,46 @@
             lastMessage = newMessage;
         }
     });
-    
+
     connection.onreconnecting(function (error) {
         console.log(`Attempting to reconnect: ${error}`);
-        const msg = $("<div></div>").text("Reconnecting...");
+        const msg = $("<div></div>").text(getTranslation('chat.reconnecting'));
         $("#chatMessages").append(msg);
     });
-    
+
     connection.onreconnected(function (connectionId) {
         console.log(`Reconnected with connectionId: ${connectionId}`);
-        const msg = $("<div></div>").text("Reconnected.");
+        const msg = $("<div></div>").text(getTranslation('chat.reconnected'));
         $("#chatMessages").append(msg);
     });
-    
+
     connection.onclose(function (error) {
         console.error(`Connection closed: ${error}`);
-        const msg = $("<div></div>").text("Connection closed. Please refresh the page to reconnect.");
+        const msg = $("<div></div>").text(getTranslation('chat.connection_closed'));
         $("#chatMessages").append(msg);
     });
-    
+
     connection.start()
         .then(function () {
             console.log("Connected to SupportChatHub");
-            const msg = $("<div></div>").text("Connected to chat.");
+            const msg = $("<div></div>").text(getTranslation('chat.connected'));
             $("#chatMessages").append(msg);
         })
         .catch(function (err) {
             console.error(`Connection failed: ${err}`);
-            const msg = $("<div></div>").text("Failed to connect. Please refresh the page.");
+            const msg = $("<div></div>").text(getTranslation('chat.connection_failed'));
             $("#chatMessages").append(msg);
         });
+
     connection.on("UpdateUserList", function (users) {
-        console.log('Updating user list:', users);
+        console.log(getTranslation('chat.update_user_list') + ':', users);
     });
+
     $("#sendButton").click(function (event) {
         const message = $("#messageInput").val();
         if (message.trim() === "") return;
 
-        const msg = $("<div></div>").text("You: " + message);
+        const msg = $("<div></div>").text(getTranslation('chat.send') + message);
         $("#chatMessages").append(msg);
         $("#chatMessages").scrollTop($("#chatMessages")[0].scrollHeight);
 
@@ -65,18 +67,18 @@
             })
             .catch(function (err) {
                 console.error(`Failed to send message: ${err}`);
-                const errorMsg = $("<div></div>").text("Failed to send message. Please try again.");
+                const errorMsg = $("<div></div>").text(getTranslation('chat.failed_to_send_message'));
                 $("#chatMessages").append(errorMsg);
             });
 
         event.preventDefault();
     });
-    
+
     $("#closeChat").click(function () {
         $("#chatWindow").hide();
         connection.stop()
             .then(function () {
-                console.log("Connection stopped");
+                console.log(getTranslation('chat.close_chat'));
             })
             .catch(function (err) {
                 console.error(`Failed to stop connection: ${err}`);
@@ -87,7 +89,7 @@
         $("#chatIcon").hide();
         $("#chatWindow").show();
     });
-    
+
     $("#closeChat").click(function () {
         $("#chatWindow").hide();
         $("#chatIcon").show();
