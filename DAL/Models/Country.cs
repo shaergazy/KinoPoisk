@@ -2,7 +2,7 @@
 
 namespace DAL.Models
 {
-    public class Country
+    public class Country : TranslatableEntity
     {
         [Key]
         public int Id { get; set; }

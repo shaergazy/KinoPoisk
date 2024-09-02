@@ -128,9 +128,10 @@ internal class Program
             new CultureInfo("ru")
         };
 
-            options.DefaultRequestCulture = new RequestCulture("ru");
+            options.DefaultRequestCulture = new RequestCulture("en");
             options.SupportedCultures = supportedCultures;
             options.SupportedUICultures = supportedCultures;
+            options.SetDefaultCulture("ru");
             var culture = CultureInfo.CurrentCulture;
             Log.Information("Current culture: {Culture}", culture);
 

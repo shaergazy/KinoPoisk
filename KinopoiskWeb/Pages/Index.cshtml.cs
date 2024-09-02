@@ -4,6 +4,7 @@ using KinopoiskWeb.ViewModels.Movie;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Localization;
+using System.Globalization;
 
 namespace KinopoiskWeb.Pages;
 public class IndexModel : PageModel
@@ -27,6 +28,7 @@ public class IndexModel : PageModel
 
     public async Task OnGetAsync()
     {
+        var culture = CultureInfo.CurrentCulture;
         if (!_cache.TryGetValue(NewestMoviesCacheKey, out List<IndexMovieVM> cachedNewestMovies))
         {
             var newestMoviesDto = await _movieService.GetNewestMoviesAsync(10);

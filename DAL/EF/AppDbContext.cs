@@ -22,6 +22,7 @@ namespace DAL
         public DbSet<MovieRating> Ratings { get; set; }
         public DbSet<Subscription> Subscriptions { get; set; }
         public DbSet<SubscriptionPlan> SubscriptionPlans { get; set; }
+        public DbSet<TranslatableEntity> Translations { get; set; }
 
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -75,6 +76,8 @@ namespace DAL
             .WithMany()
             .HasForeignKey(s => s.SubscriptionPlanId)
             .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Entity<TranslatableEntity>().UseTptMappingStrategy();
 
             foreach (var x in builder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
                 x.DeleteBehavior = DeleteBehavior.ClientCascade;

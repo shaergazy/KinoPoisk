@@ -1,7 +1,6 @@
 ﻿$(document).ready(function () {
     var token = $('input[name="__RequestVerificationToken"]').val();
     loadTranslations(currentCulture);
-    // Поиск по заголовку
     $('#search-button-title').on('click', function () {
         var title = $('#title').val();
         var year = $('#year').val();
@@ -24,8 +23,7 @@
             }
         });
     });
-
-    // Сброс формы поиска по заголовку
+    
     $('#reset-button-title').on('click', function () {
         $('#search-form-title')[0].reset();
         $('#search-results').empty();

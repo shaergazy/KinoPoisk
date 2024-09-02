@@ -17,18 +17,34 @@
     "plot": "Plot",
     "language": "Language",
     "country": "Country",
-    "imdbRating": "IMDB Rating"
+    "imdbRating": "IMDB Rating",
+    "title": "Title",
+    "add_new": "Add new movie",
+    "update": "Update movie",
+    "delete": "Delete movie",
+    "search_by_title": "Search by title",
+    "search_by_genre": "Search by genre"
   },
   "select": {
     "country": "Select country",
     "genre": "Select genre",
-    "director": "Select director"
+    "director": "Select director",
+    "actor": "Select actor",
+    "language": "Select language",
+    "year": "Select year",
+    "rating": "Select rating"
   },
   "button": {
     "save_actor": "Save actor",
     "more": "More",
     "less": "Less",
-    "import": "Import"
+    "import": "Import",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "search": "Search",
+    "add": "Add"
   },
   "error": {
     "actor_already_added": "Actor already added",
@@ -37,9 +53,14 @@
     "empty_comment": "Comment cannot be empty.",
     "adding_comment": "Error adding comment",
     "rating": "Error sending rating",
+    "rating_failed": "Failed to send rating.",
+    "rating_submission": "Rating submission error: ",
     "search": "Search error",
     "search_by_id": "Search by ID error",
-    "import": "Error importing movie"
+    "import": "Error importing movie",
+    "delete_failed": "Failed to delete movie",
+    "update_failed": "Failed to update movie",
+    "network_error": "Network error, please try again later"
   },
   "notification": {
     "rating_success": "Rating successfully submitted!",
@@ -47,8 +68,11 @@
     "search_success": "Search results successfully received!",
     "search_success_by_id": "Search results by ID successfully received!",
     "import_success": "Movie successfully imported!",
+    "delete_success": "Movie successfully deleted!",
+    "update_success": "Movie successfully updated!",
     "no_movies": "No movies found.",
-    "no_movie": "No movie found."
+    "no_movie": "No movie found.",
+    "network_error": "Failed to connect to the server."
   },
   "order": "Order",
   "table": {
@@ -56,10 +80,72 @@
     "title": "Title",
     "year": "Year",
     "poster": "Poster",
-    "action": "Action"
+    "action": "Action",
+    "director": "Director",
+    "genre": "Genre",
+    "rating": "Rating",
+    "language": "Language"
   },
   "result": {
     "no_movies": "No movies found.",
-    "no_movie": "No movie found."
+    "no_movie": "No movie found.",
+    "empty_results": "No search results"
+  },
+  "select2": {
+    "country_placeholder": "Select country",
+    "actor_placeholder": "Select actor",
+    "director_placeholder": "Select director",
+    "plan_placeholder": "Select plan",
+    "genre_placeholder": "Select genre",
+    "language_placeholder": "Select language"
+  },
+  "dataTable": {
+    "details": "Details",
+    "edit": "Edit",
+    "export_pdf": "Export to PDF",
+    "export_excel": "Export to Excel",
+    "more": "More",
+    "less": "Less",
+    "delete": "Delete",
+    "view": "View",
+    "add_new": "Add new"
+  },
+  "rating": {
+    "rating_for_movie": "Rating for the movie",
+    "is": "is",
+    "stars": "stars",
+    "rate_this_movie": "Rate this movie",
+    "submit_rating": "Submit rating",
+    "average_rating": "Average rating"
+  },
+  "per": "per",
+  "chat": {
+    "reconnecting": "Reconnecting...",
+    "reconnected": "Connection restored.",
+    "connection_closed": "Connection closed. Please refresh the page to reconnect.",
+    "connected": "Chat connection established.",
+    "connection_failed": "Failed to connect. Please refresh the page.",
+    "failed_to_send_message": "Failed to send message. Please try again.",
+    "update_user_list": "Updating user list",
+    "send": "You: ",
+    "close_chat": "Chat closed",
+    "open_chat": "Open chat",
+    "new_message": "New message",
+    "enter_message": "Enter message...",
+    "send_message": "Send message",
+    "user_list": "User list"
+  },
+  "form": {
+    "name": "Name",
+    "email": "Email",
+    "password": "Password",
+    "confirm_password": "Confirm Password",
+    "submit": "Submit",
+    "reset": "Reset"
+  },
+  "label": {
+    "username": "Username",
+    "password": "Password",
+    "remember_me": "Remember me"
   }
 }

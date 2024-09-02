@@ -5,7 +5,7 @@ $(document).ready(function () {
 
     function toggleDescription(description, movieId) {
         const fullText = description.data('fullText') || description.text().trim();
-        description.data('fullText', fullText); // Сохраняем полный текст в data атрибуте
+        description.data('fullText', fullText); 
 
         if (fullText.length > maxLength) {
             const truncatedText = fullText.substring(0, maxLength) + '...';
