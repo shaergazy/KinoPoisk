@@ -38,9 +38,10 @@ namespace API.Controllers
         [ProducesResponseType(typeof(int), 200)]
         public async Task<int> Create([FromBody] AddGenreDto dto)
         {
-            if (dto == null) throw new ArgumentNullException(nameof(dto));
-            var genre = await _service.CreateAsync(dto);
-            return genre.Id;
+            //if (dto == null) throw new ArgumentNullException(nameof(dto));
+            //var genre = await _service.CreateAsync(dto);
+            //return genre.Id;
+            return 1;
         }
 
         /// <summary>

@@ -321,11 +321,11 @@ namespace BLL.Services.Implementation
                 _logger.LogInformation("Assigned country with ID {CountryId} to movie.", dto.CountryId);
             }
 
-            var genres = await _uow.Genres.GetAll()
-                            .Where(g => dto.GenreIds.Contains(g.Id))
-                            .ToListAsync();
-            movie.Genres = genres.Select(g => new MovieGenre { Movie = movie, Genre = g }).ToList();
-            _logger.LogInformation("Assigned genres to movie.");
+            //var genres = await _uow.Genres.GetAll()
+            //                .Where(g => dto.GenreIds.Contains(g.Id))
+            //                .ToListAsync();
+            //movie.Genres = genres.Select(g => new MovieGenre { Movie = movie, Genre = g }).ToList();
+            //_logger.LogInformation("Assigned genres to movie.");
 
             movie.People = new List<MoviePerson>
             {

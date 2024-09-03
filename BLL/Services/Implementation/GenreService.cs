@@ -2,6 +2,7 @@
 using BLL.DTO;
 using BLL.DTO.Genre;
 using BLL.Services.Interfaces;
+using Common.Extensions;
 using DAL.Models;
 using Data.Repositories.RepositoryInterfaces;
 using Microsoft.Extensions.Logging;

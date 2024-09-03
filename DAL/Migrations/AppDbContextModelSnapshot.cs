@@ -57,6 +57,32 @@ namespace DAL.Migrations
                     b.ToTable("Comments");
                 });
 
+            modelBuilder.Entity("DAL.Models.Country", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("FlagLink")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsOwnPicture")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ShortName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Countries");
+                });
+
             modelBuilder.Entity("DAL.Models.Movie", b =>
                 {
                     b.Property<Guid>("Id")
@@ -218,11 +244,18 @@ namespace DAL.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("Discriminator")
+                        .IsRequired()
+                        .HasMaxLength(21)
+                        .HasColumnType("nvarchar(21)");
+
                     b.HasKey("Id");
 
-                    b.ToTable("Translations");
+                    b.ToTable("TranslatableEntity");
 
-                    b.UseTptMappingStrategy();
+                    b.HasDiscriminator().HasValue("TranslatableEntity");
+
+                    b.UseTphMappingStrategy();
                 });
 
             modelBuilder.Entity("DAL.Models.TranslatableEntityField", b =>
@@ -517,36 +550,15 @@ namespace DAL.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("DAL.Models.Country", b =>
-                {
-                    b.HasBaseType("DAL.Models.TranslatableEntity");
-
-                    b.Property<string>("FlagLink")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsOwnPicture")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ShortName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.ToTable("Countries");
-                });
-
             modelBuilder.Entity("DAL.Models.Genre", b =>
                 {
                     b.HasBaseType("DAL.Models.TranslatableEntity");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(64)
-                        .HasColumnType("nvarchar(64)");
+                        .HasColumnType("nvarchar(max)");
 
-                    b.ToTable("Genres");
+                    b.HasDiscriminator().HasValue("Genre");
                 });
 
             modelBuilder.Entity("DAL.Models.Comment", b =>
@@ -714,24 +726,6 @@ namespace DAL.Migrations
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.ClientCascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("DAL.Models.Country", b =>
-                {
-                    b.HasOne("DAL.Models.TranslatableEntity", null)
-                        .WithOne()
-                        .HasForeignKey("DAL.Models.Country", "Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("DAL.Models.Genre", b =>
-                {
-                    b.HasOne("DAL.Models.TranslatableEntity", null)
-                        .WithOne()
-                        .HasForeignKey("DAL.Models.Genre", "Id")
-                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
