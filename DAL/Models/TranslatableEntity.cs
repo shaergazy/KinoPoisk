@@ -1,8 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using DAL.Interfaces;
+using System.ComponentModel.DataAnnotations;
 
 namespace DAL.Models
 {
-    public class TranslatableEntity
+    public class TranslatableEntity : ITranslatableEntity
     {
         [Key]
         public int Id { get; set; }

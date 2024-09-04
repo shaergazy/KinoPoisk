@@ -1,4 +1,5 @@
-﻿using DAL.Interfaces;
+﻿using DAL.Enums;
+using DAL.Interfaces;
 using System.ComponentModel.DataAnnotations;
 
 namespace BLL.DTO.Genre
@@ -7,6 +8,7 @@ namespace BLL.DTO.Genre
     {
         [Required]
         public string Name { get; set; }
+        public LanguageCode LanguageCode { get; set; }
     }
     public class IdHasBase : Base, IIdHas<int>
     {

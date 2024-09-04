@@ -70,7 +70,12 @@ internal class Program
     {
         services.AddRazorPages()
             .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
-            .AddDataAnnotationsLocalization(); ;
+            .AddDataAnnotationsLocalization();
+            //.AddJsonOptions(options =>
+            //{
+            //    options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve;
+            //    options.JsonSerializerOptions.WriteIndented = true;
+            //});
         services.AddSignalR();
         services.AddCommonServices(configuration);
         services.AddHangfire(x => x.UseSqlServerStorage(configuration.GetConnectionString("Default")));

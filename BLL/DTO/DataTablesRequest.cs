@@ -1,4 +1,6 @@
-﻿namespace BLL.DTO
+﻿using DAL.Enums;
+
+namespace BLL.DTO
 {
     public class DataTablesRequestDto
     {
@@ -13,5 +15,7 @@
         public int Length { get; set; }
 
         public string SearchTerm { get; set; }
+
+        public LanguageCode LanguageCode { get; set; }
     }
 }

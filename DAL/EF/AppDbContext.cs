@@ -16,13 +16,13 @@ namespace DAL
 
         public DbSet<Country> Countries { get; set; }
         public DbSet<Movie> Movies { get; set; }
-        //public DbSet<Genre> Genres { get; set; }
+        public DbSet<Genre> Genres { get; set; }
         public DbSet<Comment> Comments { get; set; }
         public DbSet<Person> Persons { get; set; }
         public DbSet<MovieRating> Ratings { get; set; }
         public DbSet<Subscription> Subscriptions { get; set; }
         public DbSet<SubscriptionPlan> SubscriptionPlans { get; set; }
-        //public DbSet<TranslatableEntityField> TranslatableEntityFields { get; set; }
+        public DbSet<TranslatableEntityField> TranslatableEntityFields { get; set; }
 
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -66,17 +66,23 @@ namespace DAL
                 .IsRequired()
                 .HasMaxLength(5000);
 
+            builder.Entity<TranslatableEntity>()
+           .HasMany(te => te.Translations)
+           .WithOne(tef => tef.TranslatableEntity)
+           .HasForeignKey(tef => tef.TranslatableEntityId)
+           .OnDelete(DeleteBehavior.Cascade);
+
             builder.Entity<Subscription>()
             .HasOne(s => s.Plan)
             .WithMany()
             .HasForeignKey(s => s.SubscriptionPlanId)
             .OnDelete(DeleteBehavior.Cascade);
 
-            //builder.Entity<TranslatableEntity>()
-            //    .ToTable("TranslatableEntities");
+            builder.Entity<TranslatableEntity>()
+                .ToTable("TranslatableEntities");
 
-            //builder.Entity<Genre>()
-            //    .ToTable("Genres");
+            builder.Entity<Genre>()
+                .ToTable("Genres");
 
             foreach (var x in builder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
                 x.DeleteBehavior = DeleteBehavior.ClientCascade;

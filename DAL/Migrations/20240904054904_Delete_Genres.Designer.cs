@@ -4,6 +4,7 @@ using DAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DAL.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240904054904_Delete_Genres")]
+    partial class Delete_Genres
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -244,11 +247,18 @@ namespace DAL.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("Discriminator")
+                        .IsRequired()
+                        .HasMaxLength(21)
+                        .HasColumnType("nvarchar(21)");
+
                     b.HasKey("Id");
 
-                    b.ToTable("TranslatableEntities", (string)null);
+                    b.ToTable("TranslatableEntity");
 
-                    b.UseTptMappingStrategy();
+                    b.HasDiscriminator().HasValue("TranslatableEntity");
+
+                    b.UseTphMappingStrategy();
                 });
 
             modelBuilder.Entity("DAL.Models.TranslatableEntityField", b =>
@@ -276,7 +286,7 @@ namespace DAL.Migrations
 
                     b.HasIndex("TranslatableEntityId");
 
-                    b.ToTable("TranslatableEntityFields");
+                    b.ToTable("TranslatableEntityField");
                 });
 
             modelBuilder.Entity("DAL.Models.Users.Role", b =>
@@ -547,7 +557,11 @@ namespace DAL.Migrations
                 {
                     b.HasBaseType("DAL.Models.TranslatableEntity");
 
-                    b.ToTable("Genres", (string)null);
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasDiscriminator().HasValue("Genre");
                 });
 
             modelBuilder.Entity("DAL.Models.Comment", b =>
@@ -715,15 +729,6 @@ namespace DAL.Migrations
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.ClientCascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("DAL.Models.Genre", b =>
-                {
-                    b.HasOne("DAL.Models.TranslatableEntity", null)
-                        .WithOne()
-                        .HasForeignKey("DAL.Models.Genre", "Id")
-                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 

@@ -6,20 +6,29 @@
         "ajax": {
             url: Urls.Genre.GetAll,
             type: 'POST',
-            headers: { 'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val() }
+            headers: { 'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val() },
+            dataSrc: function (json) {
+                // Вытаскиваем данные из json.data.$values
+                return json.data.$values;
+            }
         },
         "language": {
             "url": `/js/locals/datatables/${currentCulture}.json`
         },
         "columns": [
             { "name": "Id", "data": "id", "visible": false },
-            { "name": "Name", "data": "name" },
+            {
+                "name": "Name",
+                "data": function (row) {
+                    return row.translations.$values[0].value;
+                }
+            },
             {
                 "data": null,
                 "render": function (data, type, row, meta) {
                     return `
                         <button class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#editGenreModal" data-id="${row.id}">${getTranslation('dataTable.edit')}</button>
-                        <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteGenreModal" data-id="${row.id}" data-name="${row.name}">${getTranslation('dataTable.delete')}</button>
+                        <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteGenreModal" data-id="${row.id}" data-name="${row.translations.$values[0].value}">${getTranslation('dataTable.delete')}</button>
                     `;
                 },
                 "sortable": false
@@ -37,7 +46,7 @@
             method: 'GET',
             success: function (data) {
                 $('#editGenreId').val(data.id);
-                $('#editGenreName').val(data.name);
+                $('#editGenreName').val(data.translations.$values[0].value);
             },
             error: function (error) {
                 console.error(getTranslation('error.loading'), error);

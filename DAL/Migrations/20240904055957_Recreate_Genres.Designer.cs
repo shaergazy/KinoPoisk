@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DAL.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240903110853_Delete_GenreTable")]
-    partial class Delete_GenreTable
+    [Migration("20240904055957_Recreate_Genres")]
+    partial class Recreate_Genres
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -247,18 +247,11 @@ namespace DAL.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Discriminator")
-                        .IsRequired()
-                        .HasMaxLength(21)
-                        .HasColumnType("nvarchar(21)");
-
                     b.HasKey("Id");
 
-                    b.ToTable("TranslatableEntity");
+                    b.ToTable("TranslatableEntities", (string)null);
 
-                    b.HasDiscriminator().HasValue("TranslatableEntity");
-
-                    b.UseTphMappingStrategy();
+                    b.UseTptMappingStrategy();
                 });
 
             modelBuilder.Entity("DAL.Models.TranslatableEntityField", b =>
@@ -286,7 +279,7 @@ namespace DAL.Migrations
 
                     b.HasIndex("TranslatableEntityId");
 
-                    b.ToTable("TranslatableEntityField");
+                    b.ToTable("TranslatableEntityFields");
                 });
 
             modelBuilder.Entity("DAL.Models.Users.Role", b =>
@@ -557,11 +550,7 @@ namespace DAL.Migrations
                 {
                     b.HasBaseType("DAL.Models.TranslatableEntity");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasDiscriminator().HasValue("Genre");
+                    b.ToTable("Genres", (string)null);
                 });
 
             modelBuilder.Entity("DAL.Models.Comment", b =>
@@ -729,6 +718,15 @@ namespace DAL.Migrations
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.ClientCascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("DAL.Models.Genre", b =>
+                {
+                    b.HasOne("DAL.Models.TranslatableEntity", null)
+                        .WithOne()
+                        .HasForeignKey("DAL.Models.Genre", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 

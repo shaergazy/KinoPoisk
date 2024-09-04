@@ -2,16 +2,17 @@
 using BLL.DTO;
 using BLL.DTO.Genre;
 using BLL.Services.Interfaces;
-using Common.Extensions;
+using DAL.Enums;
 using DAL.Models;
 using Data.Repositories.RepositoryInterfaces;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System.Linq.Dynamic.Core;
 
 namespace BLL.Services.Implementation
 {
-    public class GenreService : SearchableService<ListGenreDto, AddGenreDto, EditGenreDto, GetGenreDto, Genre, int, DataTablesRequestDto>,
-        IGenreService
+    public class GenreService : TranslatableService<ListGenreDto, AddGenreDto, EditGenreDto, GetGenreDto, Genre, int, DataTablesRequestDto>,
+    IGenreService
     {
         private readonly IMapper _mapper;
         private readonly IUnitOfWork<Genre, int> _uow;
@@ -23,20 +24,26 @@ namespace BLL.Services.Implementation
             _uow = unitOfWork;
             _logger = logger;
         }
-
+        public override List<ListGenreDto> GetAll ()
+        {
+            return _mapper.Map<List<ListGenreDto>>(_uow.Genres.GetAll().Include(x => x.Translations));
+        }
         public override IQueryable<Genre> FilterEntities(DataTablesRequestDto request, IQueryable<Genre>? entities = null)
         {
             var searchTerm = request.SearchTerm;
             if (entities == null)
             {
-                entities = _uow.Repository.GetAll();
-                _logger.LogInformation("Retrieved all genres from the repository.");
+                entities = _uow.Repository.GetAll()
+                              .Include(g => g.Translations);
+                _logger.LogInformation("Retrieved all genres with translations from the repository.");
             }
 
             if (!string.IsNullOrWhiteSpace(searchTerm))
             {
-                entities = entities.Where(s =>
-                    s.Name.ToUpper().Contains(searchTerm.ToUpper()));
+                entities = entities.Where(s => s.Translations.Any(t =>
+                    t.FieldType == TranslatableFieldType.Name &&
+                    t.LanguageCode == request.LanguageCode &&
+                    t.Value.ToUpper().Contains(searchTerm.ToUpper())));
                 _logger.LogInformation("Filtered genres by search term: {SearchTerm}", searchTerm);
             }
 
@@ -50,10 +57,22 @@ namespace BLL.Services.Implementation
             {
                 try
                 {
-                    var genre = await _uow.Genres.FirstOrDefaultAsync(g => g.Name == genreName);
+                    var genre = await _uow.Genres
+                        .Include(g => g.Translations)
+                        .FirstOrDefaultAsync(g => g.Translations.Any(t =>
+                            t.FieldType == TranslatableFieldType.Name &&
+                            t.LanguageCode == LanguageCode.en &&
+                            t.Value == genreName));
+
                     if (genre == null)
                     {
-                        genre = new Genre { Name = genreName };
+                        genre = new Genre();
+                        genre.Translations.Add(new TranslatableEntityField
+                        {
+                            FieldType = TranslatableFieldType.Name,
+                            LanguageCode = LanguageCode.en,
+                            Value = genreName
+                        });
                         await _uow.Genres.AddAsync(genre);
                         _logger.LogInformation("Added new genre: {GenreName}", genreName);
                     }
@@ -67,4 +86,5 @@ namespace BLL.Services.Implementation
             }
         }
     }
+
 }

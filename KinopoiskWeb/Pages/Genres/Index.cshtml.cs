@@ -110,8 +110,8 @@ namespace KinopoiskWeb.Pages.Genres
             var genres = _service.GetAll();
             if (!string.IsNullOrWhiteSpace(searchTerm))
             {
-                genres = genres.Where(s =>
-                    s.Name.ToUpper().Contains(searchTerm.ToUpper()));
+                //genres = genres.Where(s =>
+                //    s.Name.ToUpper().Contains(searchTerm.ToUpper()));
             }
             return new JsonResult(genres);
         }
