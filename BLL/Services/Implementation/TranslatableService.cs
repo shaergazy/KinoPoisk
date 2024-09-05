@@ -98,7 +98,6 @@ namespace BLL.Services.Implementation
 
             _logger.LogDebug("Filtering entities for request: {Request}", request);
 
-            // Фильтрация по переводу, если требуется (например, по значению в конкретном языке)
             if (!string.IsNullOrEmpty(request.SearchTerm))
             {
                 var searchValue = request.SearchTerm.ToLower();

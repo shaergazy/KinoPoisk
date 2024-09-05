@@ -46,7 +46,7 @@
             method: 'GET',
             success: function (data) {
                 $('#editGenreId').val(data.id);
-                $('#editGenreName').val(data.translations.$values[0].value);
+                $('#editGenreName').val(data.name);
             },
             error: function (error) {
                 console.error(getTranslation('error.loading'), error);

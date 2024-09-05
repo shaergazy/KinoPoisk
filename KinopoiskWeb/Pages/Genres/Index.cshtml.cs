@@ -12,7 +12,6 @@ using Microsoft.Extensions.Localization;
 
 namespace KinopoiskWeb.Pages.Genres
 {
-    //[Authorize(Roles = "Admin")]
     public class IndexModel : PageModel
     {
         private readonly IGenreService _service;
@@ -29,7 +28,7 @@ namespace KinopoiskWeb.Pages.Genres
         }
 
         [BindProperty]
-        public IList<IndexGenreVM> Genres { get; set; }
+        public IList<GenreVM> Genres { get; set; }
 
         [BindProperty]
         public GenreVM Genre { get; set; }
@@ -39,6 +38,8 @@ namespace KinopoiskWeb.Pages.Genres
 
         public async Task OnGetAsync()
         {
+            // Fetch genres for both English and Russian views
+            Genres = _mapper.Map<List<GenreVM>>(await _service.GetAllAsync());
         }
 
         [BindProperty]
@@ -93,13 +94,13 @@ namespace KinopoiskWeb.Pages.Genres
             {
                 _logger.LogInformation("Deleting genre with ID {GenreId}.", GenreId);
                 await _service.DeleteAsync(GenreId);
-                TempData["SuccessMessage"] = _localizer["Deleted"];
+                TempData["SuccessMessage"] = _localizer["Deleted"].Value;
                 return RedirectToPage();
             }
             catch (DbUpdateException ex)
             {
                 _logger.LogError(ex, "Error occurred while deleting genre with ID {GenreId}.", GenreId);
-                TempData["ErrorMessage"] = _localizer["DeleteGenreError"];
+                TempData["ErrorMessage"] = _localizer["DeleteGenreError"].Value;
                 return RedirectToPage();
             }
         }
@@ -110,8 +111,8 @@ namespace KinopoiskWeb.Pages.Genres
             var genres = _service.GetAll();
             if (!string.IsNullOrWhiteSpace(searchTerm))
             {
-                //genres = genres.Where(s =>
-                //    s.Name.ToUpper().Contains(searchTerm.ToUpper()));
+                //genres = genres.Where(g =>
+                //    g.Translations.Any(t => t.Value.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)));
             }
             return new JsonResult(genres);
         }

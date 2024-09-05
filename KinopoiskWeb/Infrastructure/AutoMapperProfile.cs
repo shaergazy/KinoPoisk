@@ -24,6 +24,8 @@ namespace KinopoiskWeb.Infrastructure
             CreateMap<IndexGenreVM, GetGenreDto>().ReverseMap();
             CreateMap<GenreVM, EditGenreDto>().ReverseMap();
 
+            CreateMap<TranslationVM, TranslationVM>().ReverseMap();
+
             CreateMap<CountryVM, AddCountryDto>().ReverseMap();
             CreateMap<IndexCountryVM, ListCountryDto>().ReverseMap();
             CreateMap<IndexCountryVM, GetCountryDto>().ReverseMap();

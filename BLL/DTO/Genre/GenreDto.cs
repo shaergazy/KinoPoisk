@@ -1,22 +1,33 @@
 ﻿using DAL.Enums;
 using DAL.Interfaces;
-using System.ComponentModel.DataAnnotations;
 
 namespace BLL.DTO.Genre
 {
     public class Base
     {
-        [Required]
-        public string Name { get; set; }
-        public LanguageCode LanguageCode { get; set; }
+        
     }
     public class IdHasBase : Base, IIdHas<int>
     {
         public int Id { get; set; }
     }
-    public class AddGenreDto : Base { }
-    public class EditGenreDto : IdHasBase { }
+    public class AddGenreDto : Base { public ICollection<TranslationDto> Translations { get; set; } = new List<TranslationDto>(); }
+    public class EditGenreDto : IdHasBase { public ICollection<TranslationDto> Translations { get; set; } = new List<TranslationDto>(); }
     public class DeleteGenreDto : IdHasBase { }
-    public class GetGenreDto : IdHasBase { }
-    public class ListGenreDto : IdHasBase { }
+    public class GetGenreDto : IdHasBase 
+    {
+        public string Name { get; set; }
+        public LanguageCode LanguageCode { get; set; }
+    }
+    public class ListGenreDto : IdHasBase 
+    {
+        public string Name { get; set; }
+        public LanguageCode LanguageCode{ get; set; }
+    }
+    public class TranslationDto
+    {
+        public LanguageCode LanguageCode { get; set; }
+        public TranslatableFieldType FieldType { get; set; }
+        public string Value { get; set; }
+    }
 }

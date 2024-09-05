@@ -2,9 +2,16 @@
 
 namespace KinopoiskWeb.ViewModels.Genre
 {
-    public class GenreVM : BaseVM<int>
+    public class GenreVM
     {
-        public string Name { get; set; }
-        LanguageCode LanguageCode { get; set; }
+        public int Id { get; set; } 
+        public ICollection<TranslationVM> Translations { get; set; } = new List<TranslationVM>();
+    }
+
+    public class TranslationVM
+    {
+        public LanguageCode LanguageCode { get; set; }
+        public TranslatableFieldType FieldType { get; set; }
+        public string Value { get; set; }
     }
 }

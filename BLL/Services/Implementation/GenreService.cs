@@ -7,6 +7,7 @@ using DAL.Models;
 using Data.Repositories.RepositoryInterfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Repositories;
 using System.Linq.Dynamic.Core;
 
 namespace BLL.Services.Implementation
@@ -48,6 +49,19 @@ namespace BLL.Services.Implementation
             }
 
             return entities;
+        }
+
+        public virtual async Task<GetGenreDto> GetByIdAsync(int id)
+        {
+            var entity = _uow.Repository.Where(x => x.Id == id).Include(x => x.Translations).FirstOrDefault();
+            _logger.LogInformation("Fetched entity with ID: {Id}", id);
+            return _mapper.Map<GetGenreDto>(entity);
+        }
+
+        public override async Task<Genre> BuildEntityForDelete(int id)
+        {
+            var entity =  _uow.Genres.Where(x => x.Id == id).Include(x => x.Translations);
+            return entity.First();
         }
 
         public async Task ImportGenres(string genreNames, Movie movie)

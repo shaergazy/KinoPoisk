@@ -28,46 +28,11 @@ namespace BLL.Infrastructure
                     src.Translations.First().LanguageCode));
 
             CreateMap<AddGenreDto, Genre>()
-                .ForMember(dest => dest.Translations, opt => opt.MapFrom((src, dest, destMember, context) =>
-                {
-                    var translation = dest.Translations.FirstOrDefault(t => t.LanguageCode == src.LanguageCode);
-                    if (translation == null)
-                    {
-                        translation = new TranslatableEntityField
-                        {
-                            LanguageCode = src.LanguageCode,
-                            FieldType = TranslatableFieldType.Name,
-                            Value = src.Name
-                        };
-                        dest.Translations.Add(translation);
-                    }
-                    else
-                    {
-                        translation.Value = src.Name;
-                    }
-                    return dest.Translations;
-                }));
+           .ForMember(dest => dest.Translations, opt => opt.MapFrom(src => src.Translations));
 
             CreateMap<EditGenreDto, Genre>()
-                .ForMember(dest => dest.Translations, opt => opt.MapFrom((src, dest, destMember, context) =>
-                {
-                    var translation = dest.Translations.FirstOrDefault(t => t.LanguageCode == src.LanguageCode);
-                    if (translation == null)
-                    {
-                        translation = new TranslatableEntityField
-                        {
-                            LanguageCode = src.LanguageCode,
-                            FieldType = TranslatableFieldType.Name,
-                            Value = src.Name
-                        };
-                        dest.Translations.Add(translation);
-                    }
-                    else
-                    {
-                        translation.Value = src.Name;
-                    }
-                    return dest.Translations;
-                }));
+                .ForMember(dest => dest.Translations, opt => opt.MapFrom(src => src.Translations));
+
 
             CreateMap<DeleteGenreDto, Genre>().ReverseMap();
 
