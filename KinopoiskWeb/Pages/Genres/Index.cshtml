@@ -39,9 +39,14 @@
                 <div class="modal-body">
                     <form method="post" asp-page-handler="HandleUpdateOrCreate">
                         <div class="form-group">
-                            <label asp-for="Genre.Name" class="control-label">@Localizer["Name"]</label>
-                            <input asp-for="Genre.Name" class="form-control" />
-                            <span asp-validation-for="Genre.Name" class="text-danger"></span>
+                            <label for="EnglishName" class="control-label">@Localizer["Name"] (English)</label>
+                            <input type="text" name="Genre.Translations[0].Value" class="form-control" />
+                            <span asp-validation-for="Genre.EnglishName" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="RussianName" class="control-label">@Localizer["Name"] (Russian)</label>
+                            <input type="text" name="Genre.Translations[1].Value" class="form-control" />
+                            <span asp-validation-for="Genre.RussianName" class="text-danger"></span>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">@Localizer["Close"]</button>
@@ -49,6 +54,7 @@
                         </div>
                     </form>
                 </div>
+
             </div>
         </div>
     </div>
@@ -63,10 +69,18 @@
                 </div>
                 <div class="modal-body">
                     <form id="editGenreForm" method="post" asp-page-handler="HandleUpdateOrCreate">
-                        <input type="hidden" name="Id" id="editGenreId" />
+                        <input type="hidden" name="Genre.Id" id="editGenreId" />
                         <div class="mb-3">
-                            <label for="editGenreName" class="form-label">@Localizer["Name"]</label>
-                            <input type="text" class="form-control" name="Name" id="editGenreName" required />
+                            <label for="editGenreEnglishName" class="control-label">@Localizer["Name (English)"]</label>
+                            <input type="text" name="Genre.Translations[0].Value" class="form-control" id="editGenreEnglishName" />
+                            <input type="hidden" name="Genre.Translations[0].LanguageCode" value="0" />
+                            <span asp-validation-for="Genre.EnglishName" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editGenreRussianName" class="control-label">@Localizer["Name (Russian)"]</label>
+                            <input type="text" name="Genre.Translations[1].Value" class="form-control" id="editGenreRussianName" />
+                            <input type="hidden" name="Genre.Translations[1].LanguageCode" value="1" />
+                            <span asp-validation-for="Genre.RussianName" class="text-danger"></span>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">@Localizer["Cancel"]</button>
@@ -74,6 +88,7 @@
                         </div>
                     </form>
                 </div>
+
             </div>
         </div>
     </div>

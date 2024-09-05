@@ -20,11 +20,11 @@ namespace KinopoiskWeb.Infrastructure
         public AutoMapperProfile()
         {
             CreateMap<GenreVM, AddGenreDto>().ReverseMap();
-            CreateMap<IndexGenreVM, ListGenreDto>().ReverseMap();
-            CreateMap<IndexGenreVM, GetGenreDto>().ReverseMap();
+            CreateMap<GenreVM, ListGenreDto>().ReverseMap();
+            CreateMap<GenreVM, GetGenreDto>().ReverseMap();
             CreateMap<GenreVM, EditGenreDto>().ReverseMap();
 
-            CreateMap<TranslationVM, TranslationVM>().ReverseMap();
+            CreateMap<TranslationVM, TranslationDto>().ReverseMap();
 
             CreateMap<CountryVM, AddCountryDto>().ReverseMap();
             CreateMap<IndexCountryVM, ListCountryDto>().ReverseMap();

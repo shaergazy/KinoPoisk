@@ -8,9 +8,9 @@ using System.Linq.Dynamic.Core;
 
 namespace BLL.Services.Implementation
 {
-    public class TranslatableService<TListDto, TAddDto, TEditDTo, TGetDto, TEntity, TKey, TDataTableRequest> : SearchableService
-        <TListDto, TAddDto, TEditDTo, TGetDto, TEntity, TKey, TDataTableRequest>
-            where TAddDto : class
+    public class TranslatableService<TListDto, TAddDto, TEditDTo, TGetDto, TEntity, TKey, TDataTableRequest> : TranslatableGenericService
+        <TListDto, TAddDto, TEditDTo, TGetDto, TEntity, TKey>
+    where TAddDto : class
     where TEditDTo : class
     where TListDto : class
     where TGetDto : class
@@ -19,9 +19,9 @@ namespace BLL.Services.Implementation
     {
         private readonly IMapper _mapper;
         private readonly IUnitOfWork<TEntity, TKey> _unitOfWork;
-        private readonly ILogger<SearchableService<TListDto, TAddDto, TEditDTo, TGetDto, TEntity, TKey, TDataTableRequest>> _logger;
+        private readonly ILogger<TranslatableGenericService<TListDto, TAddDto, TEditDTo, TGetDto, TEntity, TKey>> _logger;
 
-        public TranslatableService(IMapper mapper, IUnitOfWork<TEntity, TKey> unitOfWork, ILogger<SearchableService<TListDto, TAddDto, TEditDTo, TGetDto, TEntity, TKey, TDataTableRequest>> logger)
+        public TranslatableService(IMapper mapper, IUnitOfWork<TEntity, TKey> unitOfWork, ILogger<TranslatableGenericService<TListDto, TAddDto, TEditDTo, TGetDto, TEntity, TKey>> logger)
             : base(mapper, unitOfWork, logger)
         {
             _mapper = mapper;
@@ -29,7 +29,7 @@ namespace BLL.Services.Implementation
             _logger = logger;
         }
 
-        public override async Task<DataTablesResponse<TEntity>> SearchAsync(TDataTableRequest request)
+        public virtual async Task<DataTablesResponse<TEntity>> SearchAsync(TDataTableRequest request)
         {
             _logger.LogDebug("Starting search with request: {Request}", request);
 
@@ -63,7 +63,7 @@ namespace BLL.Services.Implementation
                 .Include(e => e.Translations);
         }
 
-        public override async Task<IList<TEntity>> GetPagedData(TDataTableRequest request, IQueryable<TEntity> entities)
+        public virtual async Task<IList<TEntity>> GetPagedData(TDataTableRequest request, IQueryable<TEntity> entities)
         {
             _logger.LogDebug("Getting paged data for request: {Request}", request);
 
@@ -77,7 +77,7 @@ namespace BLL.Services.Implementation
             return data;
         }
 
-        public override IQueryable<TEntity> OrderByColumn(IQueryable<TEntity> entities, TDataTableRequest request)
+        public virtual IQueryable<TEntity> OrderByColumn(IQueryable<TEntity> entities, TDataTableRequest request)
         {
             var sortColumnName = request.SortColumn;
             var sortDirection = request.SortDirection;
@@ -88,7 +88,7 @@ namespace BLL.Services.Implementation
             return entities;
         }
 
-        public override IQueryable<TEntity> FilterEntities(TDataTableRequest request, IQueryable<TEntity> entities = null)
+        public virtual IQueryable<TEntity> FilterEntities(TDataTableRequest request, IQueryable<TEntity> entities = null)
         {
             if (entities == null)
             {

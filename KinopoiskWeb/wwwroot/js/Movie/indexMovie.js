@@ -92,6 +92,9 @@
             url: Urls.Movie.GetAll,
             method: 'POST',
             headers: { 'RequestVerificationToken': token },
+            dataSrc: function (json) {
+                return json.data.$values;
+            },
             data: function (d) {
                 d.title = $('#titleFilter').val();
                 d.year = $('#releasedDateFilter').val();

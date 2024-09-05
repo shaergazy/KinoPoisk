@@ -36,14 +36,13 @@ namespace KinopoiskWeb.Pages.Genres
         [BindProperty]
         public int GenreId { get; set; }
 
-        public async Task OnGetAsync()
-        {
-            // Fetch genres for both English and Russian views
-            Genres = _mapper.Map<List<GenreVM>>(await _service.GetAllAsync());
-        }
-
         [BindProperty]
         public DataTablesRequest DataTablesRequest { get; set; }
+
+        public async Task OnGetAsync()
+        {
+            Genres = _mapper.Map<List<GenreVM>>(_service.GetAll());
+        }
 
         public async Task<IActionResult> OnPostAsync()
         {
@@ -62,27 +61,37 @@ namespace KinopoiskWeb.Pages.Genres
                 _logger.LogWarning("Genre with ID {GenreId} not found.", id);
                 return new JsonResult(NotFound());
             }
-
-            return new JsonResult(_mapper.Map<IndexGenreVM>(genre));
+            var s  = _mapper.Map<GenreVM>(genre);
+            return new JsonResult(_mapper.Map<GenreVM>(genre));
         }
 
-        public async Task<IActionResult> OnPostHandleUpdateOrCreateAsync(GenreVM genre)
+        public async Task<IActionResult> OnPostHandleUpdateOrCreateAsync()
         {
-            if (genre == null)
+            if (Genre == null)
             {
                 _logger.LogError("Genre parameter is null.");
-                throw new ArgumentNullException(nameof(genre));
+                ModelState.AddModelError(string.Empty, _localizer["GenreNullError"].Value);
+                return Page();
             }
-
-            if (genre.Id == 0)
+            try
             {
-                _logger.LogInformation("Creating new genre.");
-                await _service.CreateAsync(_mapper.Map<AddGenreDto>(genre));
+                if (Genre.Id == 0)
+                {
+                    _logger.LogInformation("Creating new genre.");
+                    await _service.CreateAsync(_mapper.Map<AddGenreDto>(Genre));
+                    TempData["SuccessMessage"] = _localizer["GenreCreated"].Value;
+                }
+                else
+                {
+                    _logger.LogInformation("Updating genre with ID {GenreId}.", Genre.Id);
+                    await _service.UpdateAsync(_mapper.Map<EditGenreDto>(Genre));
+                    TempData["SuccessMessage"] = _localizer["GenreUpdated"].Value;
+                }
             }
-            else
+            catch (Exception ex)
             {
-                _logger.LogInformation("Updating genre with ID {GenreId}.", genre.Id);
-                await _service.UpdateAsync(_mapper.Map<EditGenreDto>(genre));
+                _logger.LogError(ex, "Error occurred while saving genre with ID {GenreId}.", Genre.Id);
+                TempData["ErrorMessage"] = _localizer["SaveGenreError"].Value;
             }
 
             return RedirectToPage();
@@ -94,27 +103,30 @@ namespace KinopoiskWeb.Pages.Genres
             {
                 _logger.LogInformation("Deleting genre with ID {GenreId}.", GenreId);
                 await _service.DeleteAsync(GenreId);
-                TempData["SuccessMessage"] = _localizer["Deleted"].Value;
-                return RedirectToPage();
+                TempData["SuccessMessage"] = _localizer["GenreDeleted"].Value;
             }
             catch (DbUpdateException ex)
             {
                 _logger.LogError(ex, "Error occurred while deleting genre with ID {GenreId}.", GenreId);
                 TempData["ErrorMessage"] = _localizer["DeleteGenreError"].Value;
-                return RedirectToPage();
             }
+
+            return RedirectToPage();
         }
 
-        public JsonResult OnGetGenres(string searchTerm)
+        public async Task<JsonResult> OnGetGenres(string searchTerm)
         {
             _logger.LogInformation("Fetching genres with search term: {SearchTerm}.", searchTerm);
-            var genres = _service.GetAll();
+            var genres =  _service.GetAll();
+
             if (!string.IsNullOrWhiteSpace(searchTerm))
             {
-                //genres = genres.Where(g =>
-                //    g.Translations.Any(t => t.Value.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)));
+                genres = genres.Where(g =>
+                    g.Translations.Any(t => t.Value.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))).ToList();
             }
-            return new JsonResult(genres);
+
+            var result = _mapper.Map<List<GenreVM>>(genres);
+            return new JsonResult(result);
         }
     }
 }

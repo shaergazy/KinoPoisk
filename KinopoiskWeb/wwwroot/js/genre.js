@@ -8,7 +8,6 @@
             type: 'POST',
             headers: { 'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val() },
             dataSrc: function (json) {
-                // Вытаскиваем данные из json.data.$values
                 return json.data.$values;
             }
         },
@@ -20,7 +19,16 @@
             {
                 "name": "Name",
                 "data": function (row) {
-                    return row.translations.$values[0].value;
+                    // Ищем переводы для английского и русского языков
+                    const englishTranslation = row.translations.$values.find(t => t.languageCode === 0);
+                    const russianTranslation = row.translations.$values.find(t => t.languageCode === 1);
+
+                    return `
+                        <div>
+                            <strong>EN:</strong> ${englishTranslation ? englishTranslation.value : 'N/A'}
+                            <br/>
+                            <strong>RU:</strong> ${russianTranslation ? russianTranslation.value : 'N/A'}
+                        </div>`;
                 }
             },
             {
@@ -46,13 +54,19 @@
             method: 'GET',
             success: function (data) {
                 $('#editGenreId').val(data.id);
-                $('#editGenreName').val(data.name);
+
+                const englishTranslation = data.translations.$values.find(t => t.languageCode === 0);
+                const russianTranslation = data.translations.$values.find(t => t.languageCode === 1);
+
+                $('#editGenreEnglishName').val(englishTranslation ? englishTranslation.value : '');
+                $('#editGenreRussianName').val(russianTranslation ? russianTranslation.value : '');
             },
             error: function (error) {
                 console.error(getTranslation('error.loading'), error);
             }
         });
     });
+
 
     $('#deleteGenreModal').on('show.bs.modal', function (event) {
         var button = $(event.relatedTarget);
@@ -62,6 +76,8 @@
         modal.find('.modal-body input#GenreToDelete_Id').val(id);
         modal.find('.modal-body #genreNameToDelete').text(name);
     });
+
+
 
     if (successMessage) {
         toastr.success(getTranslation('notification.success'));

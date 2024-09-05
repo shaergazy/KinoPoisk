@@ -15,23 +15,19 @@ namespace BLL.Infrastructure
     {
         public AutoMapperProfile()
         {
-            CreateMap<Genre, GetGenreDto>()
-                .ForMember(dest => dest.Name, opt => opt.MapFrom(src =>
-                    src.Translations.First().Value))
-                .ForMember(dest => dest.LanguageCode, opt => opt.MapFrom(src =>
-                    src.Translations.First().LanguageCode));
+            CreateMap<ListGenreDto, Genre>()
+           .ForMember(dest => dest.Translations, opt => opt.MapFrom(src => src.Translations)).ReverseMap();
 
-            CreateMap<Genre, ListGenreDto>()
-                .ForMember(dest => dest.Name, opt => opt.MapFrom(src =>
-                    src.Translations.First().Value))
-                .ForMember(dest => dest.LanguageCode, opt => opt.MapFrom(src =>
-                    src.Translations.First().LanguageCode));
+            CreateMap<GetGenreDto, Genre>()
+                .ForMember(dest => dest.Translations, opt => opt.MapFrom(src => src.Translations)).ReverseMap();
 
             CreateMap<AddGenreDto, Genre>()
            .ForMember(dest => dest.Translations, opt => opt.MapFrom(src => src.Translations));
 
             CreateMap<EditGenreDto, Genre>()
                 .ForMember(dest => dest.Translations, opt => opt.MapFrom(src => src.Translations));
+
+            CreateMap<TranslatableEntityField, TranslationDto>().ReverseMap();
 
 
             CreateMap<DeleteGenreDto, Genre>().ReverseMap();
