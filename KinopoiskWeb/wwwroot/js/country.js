@@ -19,7 +19,6 @@
             {
                 "name": "Name",
                 "data": function (row) {
-                    // Ищем переводы для английского и русского языков
                     const englishTranslation = row.translations.$values.find(t => t.languageCode === 0);
                     const russianTranslation = row.translations.$values.find(t => t.languageCode === 1);
 
@@ -36,8 +35,15 @@
                 "name": "FlagLink",
                 "data": "flagLink",
                 "render": function (data, type, row, meta) {
-                    return `<img src="${data}" alt="${getTranslation('table.flag')}" style="width: 50px; height: auto;" />`;
+                    var imageUrl = data;
+                    
+                    if (!data.startsWith("http://") && !data.startsWith("https://")) {
+                        imageUrl = "/" + imageUrl;
+                    }
+
+                    return `<img src="${imageUrl}" alt="${getTranslation('table.flag')}" style="width: 50px; height: auto;" />`;
                 }
+
             },
             {
                 "data": null,

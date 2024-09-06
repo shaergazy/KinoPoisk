@@ -5,18 +5,7 @@ namespace BLL.DTO.Person
 {
     public class Base
     {
-        /// <summary>
-        /// Name of Country
-        /// </summary>
-        [Required]
-        [MaxLength(100)]
-        public string FirstName { get; set; }
-
-        /// <summary>
-        /// Code of Country
-        /// </summary>
-        [MaxLength(2)]
-        public string LastName { get; set; }
+        public ICollection<TranslationDto> Translations { get; set; }
 
         /// <summary>
         /// BirthDate
