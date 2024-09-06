@@ -1,4 +1,4 @@
-﻿@page "{id:guid}"
+﻿@* @page "{id:guid}"
 @using Microsoft.Extensions.Localization
 @model KinopoiskWeb.Pages.Movies.DetailsModel
 @inject IStringLocalizer<Pages.Movies.DetailsModel> Localizer
@@ -56,7 +56,7 @@
             </div>
         </div>
     </div>
-    @* <div class="row">
+    <div class="row">
         <div class="col-12">
             <div class="comments-section">
                 <h2>@Localizer["Comments"]</h2>
@@ -70,7 +70,7 @@
                 </table>
             </div>
         </div>
-    </div> *@
+    </div>
     @if (User.Identity.IsAuthenticated)
     {
         <div class="row">
@@ -104,3 +104,4 @@
     @await Html.PartialAsync("Shared/_Urls")
     <script src="~/js/Movie/detailsMovie.js" asp-append-version="true"></script>
 }
+ *@

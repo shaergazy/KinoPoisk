@@ -42,7 +42,6 @@ namespace BLL.Services.Implementation
             {
                 entities = entities.Where(s => s.Translations.Any(t =>
                     t.FieldType == TranslatableFieldType.Name &&
-                    t.LanguageCode == request.LanguageCode &&
                     t.Value.ToUpper().Contains(searchTerm.ToUpper())));
                 _logger.LogInformation("Filtered genres by search term: {SearchTerm}", searchTerm);
             }
@@ -50,18 +49,18 @@ namespace BLL.Services.Implementation
             return entities;
         }
 
-        public override async Task<GetGenreDto> GetByIdAsync(int id)
-        {
-            var entity = _uow.Repository.Where(x => x.Id == id).Include(x => x.Translations).FirstOrDefault();
-            _logger.LogInformation("Fetched entity with ID: {Id}", id);
-            return _mapper.Map<GetGenreDto>(entity);
-        }
+        //public override async Task<GetGenreDto> GetByIdAsync(int id)
+        //{
+        //    var entity = _uow.Repository.Where(x => x.Id == id).Include(x => x.Translations).FirstOrDefault();
+        //    _logger.LogInformation("Fetched entity with ID: {Id}", id);
+        //    return _mapper.Map<GetGenreDto>(entity);
+        //}
 
-        public override async Task<Genre> BuildEntityForDelete(int id)
-        {
-            var entity =  _uow.Genres.Where(x => x.Id == id).Include(x => x.Translations);
-            return entity.First();
-        }
+        //public override async Task<Genre> BuildEntityForDelete(int id)
+        //{
+        //    var entity = _uow.Genres.Where(x => x.Id == id).Include(x => x.Translations);
+        //    return entity.First();
+        //}
 
         public async Task ImportGenres(string genreNames, Movie movie)
         {
@@ -90,11 +89,11 @@ namespace BLL.Services.Implementation
                         _logger.LogInformation("Added new genre: {GenreName}", genreName);
                     }
                     movie.Genres.Add(new MovieGenre { Genre = genre });
-                    _logger.LogInformation("Added genre {GenreName} to movie {MovieTitle}", genreName, movie.Title);
+                    _logger.LogInformation("Added genre {GenreName} to movie {MovieTitle}", genreName/*, movie.Title*/);
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError(ex, "Error importing genre {GenreName} for movie {MovieTitle}", genreName, movie.Title);
+                    _logger.LogError(ex, "Error importing genre {GenreName} for movie {MovieTitle}", genreName/*, movie.Title*/);
                 }
             }
         }

@@ -8,5 +8,11 @@ namespace DAL.Enums
         Name = 0,
         [Description("Description")]
         Description = 1,
+        [Description("Title")]
+        Title = 2,
+        [Description("FirstName")]
+        FirstName = 3,
+        [Description("Description")]
+        LastName = 4,
     }
 }

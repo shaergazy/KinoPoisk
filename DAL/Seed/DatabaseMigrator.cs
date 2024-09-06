@@ -79,33 +79,148 @@ namespace DAL.Seed
             try
             {
                 var countries = new List<Country>
+        {
+            new Country
+            {
+                ShortName = "kg",
+                FlagLink = "https://flagpedia.net/data/flags/h80/kg.png",
+                IsOwnPicture = false,
+                Translations = new List<TranslatableEntityField>
                 {
-                    new Country {Name = "Kyrgyzstan", ShortName = "kg", FlagLink = "https://flagpedia.net/data/flags/h80/kg.png"},
-                    new Country {Name = "Russia", ShortName = "ru", FlagLink = "https://flagpedia.net/data/flags/h80/ru.png"},
-                    new Country {Name = "Japan", ShortName = "jp", FlagLink = "https://flagpedia.net/data/flags/h80/jp.png"},
-                    new Country {Name = "Australia", ShortName = "au", FlagLink = "https://flagpedia.net/data/flags/h80/au.png"},
-                    new Country {Name = "Belarus", ShortName = "by", FlagLink = "https://flagpedia.net/data/flags/h80/by.png"},
-                    new Country {Name = "Brazil", ShortName = "br", FlagLink = "https://flagpedia.net/data/flags/h80/br.png"},
-                    new Country {Name = "Canada", ShortName = "ca", FlagLink = "https://flagpedia.net/data/flags/h80/ca.png"},
-                    new Country {Name = "France", ShortName = "fr", FlagLink = "https://flagpedia.net/data/flags/h80/fr.png"},
-                    new Country {Name = "Germany", ShortName = "de", FlagLink = "https://flagpedia.net/data/flags/h80/de.png"},
-                    new Country {Name = "India", ShortName = "in", FlagLink = "https://flagpedia.net/data/flags/h80/in.png"},
-                    new Country {Name = "United States", ShortName = "us", FlagLink = "https://flagpedia.net/data/flags/h80/us.png"},
-                };
+                    new TranslatableEntityField { LanguageCode = LanguageCode.en, FieldType = TranslatableFieldType.Name, Value = "Kyrgyzstan" },
+                    new TranslatableEntityField { LanguageCode = LanguageCode.ru, FieldType = TranslatableFieldType.Name, Value = "Кыргызстан" }
+                }
+            },
+            new Country
+            {
+                ShortName = "ru",
+                FlagLink = "https://flagpedia.net/data/flags/h80/ru.png",
+                IsOwnPicture = false,
+                Translations = new List<TranslatableEntityField>
+                {
+                    new TranslatableEntityField { LanguageCode = LanguageCode.en, FieldType = TranslatableFieldType.Name, Value = "Russia" },
+                    new TranslatableEntityField { LanguageCode = LanguageCode.ru, FieldType = TranslatableFieldType.Name, Value = "Россия" }
+                }
+            },
+            new Country
+            {
+                ShortName = "jp",
+                FlagLink = "https://flagpedia.net/data/flags/h80/jp.png",
+                IsOwnPicture = false,
+                Translations = new List<TranslatableEntityField>
+                {
+                    new TranslatableEntityField { LanguageCode = LanguageCode.en, FieldType = TranslatableFieldType.Name, Value = "Japan" },
+                    new TranslatableEntityField { LanguageCode = LanguageCode.ru, FieldType = TranslatableFieldType.Name, Value = "Япония" }
+                }
+            },
+            new Country
+            {
+                ShortName = "au",
+                FlagLink = "https://flagpedia.net/data/flags/h80/au.png",
+                IsOwnPicture = false,
+                Translations = new List<TranslatableEntityField>
+                {
+                    new TranslatableEntityField { LanguageCode = LanguageCode.en, FieldType = TranslatableFieldType.Name, Value = "Australia" },
+                    new TranslatableEntityField { LanguageCode = LanguageCode.ru, FieldType = TranslatableFieldType.Name, Value = "Австралия" }
+                }
+            },
+            new Country
+            {
+                ShortName = "by",
+                FlagLink = "https://flagpedia.net/data/flags/h80/by.png",
+                IsOwnPicture = false,
+                Translations = new List<TranslatableEntityField>
+                {
+                    new TranslatableEntityField { LanguageCode = LanguageCode.en, FieldType = TranslatableFieldType.Name, Value = "Belarus" },
+                    new TranslatableEntityField { LanguageCode = LanguageCode.ru, FieldType = TranslatableFieldType.Name, Value = "Беларусь" }
+                }
+            },
+            new Country
+            {
+                ShortName = "br",
+                FlagLink = "https://flagpedia.net/data/flags/h80/br.png",
+                IsOwnPicture = false,
+                Translations = new List<TranslatableEntityField>
+                {
+                    new TranslatableEntityField { LanguageCode = LanguageCode.en, FieldType = TranslatableFieldType.Name, Value = "Brazil" },
+                    new TranslatableEntityField { LanguageCode = LanguageCode.ru, FieldType = TranslatableFieldType.Name, Value = "Бразилия" }
+                }
+            },
+            new Country
+            {
+                ShortName = "ca",
+                FlagLink = "https://flagpedia.net/data/flags/h80/ca.png",
+                IsOwnPicture = false,
+                Translations = new List<TranslatableEntityField>
+                {
+                    new TranslatableEntityField { LanguageCode = LanguageCode.en, FieldType = TranslatableFieldType.Name, Value = "Canada" },
+                    new TranslatableEntityField { LanguageCode = LanguageCode.ru, FieldType = TranslatableFieldType.Name, Value = "Канада" }
+                }
+            },
+            new Country
+            {
+                ShortName = "fr",
+                FlagLink = "https://flagpedia.net/data/flags/h80/fr.png",
+                IsOwnPicture = false,
+                Translations = new List<TranslatableEntityField>
+                {
+                    new TranslatableEntityField { LanguageCode = LanguageCode.en, FieldType = TranslatableFieldType.Name, Value = "France" },
+                    new TranslatableEntityField { LanguageCode = LanguageCode.ru, FieldType = TranslatableFieldType.Name, Value = "Франция" }
+                }
+            },
+            new Country
+            {
+                ShortName = "de",
+                FlagLink = "https://flagpedia.net/data/flags/h80/de.png",
+                IsOwnPicture = false,
+                Translations = new List<TranslatableEntityField>
+                {
+                    new TranslatableEntityField { LanguageCode = LanguageCode.en, FieldType = TranslatableFieldType.Name, Value = "Germany" },
+                    new TranslatableEntityField { LanguageCode = LanguageCode.ru, FieldType = TranslatableFieldType.Name, Value = "Германия" }
+                }
+            },
+            new Country
+            {
+                ShortName = "in",
+                FlagLink = "https://flagpedia.net/data/flags/h80/in.png",
+                IsOwnPicture = false,
+                Translations = new List<TranslatableEntityField>
+                {
+                    new TranslatableEntityField { LanguageCode = LanguageCode.en, FieldType = TranslatableFieldType.Name, Value = "India" },
+                    new TranslatableEntityField { LanguageCode = LanguageCode.ru, FieldType = TranslatableFieldType.Name, Value = "Индия" }
+                }
+            },
+            new Country
+            {
+                ShortName = "us",
+                FlagLink = "https://flagpedia.net/data/flags/h80/us.png",
+                IsOwnPicture = false,
+                Translations = new List<TranslatableEntityField>
+                {
+                    new TranslatableEntityField { LanguageCode = LanguageCode.en, FieldType = TranslatableFieldType.Name, Value = "United States" },
+                    new TranslatableEntityField { LanguageCode = LanguageCode.ru, FieldType = TranslatableFieldType.Name, Value = "Соединенные Штаты" }
+                }
+            }
+        };
+                var existingCountries = await _appDbContext.Countries
+                .Include(c => c.Translations)
+                .ToListAsync();
 
-                foreach( var country in countries )
+                foreach (var country in countries)
                 {
-                    if (_appDbContext.Countries.Any(x => x.Name == country.Name))
+                    if (existingCountries.Any(x => x.Translations.Any(t => t.Value == country.Translations.FirstOrDefault(t => t.FieldType == TranslatableFieldType.Name && t.LanguageCode == LanguageCode.en)?.Value)))
                         continue;
-                    _appDbContext.Countries.Add( country );
+
+                    _appDbContext.Countries.Add(country);
                 }
 
                 await _appDbContext.SaveChangesAsync();
             }
-                catch (Exception exp)
+            catch (Exception exp)
             {
                 logger.LogCritical(exp, "System couldn't seed countries");
             }
         }
+
     }
 }

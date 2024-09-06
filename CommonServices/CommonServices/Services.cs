@@ -74,7 +74,7 @@ namespace Common.CommonServices
             services.AddTransient(typeof(ISearchableService<,,,,,,>), typeof(SearchableService<,,,,,,>));
             services.AddTransient<ICountryService, CountryService>();
             services.AddTransient<IGenreService, GenreService>();
-            services.AddTransient<IPersonService, PersonService>();
+            //services.AddTransient<IPersonService, PersonService>();
             services.AddTransient<IAuthorizeNetService, AuthorizeNetService>();
             services.AddTransient<ISubscriptionService, SubscriptionService>();
             services.AddSingleton(serviceProvider =>

@@ -7,12 +7,7 @@ namespace BLL.DTO.Country
 {
     public class Base
     {
-        /// <summary>
-        /// Name of Country
-        /// </summary>
-        [Required]
-        [MaxLength(100)]
-        public string Name { get; set; }
+        public ICollection<TranslationDto> Translations { get; set; } = new List<TranslationDto>();
 
         /// <summary>
         /// Code of Country

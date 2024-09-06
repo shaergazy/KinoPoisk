@@ -41,11 +41,13 @@
                         <div class="form-group">
                             <label for="EnglishName" class="control-label">@Localizer["Name"] (English)</label>
                             <input type="text" name="Genre.Translations[0].Value" class="form-control" />
+                            <input type="hidden" name="Genre.Translations[0].LanguageCode" value="0" />
                             <span asp-validation-for="Genre.EnglishName" class="text-danger"></span>
                         </div>
                         <div class="form-group">
                             <label for="RussianName" class="control-label">@Localizer["Name"] (Russian)</label>
                             <input type="text" name="Genre.Translations[1].Value" class="form-control" />
+                            <input type="hidden" name="Genre.Translations[1].LanguageCode" value="1" />
                             <span asp-validation-for="Genre.RussianName" class="text-danger"></span>
                         </div>
                         <div class="modal-footer">

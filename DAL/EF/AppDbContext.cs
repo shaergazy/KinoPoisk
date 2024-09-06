@@ -46,21 +46,6 @@ namespace DAL
                 .HasForeignKey(x => x.RoleId)
                 .IsRequired();
 
-            builder.Entity<Movie>()
-                .Property(x => x.Title)
-                .IsRequired()
-                .HasMaxLength(256);
-
-            builder.Entity<Person>()
-                .Property(x => x.FirstName)
-                .IsRequired()
-                .HasMaxLength(64);
-
-            builder.Entity<Person>()
-                .Property(x => x.LastName)
-                .IsRequired(false)
-                .HasMaxLength(64);
-
             builder.Entity<Comment>()
                 .Property(x => x.Text)
                 .IsRequired()
@@ -78,11 +63,22 @@ namespace DAL
             .HasForeignKey(s => s.SubscriptionPlanId)
             .OnDelete(DeleteBehavior.Cascade);
 
-            builder.Entity<TranslatableEntity>()
-                .ToTable("TranslatableEntities");
+            //builder.Entity<TranslatableEntity>()
+            //    .ToTable("TranslatableEntities");
 
-            builder.Entity<Genre>()
-                .ToTable("Genres");
+            //builder.Entity<Genre>()
+            //    .ToTable("Genres");
+
+            //builder.Entity<Genre>()
+            //    .ToTable("Genres");
+
+            //builder.Entity<Genre>()
+            //    .ToTable("Genres");
+
+            //builder.Entity<Genre>()
+            //    .ToTable("Genres");
+
+            builder.Entity<TranslatableEntity>().UseTptMappingStrategy();
 
             foreach (var x in builder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
                 x.DeleteBehavior = DeleteBehavior.ClientCascade;

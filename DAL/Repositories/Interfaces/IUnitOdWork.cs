@@ -5,6 +5,7 @@ using Data.Models;
 namespace Data.Repositories.RepositoryInterfaces
 {
     public interface IUnitOfWork <TEntity, TKey> : IDisposable
+        where TEntity : class
     {
         public IGenericRepository<Movie, Guid> Movies { get; }
         public IGenericRepository<TEntity, TKey> Repository { get; }

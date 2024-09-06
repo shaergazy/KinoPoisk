@@ -56,12 +56,7 @@ namespace BLL.Services.Implementation
             return response;
         }
 
-        protected virtual IQueryable<TEntity> GetAllWithTranslations()
-        {
-            return _unitOfWork.Repository
-                .GetAll()
-                .Include(e => e.Translations);
-        }
+
 
         public virtual async Task<IList<TEntity>> GetPagedData(TDataTableRequest request, IQueryable<TEntity> entities)
         {

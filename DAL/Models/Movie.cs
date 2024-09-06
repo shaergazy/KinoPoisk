@@ -1,16 +1,10 @@
-﻿using DAL.Models;
-using Data.Models;
-using System.ComponentModel.DataAnnotations;
+﻿using Data.Models;
 
 namespace DAL.Models
 {
-    public class Movie
+    public class Movie : TranslatableEntity
     {
-        [Key]
-        public Guid Id { get; set; }
         public string Poster { get; set; }
-        public string Title { get; set; }
-        public string Description { get; set; }
         public DateTime ReleasedDate {  get; set; }
         public int? CountryId { get; set; }
         public Country Country { get; set; }

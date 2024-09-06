@@ -7,7 +7,6 @@ using KinopoiskWeb.DataTables;
 using KinopoiskWeb.ViewModels.Country;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.Extensions.Logging;
 
 namespace KinopoiskWeb.Pages.Countries
 {
@@ -26,7 +25,7 @@ namespace KinopoiskWeb.Pages.Countries
         }
 
         [BindProperty]
-        public List<IndexCountryVM> Countries { get; set; }
+        public List<CountryVM> Countries { get; set; }
 
         [BindProperty]
         public CountryVM Country { get; set; }
@@ -51,7 +50,7 @@ namespace KinopoiskWeb.Pages.Countries
 
         public async Task<IActionResult> OnPostHandleCreateOrUpdateAsync(CountryVM country)
         {
-            if (country == null)
+             if (country == null)
             {
                 _logger.LogError("Country parameter is null.");
                 throw new ArgumentNullException(nameof(country));
@@ -81,7 +80,7 @@ namespace KinopoiskWeb.Pages.Countries
                 return new JsonResult(NotFound());
             }
 
-            return new JsonResult(_mapper.Map<IndexCountryVM>(country));
+            return new JsonResult(_mapper.Map<CountryVM>(country));
         }
 
         public async Task<IActionResult> OnPostDeleteAsync()
@@ -97,8 +96,8 @@ namespace KinopoiskWeb.Pages.Countries
             var entities = _service.GetAll();
             if (!string.IsNullOrWhiteSpace(searchTerm))
             {
-                entities = entities.Where(s => s.Name.ToUpper()
-                                   .Contains(searchTerm.ToUpper()));
+                //entities = entities.Where(s => s.Name.ToUpper()
+                //                   .Contains(searchTerm.ToUpper()));
             }
             return new JsonResult(entities);
         }

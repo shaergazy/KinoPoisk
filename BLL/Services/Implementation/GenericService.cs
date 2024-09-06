@@ -13,7 +13,7 @@ namespace BLL.Services.Implementation
     where TEditDto : class
     where TListDto : class
     where TGetDto : class
-    where TEntity : class
+        where TEntity : class
     {
         private readonly IMapper _mapper;
         private readonly IUnitOfWork<TEntity, TKey> _unitOfWork;

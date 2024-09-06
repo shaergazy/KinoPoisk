@@ -2,14 +2,16 @@
 using BLL.DTO;
 using BLL.DTO.Country;
 using BLL.Services.Interfaces;
+using DAL.Enums;
 using DAL.Models;
 using Data.Repositories.RepositoryInterfaces;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System.Linq.Dynamic.Core;
 
 namespace BLL.Services.Implementation
 {
-    public class CountryService : SearchableService<ListCountryDto, AddCountryDto, EditCountryDto, GetCountryDto, Country, int, DataTablesRequestDto>, ICountryService
+    public class CountryService : TranslatableService<ListCountryDto, AddCountryDto, EditCountryDto, GetCountryDto, Country, int, DataTablesRequestDto>, ICountryService
     {
         private readonly IMapper _mapper;
         private readonly IUnitOfWork<Country, int> _uow;
@@ -27,31 +29,51 @@ namespace BLL.Services.Implementation
             var countries = countryNames.Split(", ");
             foreach (var countryName in countries)
             {
+                var movieTitle = movie.Translations.FirstOrDefault(x => x.FieldType == TranslatableFieldType.Title);
                 try
                 {
-                    var country = await _uow.Countries.FirstOrDefaultAsync(c => c.Name == countryName);
+                    var country = await _uow.Countries
+                        .Include(c => c.Translations)
+                        .FirstOrDefaultAsync(c => c.Translations.Any(t => t.Value == countryName 
+                                                                    && t.LanguageCode == LanguageCode.en
+                                                                    || t.LanguageCode == LanguageCode.ru));
+
                     if (country == null)
                     {
-                        country = new Country { Name = countryName };
+                        country = new Country();
+                        country.Translations.Add(new TranslatableEntityField
+                        {
+                            LanguageCode = LanguageCode.en,
+                            FieldType = TranslatableFieldType.Name,
+                            Value = countryName
+                        });
+
+                        country.Translations.Add(new TranslatableEntityField
+                        {
+                            LanguageCode = LanguageCode.ru,
+                            FieldType = TranslatableFieldType.Name,
+                            Value = countryName
+                        });
+
                         await _uow.Countries.AddAsync(country);
                     }
                     movie.Country = country;
-
-                    _logger.LogInformation("Imported country {CountryName} for movie {MovieTitle}", countryName, movie.Title);
+                    _logger.LogInformation("Imported country {CountryName} for movie {MovieTitle}", countryName, movieTitle);
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError(ex, "Error importing country {CountryName} for movie {MovieTitle}", countryName, movie.Title);
+                    _logger.LogError(ex, "Error importing country {CountryName} for movie {MovieTitle}", countryName, movieTitle);
                 }
             }
         }
+
 
         public override IQueryable<Country> FilterEntities(DataTablesRequestDto request, IQueryable<Country>? entities = null)
         {
             var searchTerm = request.SearchTerm;
             if (!string.IsNullOrWhiteSpace(searchTerm))
             {
-                entities = entities.Where(s => s.Name.ToUpper().Contains(searchTerm.ToUpper()));
+                entities = entities.Where(c => c.Translations.Any(t => t.Value.ToUpper().Contains(searchTerm.ToUpper())));
                 _logger.LogInformation("Filtered countries by search term: {SearchTerm}", searchTerm);
             }
 
@@ -60,28 +82,43 @@ namespace BLL.Services.Implementation
 
         public override async Task<Country> BuildEntityForCreate(AddCountryDto dto)
         {
-            if (dto.Flag == null || dto.Name == null)
+            var countries = _uow.Repository
+            .AsEnumerable()
+            .Where(x => x.Translations.Any(t => dto.Translations.Any(d => d.Value == t.Value && d.LanguageCode == t.LanguageCode)))
+            .ToList();
+
+            if (dto.Flag == null || dto.Translations == null || !dto.Translations.Any())
             {
-                _logger.LogWarning("Invalid AddCountryDto: Flag or Name is null");
+                _logger.LogWarning("Invalid AddCountryDto: Flag or Translations are null");
                 throw new ArgumentNullException("You have to complete all properties");
             }
 
-            if (_uow.Repository.Any(x => x.Name == dto.Name))
+            if (countries.Count != 0)
             {
-                _logger.LogWarning("Attempted to create an already existing country: {CountryName}", dto.Name);
-                throw new Exception("Country already exist");
+                _logger.LogWarning("Attempted to create an already existing country with one of the provided translations");
+                throw new Exception("Country already exists");
             }
 
-            var country = _mapper.Map<Country>(dto);
-            var relativePath = await SaveFileAsync(dto.Flag);
+            var country = new Country
+            {
+                Translations = dto.Translations.Select(t => new TranslatableEntityField
+                {
+                    LanguageCode = t.LanguageCode,
+                    FieldType = t.FieldType,
+                    Value = t.Value
+                }).ToList(),
+                ShortName = dto.ShortName
+            };
 
+            var relativePath = await SaveFileAsync(dto.Flag);
             country.FlagLink = relativePath;
             country.IsOwnPicture = true;
 
-            _logger.LogInformation("Created new country: {CountryName}", country.Name);
+            _logger.LogInformation("Created new country with translations");
 
             return country;
         }
+
 
         public override async Task<Country> BuildEntityForDelete(int id)
         {
@@ -91,7 +128,8 @@ namespace BLL.Services.Implementation
                 throw new Exception("There are movies in this Country, so you won't be able to delete it.");
             }
 
-            var country = await _uow.Repository.GetByIdAsync(id);
+            var country = await GetWithTranslationsByIdAsync(id);
+
             if (country == null)
             {
                 _logger.LogWarning("Attempted to delete non-existing country: {CountryId}", id);
@@ -117,20 +155,31 @@ namespace BLL.Services.Implementation
                 throw new ArgumentNullException();
             }
 
-            if (_uow.Repository.Any(x => x.Name == dto.Name && x.Id != dto.Id))
-            {
-                _logger.LogWarning("Attempted to update to an already existing country name: {CountryName}", dto.Name);
-                throw new Exception("Country already exist");
-            }
-
-            var countryToUpdate = await _uow.Repository.GetByIdAsync(dto.Id);
+            var countryToUpdate = await GetWithTranslationsByIdAsync(dto.Id);
             if (countryToUpdate == null)
             {
                 _logger.LogWarning("Attempted to update non-existing country: {CountryId}", dto.Id);
                 throw new Exception($"Country with id {dto.Id} doesn't exist");
             }
 
-            countryToUpdate.Name = dto.Name;
+            foreach (var translationDto in dto.Translations)
+            {
+                var translation = countryToUpdate.Translations.FirstOrDefault(t => t.LanguageCode == translationDto.LanguageCode && t.FieldType == translationDto.FieldType);
+                if (translation != null)
+                {
+                    translation.Value = translationDto.Value;
+                }
+                else
+                {
+                    countryToUpdate.Translations.Add(new TranslatableEntityField
+                    {
+                        LanguageCode = translationDto.LanguageCode,
+                        FieldType = translationDto.FieldType,
+                        Value = translationDto.Value
+                    });
+                }
+            }
+
             countryToUpdate.ShortName = dto.ShortName;
 
             if (dto.Flag != null)
@@ -151,5 +200,6 @@ namespace BLL.Services.Implementation
 
             return countryToUpdate;
         }
+
     }
 }

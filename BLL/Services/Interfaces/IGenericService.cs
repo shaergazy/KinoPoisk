@@ -5,7 +5,6 @@
         where TEditDto : class
         where TListDto : class
         where TGetDto : class
-        where TEntity : class
     {
         IEnumerable<TListDto> GetAll();
         Task<TGetDto> GetByIdAsync(TKey id);

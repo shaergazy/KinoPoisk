@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Query;
 using System.Linq.Expressions;
 
@@ -5,6 +6,7 @@ namespace Data.Repositories.RepositoryInterfaces;
 
 
 public interface IGenericRepository<TEntity, TKey>
+    where TEntity : class
 {
     public IQueryable<TEntity> GetAll();
 
@@ -17,6 +19,10 @@ public interface IGenericRepository<TEntity, TKey>
     public Task Remove(TEntity model);
 
     public void RemoveRange(IEnumerable<TEntity> entities);
+
+    public IEnumerable<TEntity> AsEnumerable();
+
+    public Task<TEntity> FindAsync(TKey id);
 
     public Task UpdateAsync(TEntity model);
 
@@ -40,4 +46,6 @@ public interface IGenericRepository<TEntity, TKey>
     /// <param name="expression"></param>
     /// <returns></returns>
     public Task<TEntity> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> expression = null);
+
+    public EntityEntry<TEntity> Entry(TEntity entity);
 }

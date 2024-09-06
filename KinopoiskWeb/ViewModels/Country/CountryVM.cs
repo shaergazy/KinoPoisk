@@ -6,9 +6,7 @@ namespace KinopoiskWeb.ViewModels.Country
     { 
         public int Id { get; set; }
 
-        [Required]
-        [StringLength(128, MinimumLength = 1)]
-        public string Name { get; set; }
+        public ICollection<TranslationVM> Translations { get; set; }
 
         [Required]
         [StringLength(2, MinimumLength =2)]

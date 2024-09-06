@@ -1,5 +1,4 @@
-﻿using DAL.Enums;
-using DAL.Interfaces;
+﻿using DAL.Interfaces;
 
 namespace BLL.DTO.Genre
 {
@@ -16,10 +15,4 @@ namespace BLL.DTO.Genre
     public class DeleteGenreDto : IdHasBase { }
     public class GetGenreDto : IdHasBase { }
     public class ListGenreDto : IdHasBase {}
-    public class TranslationDto
-    {
-        public LanguageCode LanguageCode { get; set; }
-        public TranslatableFieldType FieldType { get; set; }
-        public string Value { get; set; }
-    }
 }

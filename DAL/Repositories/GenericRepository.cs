@@ -1,6 +1,7 @@
 ﻿using DAL;
 using Data.Repositories.RepositoryInterfaces;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System.Linq.Expressions;
 
 namespace Repositories
@@ -93,6 +94,21 @@ namespace Repositories
         public void RemoveRange(IEnumerable<TEntity> entities)
         {
             _dbSet.RemoveRange(entities);
+        }
+
+        public IEnumerable<TEntity> AsEnumerable()
+        {
+            return _dbSet.AsEnumerable();
+        }
+
+        public async Task<TEntity> FindAsync(TKey id)
+        {
+            return await _dbSet.FindAsync(id);
+        }
+
+        public EntityEntry<TEntity> Entry(TEntity entity)
+        {
+            return _dbSet.Entry(entity);
         }
     }
 }

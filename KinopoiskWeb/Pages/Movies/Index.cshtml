@@ -1,4 +1,4 @@
-﻿@page
+﻿@* @page
 @using Microsoft.Extensions.Localization
 @inject IStringLocalizer<Pages.Movies.IndexModel> Localizer
 @model KinopoiskWeb.Pages.Movies.IndexModel
@@ -103,3 +103,4 @@
         var isAdmin = @(User.IsInRole("Admin").ToString().ToLower());
     </script>
 }
+ *@

@@ -57,12 +57,12 @@ namespace BLL
 
                             foreach (var movie in _movies)
                             {
-                                table.Cell().Element(CellStyle).Text(movie.Title);
-                                table.Cell().Element(CellStyle).Text(movie.Description);
-                                table.Cell().Element(CellStyle).Text(movie.ReleasedDate.ToString("dd/MM/yy"));
-                                table.Cell().Element(CellStyle).Text($"{movie.Duration} min");
-                                table.Cell().Element(CellStyle).Text(movie.IMDBRating.ToString());
-                                table.Cell().Element(CellStyle).Text(movie.Rating.ToString());
+                                //table.Cell().Element(CellStyle).Text(movie.Title);
+                                //table.Cell().Element(CellStyle).Text(movie.Description);
+                                //table.Cell().Element(CellStyle).Text(movie.ReleasedDate.ToString("dd/MM/yy"));
+                                //table.Cell().Element(CellStyle).Text($"{movie.Duration} min");
+                                //table.Cell().Element(CellStyle).Text(movie.IMDBRating.ToString());
+                                //table.Cell().Element(CellStyle).Text(movie.Rating.ToString());
                             }
                         });
                     });

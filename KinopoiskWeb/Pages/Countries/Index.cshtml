@@ -2,13 +2,15 @@
 @using Microsoft.Extensions.Localization
 @inject IStringLocalizer<Pages.Countries.IndexModel> Localizer
 @model KinopoiskWeb.Pages.Countries.IndexModel
+
 @{
     ViewData["Title"] = Localizer["Countries"];
 }
-<head>
 
+<head>
     <link rel="stylesheet" href="https://cdn.datatables.net/2.0.8/css/dataTables.dataTables.css" />
 </head>
+
 <body>
     <h1>@Localizer["Countries"]</h1>
 
@@ -31,39 +33,45 @@
     </table>
 
     <!-- Create Country Modal -->
-    <div class="modal fade" id="createCountryModal" tabindex="-1" aria-labelledby="createCountryModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="createCountryModalLabel">@Localizer["CreateNewCountry"]</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="@Localizer["Close"]"></button>
-                </div>
-                <div class="modal-body">
-                    <form method="post" enctype="multipart/form-data" asp-page-handler="HandleCreateOrUpdate">
-                        <div class="form-group">
-                            <label asp-for="Country.Name" class="control-label">@Localizer["Name"]</label>
-                            <input asp-for="Country.Name" class="form-control" />
-                            <span asp-validation-for="Country.Name" class="text-danger"></span>
-                        </div>
-                        <div class="form-group">
-                            <label asp-for="Country.ShortName" class="control-label">@Localizer["CodeOfCountry"]</label>
-                            <input asp-for="Country.ShortName" class="form-control" />
-                            <span asp-validation-for="Country.ShortName" class="text-danger"></span>
-                        </div>
-                        <div class="form-group">
-                            <label asp-for="Country.Flag" class="control-label">@Localizer["Flag"]</label>
-                            <input type="file" asp-for="Country.Flag" class="form-control" />
-                            <span asp-validation-for="Country.Flag" class="text-danger"></span>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">@Localizer["Close"]</button>
-                            <button type="submit" class="btn btn-primary">@Localizer["Save"]</button>
-                        </div>
-                    </form>
-                </div>
+<div class="modal fade" id="createCountryModal" tabindex="-1" aria-labelledby="createCountryModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="createCountryModalLabel">@Localizer["CreateNewCountry"]</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="@Localizer["Close"]"></button>
+            </div>
+            <div class="modal-body">
+                <form method="post" enctype="multipart/form-data" asp-page-handler="HandleCreateOrUpdate">
+                    <div class="form-group">
+                        <label class="control-label">@Localizer["Name"] (English)</label>
+                        <input type="text" name="Country.Translations[0].Value" class="form-control" placeholder="@Localizer["EnterNameInEnglish"]" required />
+                        <input type="hidden" name="Country.Translations[0].LanguageCode" value="0" />
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">@Localizer["Name"] (Russian)</label>
+                        <input type="text" name="Country.Translations[1].Value" class="form-control" placeholder="@Localizer["EnterNameInRussian"]" required />
+                        <input type="hidden" name="Country.Translations[1].LanguageCode" value="1" />
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Country.ShortName" class="control-label">@Localizer["CodeOfCountry"]</label>
+                        <input asp-for="Country.ShortName" class="form-control" />
+                        <span asp-validation-for="Country.ShortName" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Country.Flag" class="control-label">@Localizer["Flag"]</label>
+                        <input type="file" asp-for="Country.Flag" class="form-control" />
+                        <span asp-validation-for="Country.Flag" class="text-danger"></span>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">@Localizer["Close"]</button>
+                        <button type="submit" class="btn btn-primary">@Localizer["Save"]</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
+</div>
+
 
     <!-- Edit Country Modal -->
     <div class="modal fade" id="editCountryModal" tabindex="-1" aria-labelledby="editCountryModalLabel" aria-hidden="true">
@@ -74,17 +82,23 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="@Localizer["Close"]"></button>
                 </div>
                 <div class="modal-body">
-                    <form id="editGForm" method="post" asp-page-handler="HandleCreateOrUpdate" enctype="multipart/form-data">
+                    <form method="post" asp-page-handler="HandleCreateOrUpdate" enctype="multipart/form-data">
                         <input type="hidden" asp-for="Country.Id" id="editCountryId" />
-                        <div class="mb-3">
-                            <label asp-for="Country.Name" class="form-label">@Localizer["Name"]</label>
-                            <input asp-for="Country.Name" class="form-control" id="editCountryName" required />
-                            <span asp-validation-for="Country.Name" class="text-danger"></span>
+
+                        <div class="form-group">
+                            <label class="control-label">@Localizer["NameInEnglish"]</label>
+                            <input type="text" name="Country.Translations[0].Value" id="editCountryEnglishName" class="form-control" required />
+                            <input type="hidden" name="Country.Translations[0].LanguageCode" value="0" />
                         </div>
-                        <div class="mb-3">
-                            <label asp-for="Country.ShortName" class="form-label">@Localizer["CodeOfCountry"]</label>
+                        <div class="form-group">
+                            <label class="control-label">@Localizer["NameInRussian"]</label>
+                            <input type="text" name="Country.Translations[1].Value" id="editCountryRussianName" class="form-control" required />
+                            <input type="hidden" name="Country.Translations[1].LanguageCode" value="1" />
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="Country.ShortName" class="control-label">@Localizer["CodeOfCountry"]</label>
                             <input asp-for="Country.ShortName" class="form-control" id="editCountryShortName" required />
-                            <span asp-validation-for="Country.ShortName" class="text-danger"></span>
                         </div>
                         <div class="form-group">
                             <label asp-for="Country.Flag" class="control-label">@Localizer["Flag"]</label>
@@ -101,6 +115,7 @@
         </div>
     </div>
 
+
     <!-- Delete Country Modal -->
     <div class="modal fade" id="deleteCountryModal" tabindex="-1" aria-labelledby="deleteCountryModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -112,7 +127,7 @@
                 <div class="modal-body">
                     <form method="post" asp-page-handler="Delete">
                         <input type="hidden" asp-for="CountryId" id="CountryToDelete_Id" />
-                        <p>@Localizer["AreYouSureToDeleteCountry"] <span id="countryNameToDelete"></span>?</p>
+                        <p>@Localizer["Are you sure you want to delete the country"] "<span id="countryNameToDelete"></span>"?</p>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">@Localizer["Cancel"]</button>
                             <button type="submit" class="btn btn-danger">@Localizer["Delete"]</button>
@@ -126,8 +141,12 @@
     @section Scripts {
         @await Html.PartialAsync("Shared/_Urls")
         <script src="~/js/country.js" asp-append-version="true"></script>
-        <partial name="_ValidationScriptsPartial" />
         <script src="https://cdn.datatables.net/2.0.8/js/dataTables.js"></script>
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" />
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+        <script>
+            var successMessage = '@TempData["SuccessMessage"]';
+            var errorMessage = '@TempData["ErrorMessage"]';
+        </script>
     }
-
 </body>

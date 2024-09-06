@@ -61,7 +61,7 @@ namespace KinopoiskWeb.Pages.Genres
                 _logger.LogWarning("Genre with ID {GenreId} not found.", id);
                 return new JsonResult(NotFound());
             }
-            var s  = _mapper.Map<GenreVM>(genre);
+            var s = _mapper.Map<GenreVM>(genre);
             return new JsonResult(_mapper.Map<GenreVM>(genre));
         }
 
@@ -117,7 +117,7 @@ namespace KinopoiskWeb.Pages.Genres
         public async Task<JsonResult> OnGetGenres(string searchTerm)
         {
             _logger.LogInformation("Fetching genres with search term: {SearchTerm}.", searchTerm);
-            var genres =  _service.GetAll();
+            var genres = _service.GetAll();
 
             if (!string.IsNullOrWhiteSpace(searchTerm))
             {
