@@ -1,4 +1,4 @@
-﻿@* @page
+﻿@page
 @using Microsoft.Extensions.Localization
 @model KinopoiskWeb.Pages.People.IndexModel
 @inject IStringLocalizer<Pages.People.IndexModel> Localizer
@@ -41,18 +41,32 @@
             <div class="modal-body">
                 <form method="post" asp-page-handler="HandleCreateOrUpdate">
                     <div class="form-group">
-                        <label asp-for="Person.FirstName" class="control-label"></label>
-                        <input asp-for="Person.FirstName" class="form-control" />
-                        <span asp-validation-for="Person.FirstName" class="text-danger"></span>
+                        <label class="control-label">@Localizer["FirstName"] (English)</label>
+                        <input type="text" name="Person.Translations[0].Value" class="form-control" />
+                        <input type="hidden" name="Person.Translations[0].LanguageCode" value="0" />
+                        <input type="hidden" name="Person.Translations[0].FieldType" value="3" />
                     </div>
                     <div class="form-group">
-                        <label asp-for="Person.LastName" class="control-label"></label>
-                        <input asp-for="Person.LastName" class="form-control" />
-                        <span asp-validation-for="Person.LastName" class="text-danger"></span>
+                        <label class="control-label">@Localizer["FirstName"] (Russian)</label>
+                        <input type="text" name="Person.Translations[1].Value" class="form-control" />
+                        <input type="hidden" name="Person.Translations[1].LanguageCode" value="1" />
+                        <input type="hidden" name="Person.Translations[1].FieldType" value="3"/>
                     </div>
                     <div class="form-group">
-                        <label asp-for="Person.BirthDate" class="control-label"></label>
-                        <input asp-for="Person.BirthDate" class="form-control" type="date" />
+                        <label class="control-label">@Localizer["LastName"] (English)</label>
+                        <input type="text" name="Person.Translations[2].Value" class="form-control" />
+                        <input type="hidden" name="Person.Translations[2].FieldType" value="4"  />
+                        <input type="hidden" name="Person.Translations[2].LanguageCode" value="0" />
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">@Localizer["LastName"] (Russian)</label>
+                        <input type="text" name="Person.Translations[3].Value" class="form-control" />
+                        <input type="hidden" name="Person.Translations[3].FieldType" value="4" />
+                        <input type="hidden" name="Person.Translations[3].LanguageCode" value="1" />
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">@Localizer["BirthDateLabel"]</label>
+                        <input type="date" asp-for="Person.BirthDate" class="form-control" />
                         <span asp-validation-for="Person.BirthDate" class="text-danger"></span>
                     </div>
                     <div class="modal-footer">
@@ -75,18 +89,38 @@
             </div>
             <div class="modal-body">
                 <form id="editPersonForm" method="post" asp-page-handler="HandleCreateOrUpdate">
-                    <input type="hidden" name="Id" id="editPersonId" />
+                    <input type="hidden" name="Person.Id" id="editPersonId" />
                     <div class="mb-3">
-                        <label for="editPersonFirstName" class="form-label">@Localizer["FirstNameLabel"]</label>
-                        <input type="text" class="form-control" name="FirstName" id="editPersonFirstName" required />
+                        <label for="editPersonFirstName" class="form-label">@Localizer["FirstNameLabel"] (English)</label>
+                        <input type="text" class="form-control" name="Person.Translations[0].Value" id="editPersonFirstName" required />
+                        <input type="hidden" name="Person.Translations[0].LanguageCode" value="0" />
+                        <input type="hidden" name="Person.Translations[0].Id" id="enFirstNameId" />
+                        <input type="hidden" name="Person.Translations[0].FieldType" value="3" />
                     </div>
                     <div class="mb-3">
-                        <label for="editPersonLastName" class="form-label">@Localizer["LastNameLabel"]</label>
-                        <input type="text" class="form-control" name="LastName" id="editPersonLastName" required />
+                        <label for="editPersonFirstNameRu" class="form-label">@Localizer["FirstNameLabel"] (Russian)</label>
+                        <input type="text" class="form-control" name="Person.Translations[1].Value" id="editPersonFirstNameRu" required />
+                        <input type="hidden" name="Person.Translations[1].LanguageCode" value="1" />
+                        <input type="hidden" name="Person.Translations[1].Id" id="ruFirstNameId" />
+                        <input type="hidden" name="Person.Translations[1].FieldType" value="3" />
+                    </div>
+                    <div class="mb-3">
+                        <label for="editPersonLastName" class="form-label">@Localizer["LastNameLabel"] (English)</label>
+                        <input type="text" class="form-control" name="Person.Translations[2].Value" id="editPersonLastName" required />
+                        <input type="hidden" name="Person.Translations[2].LanguageCode" value="0" />
+                        <input type="hidden" name="Person.Translations[2].Id" id="enLastNameId" />
+                        <input type="hidden" name="Person.Translations[2].FieldType" value="4" />
+                    </div>
+                    <div class="mb-3">
+                        <label for="editPersonLastNameRu" class="form-label">@Localizer["LastNameLabel"] (Russian)</label>
+                        <input type="text" class="form-control" name="Person.Translations[3].Value" id="editPersonLastNameRu" required />
+                        <input type="hidden" name="Person.Translations[3].LanguageCode" value="1" />
+                        <input type="hidden" name="Person.Translations[3].Id" id="ruLastNameId" />
+                        <input type="hidden" name="Person.Translations[3].FieldType" value="4" />
                     </div>
                     <div class="mb-3">
                         <label for="editPersonBirthDate" class="form-label">@Localizer["BirthDateLabel"]</label>
-                        <input type="date" class="form-control" name="BirthDate" id="editPersonBirthDate" required />
+                        <input type="date" class="form-control" name="Person.BirthDate" id="editPersonBirthDate" required />
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">@Localizer["CancelButton"]</button>
@@ -132,4 +166,3 @@
         </script>
     }
 }
- *@

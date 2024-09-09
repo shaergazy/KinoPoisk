@@ -60,6 +60,8 @@
 
                 $('#editGenreEnglishName').val(englishTranslation ? englishTranslation.value : '');
                 $('#editGenreRussianName').val(russianTranslation ? russianTranslation.value : '');
+                $('#enId').val(englishTranslation.id);
+                $('#ruId').val(russianTranslation.id);
             },
             error: function (error) {
                 console.error(getTranslation('error.loading'), error);

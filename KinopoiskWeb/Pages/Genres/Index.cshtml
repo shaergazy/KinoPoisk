@@ -72,6 +72,8 @@
                 <div class="modal-body">
                     <form id="editGenreForm" method="post" asp-page-handler="HandleUpdateOrCreate">
                         <input type="hidden" name="Genre.Id" id="editGenreId" />
+                        <input type="hidden" name="Genre.Translations[0].Id" id="enId" />
+                        <input type="hidden" name="Genre.Translations[1].Id" id="ruId" />
                         <div class="mb-3">
                             <label for="editGenreEnglishName" class="control-label">@Localizer["Name (English)"]</label>
                             <input type="text" name="Genre.Translations[0].Value" class="form-control" id="editGenreEnglishName" />

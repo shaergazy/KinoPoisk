@@ -27,10 +27,10 @@ namespace BLL.Infrastructure
             CreateMap<EditGenreDto, Genre>()
                 .ForMember(dest => dest.Translations, opt => opt.MapFrom(src => src.Translations));
 
+            CreateMap<DeleteGenreDto, Genre>().ReverseMap();
+
             CreateMap<TranslatableEntityField, TranslationDto>().ReverseMap();
 
-
-            CreateMap<DeleteGenreDto, Genre>().ReverseMap();
 
             CreateMap<ListCountryDto, Country>()
             .ForMember(dest => dest.Translations, opt => opt.MapFrom(src => src.Translations)).ReverseMap();
@@ -43,6 +43,20 @@ namespace BLL.Infrastructure
 
             CreateMap<EditCountryDto, Country>()
                 .ForMember(dest => dest.Translations, opt => opt.MapFrom(src => src.Translations));
+
+            CreateMap<ListPersonDto, Person>()
+            .ForMember(dest => dest.Translations, opt => opt.MapFrom(src => src.Translations)).ReverseMap();
+
+            CreateMap<GetPersonDto, Person>()
+                .ForMember(dest => dest.Translations, opt => opt.MapFrom(src => src.Translations)).ReverseMap();
+
+            CreateMap<AddPersonDto, Person>()
+           .ForMember(dest => dest.Translations, opt => opt.MapFrom(src => src.Translations));
+
+            CreateMap<EditPersonDto, Person>()
+                .ForMember(dest => dest.Translations, opt => opt.MapFrom(src => src.Translations));
+
+            CreateMap<DeletePersonDto, Person>().ReverseMap();
 
 
             //CreateMap<Genre, AddGenreDto>().ReverseMap();

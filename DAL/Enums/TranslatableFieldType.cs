@@ -12,7 +12,7 @@ namespace DAL.Enums
         Title = 2,
         [Description("FirstName")]
         FirstName = 3,
-        [Description("Description")]
+        [Description("LastName")]
         LastName = 4,
     }
 }
