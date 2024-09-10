@@ -30,80 +30,60 @@ namespace BLL.Services.Implementation
 
         public async Task ImportPeopleAsync(string actorNames, string directorName, Movie movie)
         {
-            //try
-            //{
-            //    _logger.LogInformation("Importing people for movie: {MovieTitle}", movie.Title);
-            //    await ImportActorsAsync(actorNames, movie);
-            //    await ImportDirectorAsync(directorName, movie);
-            //    _logger.LogInformation("Successfully imported people for movie: {MovieTitle}", movie.Title);
-            //}
-            //catch (Exception ex)
-            //{
-            //    _logger.LogError(ex, "Error occurred while importing people for movie: {MovieTitle}", movie.Title);
-            //    throw;
-            //}
+            try
+            {
+                _logger.LogInformation("Importing people for movie: {MovieTitle}", movie.Translations.FirstOrDefault(x => x.FieldType == TranslatableFieldType.Title));
+                await ImportActorsAsync(actorNames, movie);
+                await ImportDirectorAsync(directorName, movie);
+                _logger.LogInformation("Successfully imported people for movie: {MovieTitle}", movie.Translations.FirstOrDefault(x => x.FieldType == TranslatableFieldType.Title));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred while importing people for movie: {MovieTitle}", movie.Translations.FirstOrDefault(x => x.FieldType == TranslatableFieldType.Title));
+                throw;
+            }
         }
 
         private async Task ImportActorsAsync(string actorNames, Movie movie)
         {
-            //var actors = actorNames.Split(", ");
-            //uint order = 1;
-            //foreach (var personName in actors)
-            //{
-            //    try
-            //    {
-            //        _logger.LogInformation("Importing actor: {PersonName}", personName);
-            //        var names = personName.Split(" ");
-            //        var firstName = names.First();
-            //        var lastName = names.Last();
-            //        var person = await _uow.People.FirstOrDefaultAsync(p => p.FirstName == firstName && p.LastName == lastName);
-            //        if (person == null)
-            //        {
-            //            person = new Person { FirstName = firstName, LastName = lastName };
-            //            await _uow.People.AddAsync(person);
-            //            _logger.LogInformation("Added new actor: {PersonName}", personName);
-            //        }
-            //        else
-            //        {
-            //            _logger.LogInformation("Actor: {PersonName} already exist in database", personName);
-            //        }
-            //        movie.People.Add(new MoviePerson { Person = person, Order = order, PersonType = PersonType.Actor });
-            //        order++;
-            //    }
-            //    catch (Exception ex)
-            //    {
-            //        _logger.LogError(ex, "Error occurred while importing actor: {PersonName}", personName);
-            //        throw;
-            //    }
-            //}
+            var actors = actorNames.Split(", ");
+            uint order = 1;
+            foreach (var personName in actors)
+            {
+                try
+                {
+                    movie.People.Add(new MoviePerson
+                    {
+                        Person = await ImportPersonAsync(personName, movie),
+                        Order = order,
+                        PersonType = PersonType.Actor
+                    });
+                    order++;
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Error occurred while importing actor: {PersonName}", personName);
+                    throw;
+                }
+            }
         }
+
 
         private async Task ImportDirectorAsync(string directorName, Movie movie)
         {
-            //try
-            //{
-            //    _logger.LogInformation("Importing director: {DirectorName}", directorName);
-            //    var names = directorName.Split(" ");
-            //    var firstName = names.First();
-            //    var lastName = names.Last();
-            //    var director = await _uow.People.FirstOrDefaultAsync(p => p.FirstName == firstName && p.LastName == lastName);
-            //    if (director == null)
-            //    {
-            //        director = new Person { FirstName = firstName, LastName = lastName };
-            //        await _uow.People.AddAsync(director);
-            //        _logger.LogInformation("Added new director: {DirectorName}", directorName);
-            //    }
-            //    else
-            //    {
-            //        _logger.LogInformation("Director: {PersonName} already exist in database", directorName);
-            //    }
-            //    movie.People.Add(new MoviePerson { Person = director, PersonType = PersonType.Director });
-            //}
-            //catch (Exception ex)
-            //{
-            //    _logger.LogError(ex, "Error occurred while importing director: {DirectorName}", directorName);
-            //    throw;
-            //}
+            try
+            {
+                movie.People.Add(new MoviePerson 
+                { 
+                    Person = await ImportPersonAsync(directorName, movie),
+                    PersonType = PersonType.Director 
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred while importing director: {DirectorName}", directorName);
+                throw;
+            }
         }
 
         public override IQueryable<Person> FilterEntities(DataTablesRequestDto request, IQueryable<Person>? entities = null)
@@ -164,6 +144,82 @@ namespace BLL.Services.Implementation
                 _logger.LogError(ex, "Error occurred while fetching directors");
                 throw;
             }
+        }
+
+        public async Task<Person> ImportPersonAsync(string personName, Movie movie)
+        {
+            _logger.LogInformation("Importing person: {PersonName}", personName);
+
+            var names = personName.Split(" ");
+            var firstNameEn = names.First();
+            var lastNameEn = names.Last();
+
+            var person = await _uow.People.FirstOrDefaultAsync(p =>
+                p.Translations.Any(t => t.FieldType == TranslatableFieldType.FirstName &&
+                                        t.LanguageCode == LanguageCode.en &&
+                                        t.Value == firstNameEn) &&
+                p.Translations.Any(t => t.FieldType == TranslatableFieldType.LastName &&
+                                        t.LanguageCode == LanguageCode.en &&
+                                        t.Value == lastNameEn));
+
+            if (person == null)
+            {
+                person = new Person();
+
+                person.Translations.Add(new TranslatableEntityField
+                {
+                    LanguageCode = LanguageCode.en,
+                    FieldType = TranslatableFieldType.FirstName,
+                    Value = firstNameEn
+                });
+                person.Translations.Add(new TranslatableEntityField
+                {
+                    LanguageCode = LanguageCode.en,
+                    FieldType = TranslatableFieldType.LastName,
+                    Value = lastNameEn
+                });
+
+                person.Translations.Add(new TranslatableEntityField
+                {
+                    LanguageCode = LanguageCode.ru,
+                    FieldType = TranslatableFieldType.FirstName,
+                    Value = firstNameEn
+                });
+                person.Translations.Add(new TranslatableEntityField
+                {
+                    LanguageCode = LanguageCode.ru,
+                    FieldType = TranslatableFieldType.LastName,
+                    Value = lastNameEn
+                });
+
+                await _uow.People.AddAsync(person);
+                _logger.LogInformation("Added new person: {PersonName}", personName);
+            }
+            else
+            {
+                _logger.LogInformation("person: {PersonName} already exists in database", personName);
+
+                if (!person.Translations.Any(t => t.LanguageCode == LanguageCode.ru && t.FieldType == TranslatableFieldType.FirstName))
+                {
+                    person.Translations.Add(new TranslatableEntityField
+                    {
+                        LanguageCode = LanguageCode.ru,
+                        FieldType = TranslatableFieldType.FirstName,
+                        Value = firstNameEn
+                    });
+                }
+
+                if (!person.Translations.Any(t => t.LanguageCode == LanguageCode.ru && t.FieldType == TranslatableFieldType.LastName))
+                {
+                    person.Translations.Add(new TranslatableEntityField
+                    {
+                        LanguageCode = LanguageCode.ru,
+                        FieldType = TranslatableFieldType.LastName,
+                        Value = lastNameEn
+                    });
+                }
+            }
+            return person;
         }
     }
 }

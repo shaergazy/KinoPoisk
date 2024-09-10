@@ -56,8 +56,8 @@ $(document).ready(function () {
                 "data": null,
                 "render": function (data, type, row, meta) {
                     return `
-                        <button class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#editGenreModal" data-id="${row.id}">${getTranslation('dataTable.edit')}</button>
-                        <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteGenreModal" data-id="${row.id}" data-name="${row.translations.$values[0].value}">${getTranslation('dataTable.delete')}</button>
+                        <button class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#editPersonModal" data-id="${row.id}">${getTranslation('dataTable.edit')}</button>
+                        <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deletePersonModal" data-id="${row.id}" data-name="${row.translations.$values[0].value}">${getTranslation('dataTable.delete')}</button>
                     `;
                 },
                 "sortable": false
