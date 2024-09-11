@@ -63,21 +63,6 @@ namespace DAL
             .HasForeignKey(s => s.SubscriptionPlanId)
             .OnDelete(DeleteBehavior.Cascade);
 
-            //builder.Entity<TranslatableEntity>()
-            //    .ToTable("TranslatableEntities");
-
-            //builder.Entity<Genre>()
-            //    .ToTable("Genres");
-
-            //builder.Entity<Genre>()
-            //    .ToTable("Genres");
-
-            //builder.Entity<Genre>()
-            //    .ToTable("Genres");
-
-            //builder.Entity<Genre>()
-            //    .ToTable("Genres");
-
             builder.Entity<TranslatableEntity>().UseTptMappingStrategy();
 
             foreach (var x in builder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))

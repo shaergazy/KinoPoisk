@@ -144,7 +144,7 @@ namespace BLL.Services.Implementation
 
         public override async Task<DataTablesResponse<Movie>> SearchAsync(MovieDataTablesRequestDto request)
         {
-            var entities = _uow.Repository.GetAll();
+            var entities = GetAllWithTranslations();
             _logger.LogInformation("Retrieved all movies for search.");
 
             var recordsTotal = entities.Count();
@@ -426,7 +426,7 @@ namespace BLL.Services.Implementation
                     },
                     new TranslatableEntityField
                     {
-                        LanguageCode = LanguageCode.en,
+                        LanguageCode = LanguageCode.ru,
                         FieldType = TranslatableFieldType.Title,
                         Value = dto.Title
                     },
@@ -438,7 +438,7 @@ namespace BLL.Services.Implementation
                     },
                     new TranslatableEntityField
                     {
-                        LanguageCode = LanguageCode.en,
+                        LanguageCode = LanguageCode.ru,
                         FieldType = TranslatableFieldType.Description,
                         Value = dto.Plot
                     }

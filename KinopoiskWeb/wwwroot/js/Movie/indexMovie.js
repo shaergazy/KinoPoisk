@@ -1,4 +1,6 @@
-﻿$(document).ready(function () {
+﻿/*const { data } = require("jquery");*/
+
+$(document).ready(function () {
     var token = $('input[name="__RequestVerificationToken"]').val();
     if (!token) {
         console.error(getTranslation("errors.csrf_token_not_found"));
@@ -115,10 +117,30 @@
                     return data ? `<img src="${data}" alt="${getTranslation("table.poster")}" width="50" height="75" />` : '';
                 }
             },
-            { "name": 'Title', "data": 'title' },
+            {
+                "name": 'Title',
+                "data": function (row) {
+                    if (currentCulture === "ru") {
+                        return row.translations.$values.find(t => t.languageCode === 1 && t.fieldType === 2).value
+                    }
+
+                    else {
+                        return row.translations.$values.find(t => t.languageCode === 0 && t.fieldType === 2).value
+                    }
+                }
+            },
             {
                 "name": 'Description',
-                "data": 'description',
+                "data": function (row) {
+                    if (currentCulture === "ru") {
+                        return row.translations.$values.find(t => t.languageCode === 1 && t.fieldType === 1).value
+                    }
+
+                    else {
+                        return row.translations.$values.find(t => t.languageCode === 0 && t.fieldType === 1).value
+                    }
+                },
+
                 "render": function (data, type, row, meta) {
                     var maxLength = 100;
                     if (data.length > maxLength) {
