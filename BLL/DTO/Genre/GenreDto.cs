@@ -6,9 +6,9 @@ namespace BLL.DTO.Genre
     {
         public ICollection<TranslationDto> Translations { get; set; } = new List<TranslationDto>();
     }
-    public class IdHasBase : Base, IIdHas<int>
+    public class IdHasBase : Base, IIdHas<Guid>
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
     }
     public class AddGenreDto : Base { }
     public class EditGenreDto : IdHasBase { }

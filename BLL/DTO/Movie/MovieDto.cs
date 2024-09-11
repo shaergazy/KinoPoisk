@@ -7,7 +7,7 @@ namespace BLL.DTO.Movie
 {
     public class Base
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
         public ICollection<TranslationDto> Translations { get; set; }
     }
 
@@ -16,17 +16,17 @@ namespace BLL.DTO.Movie
         public IFormFile Poster { get; set; }
         public DateTime Released { get; set; }
         public DateTime ReleasedDate { get; set; }
-        public int? CountryId { get; set; }
-        public ICollection<int>? GenreIds { get; set; }
+        public Guid CountryId { get; set; }
+        public ICollection<Guid>? GenreIds { get; set; }
         public uint? Duration { get; set; }
         public float? IMDBRating { get; set; }
-        public int DirectorId { get; set; }
+        public Guid DirectorId { get; set; }
         public List<MoviePersonDto>? Actors { get; set; }
     }
 
     public class MoviePersonDto
     {
-        public int PersonId { get; set; }
+        public Guid PersonId { get; set; }
         public uint Order { get; set; }
     }
 
@@ -51,7 +51,7 @@ namespace BLL.DTO.Movie
 
     public class AddMovieRating
     {
-        public int MovieId { get; set; }
+        public Guid MovieId { get; set; }
         public Guid UserId { get; set; }
         public int StarCount { get; set; }
     }
@@ -68,6 +68,6 @@ namespace BLL.DTO.Movie
     {
         public string Text { set; get; }
         public string UserId { set; get; }
-        public int MovieId { set; get; }
+        public Guid MovieId { set; get; }
     }
 }

@@ -34,7 +34,7 @@ namespace KinopoiskWeb.Pages.Genres
         public GenreVM Genre { get; set; }
 
         [BindProperty]
-        public int GenreId { get; set; }
+        public Guid GenreId { get; set; }
 
         [BindProperty]
         public DataTablesRequest DataTablesRequest { get; set; }
@@ -52,7 +52,7 @@ namespace KinopoiskWeb.Pages.Genres
             return new JsonResult(response);
         }
 
-        public async Task<JsonResult> OnGetById(int id)
+        public async Task<JsonResult> OnGetById(Guid id)
         {
             _logger.LogInformation("Fetching genre with ID {GenreId}.", id);
             var genre = await _service.GetByIdAsync(id);
@@ -75,7 +75,7 @@ namespace KinopoiskWeb.Pages.Genres
             }
             try
             {
-                if (Genre.Id == 0)
+                if (Genre.Id == Guid.Empty)
                 {
                     _logger.LogInformation("Creating new genre.");
                     await _service.CreateAsync(_mapper.Map<AddGenreDto>(Genre));

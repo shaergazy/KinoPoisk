@@ -39,9 +39,6 @@ namespace DAL.Migrations
                     b.Property<Guid>("MovieId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int?>("MovieId1")
-                        .HasColumnType("int");
-
                     b.Property<string>("Text")
                         .IsRequired()
                         .HasMaxLength(5000)
@@ -53,7 +50,7 @@ namespace DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("MovieId1");
+                    b.HasIndex("MovieId");
 
                     b.HasIndex("UserId");
 
@@ -68,20 +65,17 @@ namespace DAL.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("GenreId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("GenreId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("MovieId")
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("MovieId1")
-                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("GenreId");
 
-                    b.HasIndex("MovieId1");
+                    b.HasIndex("MovieId");
 
                     b.ToTable("MovieGenre");
                 });
@@ -152,11 +146,9 @@ namespace DAL.Migrations
 
             modelBuilder.Entity("DAL.Models.TranslatableEntity", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
@@ -179,8 +171,8 @@ namespace DAL.Migrations
                     b.Property<int>("LanguageCode")
                         .HasColumnType("int");
 
-                    b.Property<int>("TranslatableEntityId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("TranslatableEntityId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Value")
                         .IsRequired()
@@ -319,21 +311,18 @@ namespace DAL.Migrations
                     b.Property<Guid>("MovieId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("MovieId1")
-                        .HasColumnType("int");
-
                     b.Property<long>("Order")
                         .HasColumnType("bigint");
 
-                    b.Property<int>("PersonId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("PersonId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("PersonType")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("MovieId1");
+                    b.HasIndex("MovieId");
 
                     b.HasIndex("PersonId");
 
@@ -351,9 +340,6 @@ namespace DAL.Migrations
                     b.Property<Guid>("MovieId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("MovieId1")
-                        .HasColumnType("int");
-
                     b.Property<int>("StarCount")
                         .HasColumnType("int");
 
@@ -365,7 +351,7 @@ namespace DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("MovieId1");
+                    b.HasIndex("MovieId");
 
                     b.HasIndex("UserId1");
 
@@ -490,8 +476,8 @@ namespace DAL.Migrations
                 {
                     b.HasBaseType("DAL.Models.TranslatableEntity");
 
-                    b.Property<int?>("CountryId")
-                        .HasColumnType("int");
+                    b.Property<Guid?>("CountryId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<long?>("Duration")
                         .HasColumnType("bigint");
@@ -528,8 +514,9 @@ namespace DAL.Migrations
                 {
                     b.HasOne("DAL.Models.Movie", null)
                         .WithMany("Comments")
-                        .HasForeignKey("MovieId1")
-                        .OnDelete(DeleteBehavior.ClientCascade);
+                        .HasForeignKey("MovieId")
+                        .OnDelete(DeleteBehavior.ClientCascade)
+                        .IsRequired();
 
                     b.HasOne("DAL.Models.Users.User", "User")
                         .WithMany("Comments")
@@ -550,7 +537,7 @@ namespace DAL.Migrations
 
                     b.HasOne("DAL.Models.Movie", "Movie")
                         .WithMany("Genres")
-                        .HasForeignKey("MovieId1")
+                        .HasForeignKey("MovieId")
                         .OnDelete(DeleteBehavior.ClientCascade)
                         .IsRequired();
 
@@ -612,7 +599,7 @@ namespace DAL.Migrations
                 {
                     b.HasOne("DAL.Models.Movie", "Movie")
                         .WithMany("People")
-                        .HasForeignKey("MovieId1")
+                        .HasForeignKey("MovieId")
                         .OnDelete(DeleteBehavior.ClientCascade)
                         .IsRequired();
 
@@ -631,7 +618,7 @@ namespace DAL.Migrations
                 {
                     b.HasOne("DAL.Models.Movie", "Movie")
                         .WithMany("Ratings")
-                        .HasForeignKey("MovieId1")
+                        .HasForeignKey("MovieId")
                         .OnDelete(DeleteBehavior.ClientCascade)
                         .IsRequired();
 

@@ -35,9 +35,9 @@ namespace DAL.Migrations
                 name: "FK_AspNetUserTokens_AspNetUsers_UserId",
                 table: "AspNetUserTokens");
 
-            //migrationBuilder.DropForeignKey(
-            //    name: "FK_Comments_AspNetUsers_UserId",
-            //    table: "Comments");
+            migrationBuilder.DropForeignKey(
+                name: "FK_Comments_AspNetUsers_UserId",
+                table: "Comments");
 
             migrationBuilder.DropForeignKey(
                 name: "FK_Comments_Movies_MovieId",

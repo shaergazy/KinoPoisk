@@ -78,7 +78,7 @@ namespace API.Controllers
         [HttpDelete]
         [AuthorizeRoles(RoleType.Admin)]
         [ProducesResponseType(204)]
-        public async Task DeleteById(int id)
+        public async Task DeleteById(Guid id)
         {
             await _service.DeleteAsync(id);
         }

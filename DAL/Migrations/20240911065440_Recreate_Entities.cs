@@ -73,12 +73,6 @@ namespace DAL.Migrations
                 table: "Subscriptions",
                 newName: "IX_Subscriptions_SubscriptionPlanId");
 
-            migrationBuilder.AddColumn<int>(
-                name: "MovieId1",
-                table: "Comments",
-                type: "int",
-                nullable: true);
-
             migrationBuilder.AddPrimaryKey(
                 name: "PK_SubscriptionPlans",
                 table: "SubscriptionPlans",
@@ -93,8 +87,7 @@ namespace DAL.Migrations
                 name: "TranslatableEntity",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1")
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -105,7 +98,7 @@ namespace DAL.Migrations
                 name: "Countries",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     ShortName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     FlagLink = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     IsOwnPicture = table.Column<bool>(type: "bit", nullable: false)
@@ -125,7 +118,7 @@ namespace DAL.Migrations
                 name: "Genres",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -142,7 +135,7 @@ namespace DAL.Migrations
                 name: "Persons",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     BirthDate = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
@@ -162,7 +155,7 @@ namespace DAL.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    TranslatableEntityId = table.Column<int>(type: "int", nullable: false),
+                    TranslatableEntityId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     LanguageCode = table.Column<int>(type: "int", nullable: false),
                     FieldType = table.Column<int>(type: "int", nullable: false),
                     Value = table.Column<string>(type: "nvarchar(max)", nullable: false)
@@ -181,10 +174,10 @@ namespace DAL.Migrations
                 name: "Movies",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Poster = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ReleasedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    CountryId = table.Column<int>(type: "int", nullable: true),
+                    CountryId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     Duration = table.Column<long>(type: "bigint", nullable: true),
                     IMDBRating = table.Column<float>(type: "real", nullable: true),
                     Rating = table.Column<float>(type: "real", nullable: false)
@@ -212,8 +205,7 @@ namespace DAL.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     MovieId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    MovieId1 = table.Column<int>(type: "int", nullable: false),
-                    GenreId = table.Column<int>(type: "int", nullable: false)
+                    GenreId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -224,8 +216,8 @@ namespace DAL.Migrations
                         principalTable: "Genres",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_MovieGenre_Movies_MovieId1",
-                        column: x => x.MovieId1,
+                        name: "FK_MovieGenre_Movies_MovieId",
+                        column: x => x.MovieId,
                         principalTable: "Movies",
                         principalColumn: "Id");
                 });
@@ -237,8 +229,7 @@ namespace DAL.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     MovieId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    MovieId1 = table.Column<int>(type: "int", nullable: false),
-                    PersonId = table.Column<int>(type: "int", nullable: false),
+                    PersonId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     PersonType = table.Column<int>(type: "int", nullable: false),
                     Order = table.Column<long>(type: "bigint", nullable: false)
                 },
@@ -246,8 +237,8 @@ namespace DAL.Migrations
                 {
                     table.PrimaryKey("PK_MoviePerson", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_MoviePerson_Movies_MovieId1",
-                        column: x => x.MovieId1,
+                        name: "FK_MoviePerson_Movies_MovieId",
+                        column: x => x.MovieId,
                         principalTable: "Movies",
                         principalColumn: "Id");
                     table.ForeignKey(
@@ -264,7 +255,6 @@ namespace DAL.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     MovieId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    MovieId1 = table.Column<int>(type: "int", nullable: false),
                     UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     UserId1 = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     StarCount = table.Column<int>(type: "int", nullable: false)
@@ -278,16 +268,16 @@ namespace DAL.Migrations
                         principalTable: "AspNetUsers",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_Ratings_Movies_MovieId1",
-                        column: x => x.MovieId1,
+                        name: "FK_Ratings_Movies_MovieId",
+                        column: x => x.MovieId,
                         principalTable: "Movies",
                         principalColumn: "Id");
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Comments_MovieId1",
+                name: "IX_Comments_MovieId",
                 table: "Comments",
-                column: "MovieId1");
+                column: "MovieId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_MovieGenre_GenreId",
@@ -295,14 +285,14 @@ namespace DAL.Migrations
                 column: "GenreId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_MovieGenre_MovieId1",
+                name: "IX_MovieGenre_MovieId",
                 table: "MovieGenre",
-                column: "MovieId1");
+                column: "MovieId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_MoviePerson_MovieId1",
+                name: "IX_MoviePerson_MovieId",
                 table: "MoviePerson",
-                column: "MovieId1");
+                column: "MovieId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_MoviePerson_PersonId",
@@ -315,9 +305,9 @@ namespace DAL.Migrations
                 column: "CountryId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Ratings_MovieId1",
+                name: "IX_Ratings_MovieId",
                 table: "Ratings",
-                column: "MovieId1");
+                column: "MovieId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Ratings_UserId1",
@@ -379,9 +369,9 @@ namespace DAL.Migrations
                 principalColumn: "Id");
 
             migrationBuilder.AddForeignKey(
-                name: "FK_Comments_Movies_MovieId1",
+                name: "FK_Comments_Movies_MovieId",
                 table: "Comments",
-                column: "MovieId1",
+                column: "MovieId",
                 principalTable: "Movies",
                 principalColumn: "Id");
 
@@ -432,7 +422,7 @@ namespace DAL.Migrations
                 table: "Comments");
 
             migrationBuilder.DropForeignKey(
-                name: "FK_Comments_Movies_MovieId1",
+                name: "FK_Comments_Movies_MovieId",
                 table: "Comments");
 
             migrationBuilder.DropForeignKey(
@@ -471,7 +461,7 @@ namespace DAL.Migrations
                 name: "TranslatableEntity");
 
             migrationBuilder.DropIndex(
-                name: "IX_Comments_MovieId1",
+                name: "IX_Comments_MovieId",
                 table: "Comments");
 
             migrationBuilder.DropPrimaryKey(
@@ -481,10 +471,6 @@ namespace DAL.Migrations
             migrationBuilder.DropPrimaryKey(
                 name: "PK_SubscriptionPlans",
                 table: "SubscriptionPlans");
-
-            migrationBuilder.DropColumn(
-                name: "MovieId1",
-                table: "Comments");
 
             migrationBuilder.RenameTable(
                 name: "Subscriptions",

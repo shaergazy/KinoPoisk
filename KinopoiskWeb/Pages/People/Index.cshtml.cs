@@ -80,7 +80,7 @@ namespace KinopoiskWeb.Pages.People
                 if (person == null)
                     throw new ArgumentNullException(nameof(person));
 
-                if (person.Id == 0)
+                if (person.Id == Guid.Empty)
                     await _service.CreateAsync(_mapper.Map<AddPersonDto>(person));
                 else
                     await _service.UpdateAsync(_mapper.Map<EditPersonDto>(person));

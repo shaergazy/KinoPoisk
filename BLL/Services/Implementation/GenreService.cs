@@ -11,14 +11,13 @@ using System.Linq.Dynamic.Core;
 
 namespace BLL.Services.Implementation
 {
-    public class GenreService : TranslatableService<ListGenreDto, AddGenreDto, EditGenreDto, GetGenreDto, Genre, int, DataTablesRequestDto>,
-    IGenreService
+    public class GenreService : TranslatableService<ListGenreDto, AddGenreDto, EditGenreDto, GetGenreDto, Genre, Guid, DataTablesRequestDto>, IGenreService
     {
         private readonly IMapper _mapper;
-        private readonly IUnitOfWork<Genre, int> _uow;
+        private readonly IUnitOfWork<Genre, Guid> _uow;
         private readonly ILogger<GenreService> _logger;
 
-        public GenreService(IMapper mapper, IUnitOfWork<Genre, int> unitOfWork, ILogger<GenreService> logger) : base(mapper, unitOfWork, logger)
+        public GenreService(IMapper mapper, IUnitOfWork<Genre, Guid> unitOfWork, ILogger<GenreService> logger) : base(mapper, unitOfWork, logger)
         {
             _mapper = mapper;
             _uow = unitOfWork;
@@ -70,6 +69,13 @@ namespace BLL.Services.Implementation
                         {
                             FieldType = TranslatableFieldType.Name,
                             LanguageCode = LanguageCode.en,
+                            Value = genreName
+                        });
+
+                        genre.Translations.Add(new TranslatableEntityField
+                        {
+                            FieldType = TranslatableFieldType.Name,
+                            LanguageCode = LanguageCode.ru,
                             Value = genreName
                         });
                         await _uow.Genres.AddAsync(genre);

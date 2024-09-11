@@ -14,17 +14,17 @@ using System.Globalization;
 
 namespace BLL.Services.Implementation
 {
-    public class MovieService : TranslatableService<ListMovieDto, AddMovieDto, EditMovieDto, GetMovieDto, Movie, int, MovieDataTablesRequestDto>, IMovieService
+    public class MovieService : TranslatableService<ListMovieDto, AddMovieDto, EditMovieDto, GetMovieDto, Movie, Guid, MovieDataTablesRequestDto>, IMovieService
     {
         private readonly IMapper _mapper;
-        private readonly IUnitOfWork<Movie, int> _uow;
+        private readonly IUnitOfWork<Movie, Guid> _uow;
         private readonly ICountryService _countryService;
         private readonly IGenreService _genreService;
         private readonly IPersonService _personService;
         private readonly ILogger<MovieService> _logger;
         private readonly OMDBService _omdbService;
 
-        public MovieService(IMapper mapper, ILogger<MovieService> logger, IUnitOfWork<Movie, int> unitOfWork,
+        public MovieService(IMapper mapper, ILogger<MovieService> logger, IUnitOfWork<Movie, Guid> unitOfWork,
             ICountryService countryService, IGenreService genreService, IPersonService personService, OMDBService omdbService)
             : base(mapper, unitOfWork, logger)
         {
@@ -37,7 +37,7 @@ namespace BLL.Services.Implementation
             _omdbService = omdbService;
         }
 
-        public async override Task DeleteAsync(int id)
+        public async override Task DeleteAsync(Guid id)
         {
             _logger.LogInformation($"Attempting to delete movie with ID: {id}");
 
@@ -170,7 +170,7 @@ namespace BLL.Services.Implementation
             return datatableResponse;
         }
 
-        public override async Task<GetMovieDto> GetByIdAsync(int id)
+        public override async Task<GetMovieDto> GetByIdAsync(Guid id)
         {
             var entity = await _uow.Repository.GetAll()
             .Include(m => m.Country)
@@ -342,7 +342,7 @@ namespace BLL.Services.Implementation
                     {
                         Movie = movie,
                         PersonId = actor.PersonId,
-                        PersonType = DAL.Enums.PersonType.Actor,
+                        PersonType = PersonType.Actor,
                         Order = actor.Order,
                     });
                 }
@@ -352,7 +352,7 @@ namespace BLL.Services.Implementation
             return movie;
         }
 
-        public override async Task<Movie> BuildEntityForDelete(int id)
+        public override async Task<Movie> BuildEntityForDelete(Guid id)
         {
             var movie = await GetWithTranslationsByIdAsync(id);
             try
@@ -375,60 +375,8 @@ namespace BLL.Services.Implementation
                 throw new ArgumentNullException(nameof(dto));
             }
 
-            var movieToUpdate = await _uow.Repository.GetByIdAsync(dto.Id);
-            if (movieToUpdate == null)
-            {
-                _logger.LogWarning("Movie with ID {MovieId} not found for update.", dto.Id);
-                throw new Exception($"Movie with id {dto.Id} doesn't exist");
-            }
+            var movieToUpdate = _mapper.Map<Movie>(dto);
 
-            // Обновление страны
-            var country = await _uow.Countries.FirstOrDefaultAsync(x => x.Id == dto.CountryId);
-            if (country != null)
-            {
-                movieToUpdate.Country = country;
-                _logger.LogInformation("Updated country for movie with ID {MovieId}.", dto.Id);
-            }
-
-            // Обновление переводов
-            foreach (var translationDto in dto.Translations)
-            {
-                var existingTranslation = movieToUpdate.Translations
-                    .FirstOrDefault(t => t.LanguageCode == translationDto.LanguageCode);
-
-                if (existingTranslation != null)
-                {
-                    // Обновляем существующий перевод
-                    existingTranslation.SetTranslation(TranslatableFieldType.Title, translationDto.Value);
-                    existingTranslation.SetTranslation(TranslatableFieldType.Description, translationDto.Description);
-                }
-                else
-                {
-                    // Добавляем новый перевод
-                    movieToUpdate.Translations.Add(new Translation
-                    {
-                        EntityId = movieToUpdate.Id,
-                        Language = translationDto.Language,
-                        Field = TranslatableFieldType.Title,
-                        Value = translationDto.Title
-                    });
-
-                    movieToUpdate.Translations.Add(new Translation
-                    {
-                        EntityId = movieToUpdate.Id,
-                        Language = translationDto.Language,
-                        Field = TranslatableFieldType.Description,
-                        Value = translationDto.Description
-                    });
-                }
-
-                _logger.LogInformation("Updated translations for movie with ID {MovieId} and language {Language}.", dto.Id, translationDto.Language);
-            }
-
-            // Обновление даты релиза
-            movieToUpdate.ReleasedDate = dto.ReleasedDate;
-
-            // Обновление постера
             if (dto.Poster != null)
             {
                 if (!string.IsNullOrEmpty(movieToUpdate.Poster))
@@ -463,29 +411,38 @@ namespace BLL.Services.Implementation
         {
             var movie = new Movie
             {
-                Id = Guid.NewGuid(),
-                Title = dto.Title,
-                Description = dto.Plot,
                 ReleasedDate = DateTime.Parse(dto.Released),
                 Poster = dto.Poster,
                 Duration = ParseDuration(dto.Runtime),
                 Genres = new List<MovieGenre>(),
                 People = new List<MoviePerson>(),
                 Translations = new List<TranslatableEntityField>
-        {
-            new TranslatableEntityField
-            {
-                LanguageCode = LanguageCode.en,
-                FieldType = TranslatableFieldType.Title,
-                Value = dto.Title
-            },
-            new TranslatableEntityField
-            {
-                Language = "ru",
-                Title = dto.Title, // Используем оригинальное название, админы потом могут исправить
-                Description = dto.Plot // Используем оригинальное описание
-            }
-        }
+                {
+                    new TranslatableEntityField
+                    {
+                        LanguageCode = LanguageCode.en,
+                        FieldType = TranslatableFieldType.Title,
+                        Value = dto.Title
+                    },
+                    new TranslatableEntityField
+                    {
+                        LanguageCode = LanguageCode.en,
+                        FieldType = TranslatableFieldType.Title,
+                        Value = dto.Title
+                    },
+                    new TranslatableEntityField
+                    {
+                        LanguageCode = LanguageCode.en,
+                        FieldType = TranslatableFieldType.Description,
+                        Value = dto.Plot
+                    },
+                    new TranslatableEntityField
+                    {
+                        LanguageCode = LanguageCode.en,
+                        FieldType = TranslatableFieldType.Description,
+                        Value = dto.Plot
+                    }
+                }
             };
 
             if (float.TryParse(dto.ImdbRating, NumberStyles.Float, CultureInfo.InvariantCulture, out float imdbRating))
@@ -495,11 +452,8 @@ namespace BLL.Services.Implementation
 
             await _uow.Movies.AddAsync(movie);
 
-            // Импортируем страну
             await _countryService.ImportCountry(dto.Country, movie);
-            // Импортируем людей (актеров и режиссеров)
             await _personService.ImportPeopleAsync(dto.Actors, dto.Director, movie);
-            // Импортируем жанры
             await _genreService.ImportGenres(dto.Genre, movie);
 
             await _uow.SaveChangesAsync();
@@ -537,7 +491,7 @@ namespace BLL.Services.Implementation
 
             foreach (var movie in movies)
             {
-                var updatedMovie = _omdbService.GetItemByTitle(movie.Title);
+                var updatedMovie = _omdbService.GetItemByTitle(movie.Translations.FirstOrDefault(x => x.FieldType == TranslatableFieldType.Title).Value);
 
                 if (float.TryParse(updatedMovie.ImdbRating, NumberStyles.Float, CultureInfo.InvariantCulture, out float imdbRating))
                 {

@@ -4,7 +4,7 @@ namespace KinopoiskWeb.ViewModels.Country
 {
     public class CountryVM 
     { 
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
         public ICollection<TranslationVM> Translations { get; set; }
 

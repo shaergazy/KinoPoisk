@@ -15,9 +15,9 @@ namespace BLL.DTO.Country
         [MaxLength(2)]
         public string ShortName { get; set; }
     }
-    public class IdHasBase : Base, IIdHas<int>
+    public class IdHasBase : Base, IIdHas<Guid>
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
     }
 
     public class AddCountryDto : Base 

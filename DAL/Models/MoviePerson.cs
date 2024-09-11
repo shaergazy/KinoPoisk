@@ -10,7 +10,7 @@ namespace Data.Models
         public int Id { get; set; }
         public Guid MovieId { get; set; }
         public Movie Movie { get; set; }
-        public int PersonId { get; set; }
+        public Guid PersonId { get; set; }
         public Person Person { get; set; }
         public PersonType PersonType { get; set; } 
         public uint Order { get; set; }

@@ -2,6 +2,6 @@
 {
     public class PersonVM : BaseVM
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
     }
 }

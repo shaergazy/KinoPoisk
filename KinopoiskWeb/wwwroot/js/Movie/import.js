@@ -1,6 +1,7 @@
 ﻿$(document).ready(function () {
     var token = $('input[name="__RequestVerificationToken"]').val();
     loadTranslations(currentCulture);
+
     $('#search-button-title').on('click', function () {
         var title = $('#title').val();
         var year = $('#year').val();
@@ -23,7 +24,7 @@
             }
         });
     });
-    
+
     $('#reset-button-title').on('click', function () {
         $('#search-form-title')[0].reset();
         $('#search-results').empty();
@@ -53,23 +54,21 @@
         });
     });
 
-    // Сброс формы поиска по IMDB Id
     $('#reset-button-id').on('click', function () {
         $('#search-form-id')[0].reset();
         $('#search-results').empty();
     });
 
-    // Функция для заполнения результатов поиска
     function populateResults(response) {
         var resultsDiv = $('#search-results');
         resultsDiv.empty();
 
-        if (response && response.success && response.movies && response.movies.searchResults && response.movies.searchResults.length > 0) {
+        if (response && response.success && response.movies && response.movies.searchResults && response.movies.searchResults.$values && response.movies.searchResults.$values.length > 0) {
             var table = $('<table>').addClass('table');
             table.append('<thead><tr><th>' + getTranslation('table.imdb_id') + '</th><th>' + getTranslation('table.title') + '</th><th>' + getTranslation('table.year') + '</th><th>' + getTranslation('table.poster') + '</th><th>' + getTranslation('table.action') + '</th></tr></thead>');
             var tbody = $('<tbody>');
 
-            response.movies.searchResults.forEach(function (movie) {
+            response.movies.searchResults.$values.forEach(function (movie) {
                 var row = $('<tr>');
                 row.append($('<td>').text(movie.imdbId));
                 row.append($('<td>').text(movie.title));
@@ -82,7 +81,6 @@
             table.append(tbody);
             resultsDiv.append(table);
 
-            // Обработчик для кнопки "Import"
             $('.import-button').on('click', function () {
                 var imdbId = $(this).data('imdbid');
                 $.ajax({

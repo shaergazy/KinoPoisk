@@ -11,13 +11,13 @@ using System.Linq.Dynamic.Core;
 
 namespace BLL.Services.Implementation
 {
-    public class CountryService : TranslatableService<ListCountryDto, AddCountryDto, EditCountryDto, GetCountryDto, Country, int, DataTablesRequestDto>, ICountryService
+    public class CountryService : TranslatableService<ListCountryDto, AddCountryDto, EditCountryDto, GetCountryDto, Country, Guid, DataTablesRequestDto>, ICountryService
     {
         private readonly IMapper _mapper;
-        private readonly IUnitOfWork<Country, int> _uow;
+        private readonly IUnitOfWork<Country, Guid> _uow;
         private readonly ILogger<CountryService> _logger;
 
-        public CountryService(IMapper mapper, IUnitOfWork<Country, int> unitOfWork, ILogger<CountryService> logger) : base(mapper, unitOfWork, logger)
+        public CountryService(IMapper mapper, IUnitOfWork<Country, Guid> unitOfWork, ILogger<CountryService> logger) : base(mapper, unitOfWork, logger)
         {
             _mapper = mapper;
             _uow = unitOfWork;
@@ -120,7 +120,7 @@ namespace BLL.Services.Implementation
         }
 
 
-        public override async Task<Country> BuildEntityForDelete(int id)
+        public override async Task<Country> BuildEntityForDelete(Guid id)
         {
             if (_uow.Movies.Any(x => x.CountryId == id))
             {

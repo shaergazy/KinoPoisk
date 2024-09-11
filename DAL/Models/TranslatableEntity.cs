@@ -6,7 +6,7 @@ namespace DAL.Models
     public class TranslatableEntity : ITranslatableEntity
     {
         [Key]
-        public int Id { get; set; }
+        public Guid Id { get; set; }
         public ICollection<TranslatableEntityField> Translations { get; set; } = new List<TranslatableEntityField>();
     }
 }

@@ -6,7 +6,7 @@ namespace DAL.Models
     {
         public string Poster { get; set; }
         public DateTime ReleasedDate {  get; set; }
-        public int? CountryId { get; set; }
+        public Guid? CountryId { get; set; }
         public Country Country { get; set; }
         public ICollection<MovieGenre> Genres { get; set; }
         public ICollection<Comment> Comments { get; set; }

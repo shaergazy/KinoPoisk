@@ -31,7 +31,7 @@ namespace KinopoiskWeb.Pages.Countries
         public CountryVM Country { get; set; }
 
         [BindProperty]
-        public int CountryId { get; set; }
+        public Guid CountryId { get; set; }
 
         public async Task OnGetAsync()
         {
@@ -56,7 +56,7 @@ namespace KinopoiskWeb.Pages.Countries
                 throw new ArgumentNullException(nameof(country));
             }
 
-            if (country.Id == 0)
+            if (country.Id == Guid.Empty)
             {
                 _logger.LogInformation("Creating new country.");
                 await _service.CreateAsync(_mapper.Map<AddCountryDto>(country));
@@ -70,7 +70,7 @@ namespace KinopoiskWeb.Pages.Countries
             return RedirectToPage();
         }
 
-        public async Task<JsonResult> OnGetById(int id)
+        public async Task<JsonResult> OnGetById(Guid id)
         {
             _logger.LogInformation("Fetching country with ID {CountryId}.", id);
             var country = await _service.GetByIdAsync(id);
