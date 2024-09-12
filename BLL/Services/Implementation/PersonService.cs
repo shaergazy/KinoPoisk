@@ -13,14 +13,14 @@ using static QuestPDF.Helpers.Colors;
 
 namespace BLL.Services.Implementation
 {
-    public class PersonService : TranslatableService<ListPersonDto, AddPersonDto, EditPersonDto, GetPersonDto, Person, int, DataTablesRequestDto>,
+    public class PersonService : TranslatableService<ListPersonDto, AddPersonDto, EditPersonDto, GetPersonDto, Person, Guid, DataTablesRequestDto>,
         IPersonService
     {
         private readonly IMapper _mapper;
-        private readonly IUnitOfWork<Person, int> _uow;
+        private readonly IUnitOfWork<Person, Guid> _uow;
         private readonly ILogger<PersonService> _logger;
 
-        public PersonService(IMapper mapper, IUnitOfWork<Person, int> unitOfWork, ILogger<PersonService> logger)
+        public PersonService(IMapper mapper, IUnitOfWork<Person, Guid> unitOfWork, ILogger<PersonService> logger)
             : base(mapper, unitOfWork, logger)
         {
             _mapper = mapper;

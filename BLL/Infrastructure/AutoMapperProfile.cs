@@ -6,8 +6,10 @@ using BLL.DTO.Movie;
 using BLL.DTO.Person;
 using BLL.DTO.SubscriptionPlan;
 using DAL.Enums;
+using DAL.Extensions;
 using DAL.Models;
 using Data.Models;
+using System.Globalization;
 
 namespace BLL.Infrastructure
 {
@@ -44,11 +46,13 @@ namespace BLL.Infrastructure
             CreateMap<EditCountryDto, Country>()
                 .ForMember(dest => dest.Translations, opt => opt.MapFrom(src => src.Translations));
 
+
             CreateMap<ListPersonDto, Person>()
             .ForMember(dest => dest.Translations, opt => opt.MapFrom(src => src.Translations)).ReverseMap();
 
             CreateMap<GetPersonDto, Person>()
-                .ForMember(dest => dest.Translations, opt => opt.MapFrom(src => src.Translations)).ReverseMap();
+                .ForMember(dest => dest.Translations, opt => opt.MapFrom(src => src.Translations))
+                .ForMember(dest => dest.BirthDate, opt => opt.MapFrom(src => src.BirthDate)).ReverseMap();
 
             CreateMap<AddPersonDto, Person>()
            .ForMember(dest => dest.Translations, opt => opt.MapFrom(src => src.Translations));
@@ -57,6 +61,22 @@ namespace BLL.Infrastructure
                 .ForMember(dest => dest.Translations, opt => opt.MapFrom(src => src.Translations));
 
             CreateMap<DeletePersonDto, Person>().ReverseMap();
+
+            CreateMap<Movie, ListMovieDto>()
+            .ForMember(dest => dest.Director, opt => opt.MapFrom(src =>
+                src.People.FirstOrDefault(p => p.PersonType.ToString() == "Director") != null
+                    ? TranslatableFieldExtensions.GetFullName(
+                        src.People.First(p => p.PersonType.ToString() == "Director").Person.Translations,
+                        CultureInfo.CurrentCulture.TwoLetterISOLanguageName)
+                    : null))
+            .ForMember(dest => dest.Actors, opt => opt.MapFrom(src => src.People
+                .OrderBy(p => p.Order)
+                .Where(p => p.PersonType.ToString() == "Actor")
+                .Select(a => TranslatableFieldExtensions.GetFullName(
+                    a.Person.Translations,
+                    CultureInfo.CurrentCulture.TwoLetterISOLanguageName))
+                .ToList()))
+            .ForMember(dest => dest.Translations, opt => opt.MapFrom(src => src.Translations));
 
 
             //CreateMap<Genre, AddGenreDto>().ReverseMap();
@@ -90,18 +110,6 @@ namespace BLL.Infrastructure
 
             //      CreateMap<MovieRating, AddMovieRating>().ReverseMap();
             //      CreateMap<AddMovieDto, Movie>().ReverseMap();
-           // CreateMap<Movie, ListMovieDto>()
-           //.ForMember(dest => dest.Director, opt => opt.MapFrom(src => src.People.FirstOrDefault(p => p.PersonType.ToString() == "Director") != null
-           //    ? new GetPersonDto { FirstName = src.People.First(p => p.PersonType.ToString() == "Director").Person.FirstName, LastName = src.People.First(p => p.PersonType.ToString() == "Director").Person.LastName }
-           //    : null))
-           //.ForMember(dest => dest.Actors, opt => opt.MapFrom(src => src.People
-           //     .OrderBy(p => p.Order)
-           //     .Where(p => p.PersonType.ToString() == "Actor")
-           //     .Select(a => new GetPersonDto
-           //     {
-           //         FirstName = a.Person.FirstName,
-           //         LastName = a.Person.LastName
-           //     }).ToList()));
 
             //      CreateMap<Movie, GetMovieDto>()
             //.ForMember(dest => dest.Poster, opt => opt.MapFrom(src => src.Poster.Replace("\\", "/")))

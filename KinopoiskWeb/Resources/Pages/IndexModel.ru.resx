@@ -127,7 +127,7 @@
     <value>Домашняя страница</value>
   </data>
   <data name="Starring" xml:space="preserve">
-    <value>В главных ролях: {0}</value>
+    <value>В главных ролях: </value>
   </data>
   <data name="Top10HighRatedMovies" xml:space="preserve">
     <value>10 лучших фильмов с высоким рейтингом</value>

@@ -1,6 +1,5 @@
 ﻿using BLL.DTO.Country;
 using BLL.DTO.Genre;
-using BLL.DTO.Person;
 using Microsoft.AspNetCore.Http;
 
 namespace BLL.DTO.Movie
@@ -33,7 +32,7 @@ namespace BLL.DTO.Movie
     public class EditMovieDto : AddMovieDto { }
     public class GetMovieDto : ListMovieDto
     {
-        public DateTime DateRealesed { get; set; }
+        public DateTime DateReleased { get; set; }
         public GetCountryDto? Country { get; set; }
         public float? IMDBRating { get; set; }
         public ICollection<GetGenreDto> Genres { get; set; }
@@ -43,8 +42,8 @@ namespace BLL.DTO.Movie
     {
         public string Poster { get; set; }
         public uint Duration { get; set; }
-        public GetPersonDto? Director { get; set; }
-        public ICollection<GetPersonDto>? Actors { get; set; }
+        public string? Director { get; set; }
+        public ICollection<string>? Actors { get; set; }
         public float Rating { get; set; }
     }
 

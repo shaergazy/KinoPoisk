@@ -2,11 +2,13 @@
 using BLL.DTO;
 using BLL.DTO.Country;
 using BLL.DTO.Genre;
+using BLL.DTO.Movie;
 using BLL.DTO.Person;
 using KinopoiskWeb.DataTables;
 using KinopoiskWeb.ViewModels;
 using KinopoiskWeb.ViewModels.Country;
 using KinopoiskWeb.ViewModels.Genre;
+using KinopoiskWeb.ViewModels.Movie;
 using KinopoiskWeb.ViewModels.Person;
 
 namespace KinopoiskWeb.Infrastructure
@@ -56,10 +58,10 @@ namespace KinopoiskWeb.Infrastructure
             // CreateMap<ActorVM, MoviePersonDto>()
             // .ForMember(dest => dest.PersonId, opt => opt.MapFrom(src => src.PersonId))
             // .ForMember(dest => dest.Order, opt => opt.MapFrom(src => src.Order));
-            // CreateMap<ListMovieDto, IndexMovieVM>()
-            //.ForMember(dest => dest.Director, opt => opt.MapFrom(src => src.Director != null ? $"{src.Director.FirstName} {src.Director.LastName}" : string.Empty))
-            //.ForMember(dest => dest.Actors, opt => opt.MapFrom(src => src.Actors != null ? src.Actors.Select(a => $"{a.FirstName} {a.LastName}").ToArray() : new string[0]))
-            //.ForMember(dest => dest.Rating, opt => opt.MapFrom(src => src.Rating));
+            CreateMap<ListMovieDto, IndexMovieVM>()
+           .ForMember(dest => dest.Director, opt => opt.MapFrom(src => src.Director != null ? src.Director : string.Empty))
+           .ForMember(dest => dest.Actors, opt => opt.MapFrom(src => src.Actors))
+           .ForMember(dest => dest.Rating, opt => opt.MapFrom(src => src.Rating));
 
             // CreateMap<GetMovieDto, DetailsMovieVM>()
             //.ForMember(dest => dest.Director, opt => opt.MapFrom(src => src.Director != null ? $"{src.Director.FirstName} {src.Director.LastName}" : string.Empty))

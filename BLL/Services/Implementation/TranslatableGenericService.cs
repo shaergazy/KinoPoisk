@@ -34,9 +34,17 @@ namespace BLL.Services.Implementation
 
         public override async Task<TGetDto> GetByIdAsync(TKey id)
         {
-            var entity = await GetWithTranslationsByIdAsync(id);
+            try
+            {
+                var entity = await GetWithTranslationsByIdAsync(id);
+                return _mapper.Map<TGetDto>(entity);
+            }
+            catch (Exception)
+            {
 
-            return _mapper.Map<TGetDto>(entity);
+                throw;
+            }
+           
         }
 
         public virtual async Task<TEntity> GetWithTranslationsByIdAsync(TKey id)

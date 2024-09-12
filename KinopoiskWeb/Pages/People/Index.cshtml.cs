@@ -31,7 +31,7 @@ namespace KinopoiskWeb.Pages.People
         public PersonVM Person { get; set; }
 
         [BindProperty]
-        public int PersonId { get; set; }
+        public Guid PersonId { get; set; }
 
         [BindProperty]
         public DataTablesRequest DataTablesRequest { get; set; }
@@ -55,7 +55,7 @@ namespace KinopoiskWeb.Pages.People
             }
         }
 
-        public async Task<JsonResult> OnGetById(int id)
+        public async Task<JsonResult> OnGetById(Guid id)
         {
             try
             {

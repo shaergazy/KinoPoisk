@@ -7,10 +7,7 @@ using KinopoiskWeb.ViewModels.Movie;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.Extensions.Logging;
-using System;
 using System.Security.Claims;
-using System.Threading.Tasks;
 
 namespace KinopoiskWeb.Pages.Movies
 {
@@ -65,7 +62,6 @@ namespace KinopoiskWeb.Pages.Movies
             {
                 var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-                // Проверка, что пользователь аутентифицирован
                 if (string.IsNullOrEmpty(userId) || !Guid.TryParse(userId, out var parsedUserId))
                 {
                     _logger.LogWarning("User not logged in or invalid UserId while trying to rate a movie.");
@@ -110,7 +106,6 @@ namespace KinopoiskWeb.Pages.Movies
             {
                 var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-                // Проверка, что пользователь аутентифицирован
                 if (string.IsNullOrEmpty(userId))
                 {
                     _logger.LogWarning("User not logged in while trying to add a comment.");

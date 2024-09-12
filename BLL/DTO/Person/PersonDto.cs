@@ -12,9 +12,9 @@ namespace BLL.DTO.Person
         /// </summary>
         public DateTime BirthDate { get; set; }
     }
-    public class IdHasBase : Base, IIdHas<int>
+    public class IdHasBase : Base, IIdHas<Guid>
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
     }
 
     public class AddPersonDto : Base { }

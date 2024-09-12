@@ -28,8 +28,14 @@ public class IndexModel : PageModel
 
     public async Task OnGetAsync()
     {
-        var culture = CultureInfo.CurrentCulture;
-        if (!_cache.TryGetValue(NewestMoviesCacheKey, out List<IndexMovieVM> cachedNewestMovies))
+        var culture = CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
+
+        // Ключи кеша с учетом культуры
+        var newestMoviesCacheKey = $"{NewestMoviesCacheKey}_{culture}";
+        var highRatedMoviesCacheKey = $"{HighRatedMoviesCacheKey}_{culture}";
+
+        // Получение кешированных данных для NewestMovies
+        if (!_cache.TryGetValue(newestMoviesCacheKey, out List<IndexMovieVM> cachedNewestMovies))
         {
             var newestMoviesDto = await _movieService.GetNewestMoviesAsync(10);
             cachedNewestMovies = _mapper.Map<List<IndexMovieVM>>(newestMoviesDto.ToList());
@@ -37,15 +43,15 @@ public class IndexModel : PageModel
             var cacheEntryOptions = new MemoryCacheEntryOptions
             {
                 AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(1),
-                SlidingExpiration = TimeSpan.FromMinutes(1) 
+                SlidingExpiration = TimeSpan.FromMinutes(1)
             };
 
-            _cache.Set(NewestMoviesCacheKey, cachedNewestMovies, cacheEntryOptions);
+            _cache.Set(newestMoviesCacheKey, cachedNewestMovies, cacheEntryOptions);
         }
-
         NewestMovies = cachedNewestMovies;
 
-        if (!_cache.TryGetValue(HighRatedMoviesCacheKey, out List<IndexMovieVM> cachedHighRatedMovies))
+        // Получение кешированных данных для HighRatedMovies
+        if (!_cache.TryGetValue(highRatedMoviesCacheKey, out List<IndexMovieVM> cachedHighRatedMovies))
         {
             var highRatedMoviesDto = await _movieService.GetTopRatedMoviesAsync(10);
             cachedHighRatedMovies = _mapper.Map<List<IndexMovieVM>>(highRatedMoviesDto.ToList());
@@ -56,9 +62,9 @@ public class IndexModel : PageModel
                 SlidingExpiration = TimeSpan.FromMinutes(1)
             };
 
-            _cache.Set(HighRatedMoviesCacheKey, cachedHighRatedMovies, cacheEntryOptions);
+            _cache.Set(highRatedMoviesCacheKey, cachedHighRatedMovies, cacheEntryOptions);
         }
-
         HighRatedMovies = cachedHighRatedMovies;
     }
+
 }

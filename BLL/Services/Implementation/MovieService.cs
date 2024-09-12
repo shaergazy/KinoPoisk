@@ -83,7 +83,7 @@ namespace BLL.Services.Implementation
             var response = await SearchAsync(dto);
             var movies = response.Data;
 
-            var document = new ListMoviePdfDocument(movies.ToList());
+            var document = new ListMoviePdfDocument(movies.ToList(), CultureInfo.CurrentCulture.TwoLetterISOLanguageName);
             using (var ms = new MemoryStream())
             {
                 document.GeneratePdf(ms);
@@ -398,12 +398,14 @@ namespace BLL.Services.Implementation
             var movies = await _uow.Movies.GetAll()
                 .Include(x => x.People)
                     .ThenInclude(m => m.Person)
+                    .ThenInclude(x => x.Translations)
                 .Include(x => x.Translations)
                 .OrderByDescending(x => x.ReleasedDate)
                 .Take(count)
                 .ToListAsync();
 
             _logger.LogInformation("Retrieved {Count} newest movies.", count);
+            var s = _mapper.Map<List<ListMovieDto>>(movies);
             return _mapper.Map<List<ListMovieDto>>(movies);
         }
 
@@ -471,7 +473,8 @@ namespace BLL.Services.Implementation
         {
             var movies = await _uow.Movies.GetAll()
                 .Include(x => x.People)
-                .ThenInclude(m => m.Person)
+                    .ThenInclude(m => m.Person)
+                .Include(x => x.Translations)
                 .OrderByDescending(x => x.Rating)
                 .Take(count)
                 .ToListAsync();
@@ -487,7 +490,7 @@ namespace BLL.Services.Implementation
 
         public async Task UpdateImdbRatings()
         {
-            var movies = _uow.Movies.GetAll();
+            var movies = GetAllWithTranslations();
 
             foreach (var movie in movies)
             {

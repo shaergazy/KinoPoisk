@@ -1,4 +1,5 @@
-﻿using DAL.Models;
+﻿using DAL.Enums;
+using DAL.Models;
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
@@ -8,9 +9,11 @@ namespace BLL
     public class ListMoviePdfDocument : IDocument
     {
         public readonly List<Movie> _movies;
-        public ListMoviePdfDocument(List<Movie> movies)
+        private readonly string _language = "en";
+        public ListMoviePdfDocument(List<Movie> movies, string language)
         {
             _movies = movies;
+            _language = language;
         }
 
         public DocumentMetadata GetMetadata() => DocumentMetadata.Default;
@@ -57,12 +60,12 @@ namespace BLL
 
                             foreach (var movie in _movies)
                             {
-                                //table.Cell().Element(CellStyle).Text(movie.Title);
-                                //table.Cell().Element(CellStyle).Text(movie.Description);
-                                //table.Cell().Element(CellStyle).Text(movie.ReleasedDate.ToString("dd/MM/yy"));
-                                //table.Cell().Element(CellStyle).Text($"{movie.Duration} min");
-                                //table.Cell().Element(CellStyle).Text(movie.IMDBRating.ToString());
-                                //table.Cell().Element(CellStyle).Text(movie.Rating.ToString());
+                                table.Cell().Element(CellStyle).Text(movie.Translations.FirstOrDefault(x => x.FieldType == TranslatableFieldType.Title && x.LanguageCode.ToString() == _language).Value);
+                                table.Cell().Element(CellStyle).Text(movie.Translations.FirstOrDefault(x => x.FieldType == TranslatableFieldType.Description && x.LanguageCode.ToString() == _language).Value);
+                                table.Cell().Element(CellStyle).Text(movie.ReleasedDate.ToString("dd/MM/yy"));
+                                table.Cell().Element(CellStyle).Text($"{movie.Duration} min");
+                                table.Cell().Element(CellStyle).Text(movie.IMDBRating.ToString());
+                                table.Cell().Element(CellStyle).Text(movie.Rating.ToString());
                             }
                         });
                     });
