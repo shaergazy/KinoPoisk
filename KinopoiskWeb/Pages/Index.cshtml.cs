@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using BLL.Services.Interfaces;
 using KinopoiskWeb.ViewModels.Movie;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Localization;
@@ -28,7 +29,7 @@ public class IndexModel : PageModel
 
     public async Task OnGetAsync()
     {
-        var culture = CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
+        var culture = Request.HttpContext.Features.Get<IRequestCultureFeature>().RequestCulture.Culture.TwoLetterISOLanguageName;
 
         // Ключи кеша с учетом культуры
         var newestMoviesCacheKey = $"{NewestMoviesCacheKey}_{culture}";
@@ -37,7 +38,8 @@ public class IndexModel : PageModel
         // Получение кешированных данных для NewestMovies
         if (!_cache.TryGetValue(newestMoviesCacheKey, out List<IndexMovieVM> cachedNewestMovies))
         {
-            var newestMoviesDto = await _movieService.GetNewestMoviesAsync(10);
+            var languageCode = Request.Cookies["LanguageCode"] ?? "ru";
+            var newestMoviesDto = await _movieService.GetNewestMoviesAsync(10, culture);
             cachedNewestMovies = _mapper.Map<List<IndexMovieVM>>(newestMoviesDto.ToList());
 
             var cacheEntryOptions = new MemoryCacheEntryOptions
@@ -53,7 +55,7 @@ public class IndexModel : PageModel
         // Получение кешированных данных для HighRatedMovies
         if (!_cache.TryGetValue(highRatedMoviesCacheKey, out List<IndexMovieVM> cachedHighRatedMovies))
         {
-            var highRatedMoviesDto = await _movieService.GetTopRatedMoviesAsync(10);
+            var highRatedMoviesDto = await _movieService.GetTopRatedMoviesAsync(10, culture);
             cachedHighRatedMovies = _mapper.Map<List<IndexMovieVM>>(highRatedMoviesDto.ToList());
 
             var cacheEntryOptions = new MemoryCacheEntryOptions

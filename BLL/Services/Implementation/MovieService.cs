@@ -170,16 +170,19 @@ namespace BLL.Services.Implementation
             return datatableResponse;
         }
 
-        public override async Task<GetMovieDto> GetByIdAsync(Guid id)
+        public async Task<GetMovieDto> GetByIdAsync(Guid id, string language = "en")
         {
             var entity = await _uow.Repository.GetAll()
             .Include(m => m.Country)
+                .ThenInclude(c => c.Translations)
             .Include(m => m.Genres)
                 .ThenInclude(x => x.Genre)
+                .ThenInclude(g => g.Translations)
             .Include(m => m.Ratings)
             .Include(m => m.Comments)
             .Include(m => m.People)
                 .ThenInclude(mp => mp.Person)
+                .ThenInclude(p => p.Translations)
             .Include(m => m.Translations)
             .FirstOrDefaultAsync(x => x.Id == id);
 
@@ -190,7 +193,7 @@ namespace BLL.Services.Implementation
             }
 
             _logger.LogInformation("Retrieved movie with ID {MovieId}.", id);
-            return _mapper.Map<GetMovieDto>(entity);
+            return _mapper.Map<GetMovieDto>(entity, opt => opt.Items["Culture"] = language); ;
         }
 
         public async Task AddRatingAsync(AddMovieRating dto)
@@ -393,7 +396,7 @@ namespace BLL.Services.Implementation
         }
 
 
-        public async Task<IEnumerable<ListMovieDto>> GetNewestMoviesAsync(int count)
+        public async Task<IEnumerable<ListMovieDto>> GetNewestMoviesAsync(int count, string language = "en")
         {
             var movies = await _uow.Movies.GetAll()
                 .Include(x => x.People)
@@ -405,8 +408,7 @@ namespace BLL.Services.Implementation
                 .ToListAsync();
 
             _logger.LogInformation("Retrieved {Count} newest movies.", count);
-            var s = _mapper.Map<List<ListMovieDto>>(movies);
-            return _mapper.Map<List<ListMovieDto>>(movies);
+            return _mapper.Map<List<ListMovieDto>>(movies, opt => opt.Items["Culture"] = language);
         }
 
         public async Task ImportMovieAsync(ExternalMovieDto dto)
@@ -469,7 +471,7 @@ namespace BLL.Services.Implementation
             return uint.TryParse(parts[0], out var duration) ? duration : 0;
         }
 
-        public async Task<IEnumerable<ListMovieDto>> GetTopRatedMoviesAsync(int count)
+        public async Task<IEnumerable<ListMovieDto>> GetTopRatedMoviesAsync(int count, string language = "en")
         {
             var movies = await _uow.Movies.GetAll()
                 .Include(x => x.People)
@@ -480,7 +482,7 @@ namespace BLL.Services.Implementation
                 .ToListAsync();
 
             _logger.LogInformation("Retrieved {Count} top rated movies.", count);
-            return _mapper.Map<List<ListMovieDto>>(movies);
+            return _mapper.Map<List<ListMovieDto>>(movies, opt => opt.Items["Culture"] = language);
         }
 
         public IQueryable<Movie> SortByParametrs(IQueryable<Movie> entities, MovieDataTablesRequestDto request)

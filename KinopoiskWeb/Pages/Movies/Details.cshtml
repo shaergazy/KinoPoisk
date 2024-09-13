@@ -4,6 +4,9 @@
 @inject IStringLocalizer<Pages.Movies.DetailsModel> Localizer
 
 @{
+    
+    
+    
     ViewData["Title"] = Model.Movie.Title;
     string posterUrl = Model.Movie.Poster;
     if (!string.IsNullOrEmpty(Model.Movie.Poster) && !Uri.IsWellFormedUriString(Model.Movie.Poster, UriKind.RelativeOrAbsolute))

@@ -63,14 +63,14 @@ namespace KinopoiskWeb.Infrastructure
            .ForMember(dest => dest.Actors, opt => opt.MapFrom(src => src.Actors))
            .ForMember(dest => dest.Rating, opt => opt.MapFrom(src => src.Rating));
 
-            // CreateMap<GetMovieDto, DetailsMovieVM>()
-            //.ForMember(dest => dest.Director, opt => opt.MapFrom(src => src.Director != null ? $"{src.Director.FirstName} {src.Director.LastName}" : string.Empty))
-            //.ForMember(dest => dest.Actors, opt => opt.MapFrom(src => src.Actors != null ? src.Actors.Select(a => $"{a.FirstName} {a.LastName}").ToArray() : new string[0]))
-            //.ForMember(dest => dest.Country, opt => opt.MapFrom(src => src.Country != null ? src.Country.Name : string.Empty))
-            ////.ForMember(dest => dest.Genres, opt => opt.MapFrom(src => src.Genres != null ? src.Genres.Select(g => g.Name).ToArray() : new string[0]))
-            //.ForMember(dest => dest.Comments, opt => opt.MapFrom(src => src.Comments != null ? src.Comments.Select(c => c.Text).ToArray() : new string[0]))
-            //.ForMember(dest => dest.ReleasedDate, opt => opt.MapFrom(src => src.DateRealesed))
-            //.ForMember(dest => dest.Rating, opt => opt.MapFrom(src => src.Rating));
+            CreateMap<GetMovieDto, DetailsMovieVM>()
+           //.ForMember(dest => dest.Director, opt => opt.MapFrom(src => src.Director != null ? $"{src.Director.FirstName} {src.Director.LastName}" : string.Empty))
+           //.ForMember(dest => dest.Actors, opt => opt.MapFrom(src => src.Actors != null ? src.Actors.Select(a => $"{a.FirstName} {a.LastName}").ToArray() : new string[0]))
+           //.ForMember(dest => dest.Country, opt => opt.MapFrom(src => src.Country != null ? src.Country.Name : string.Empty))
+           ////.ForMember(dest => dest.Genres, opt => opt.MapFrom(src => src.Genres != null ? src.Genres.Select(g => g.Name).ToArray() : new string[0]))
+           .ForMember(dest => dest.Comments, opt => opt.MapFrom(src => src.Comments != null ? src.Comments.Select(c => c.Text).ToArray() : new string[0]))
+           .ForMember(dest => dest.ReleasedDate, opt => opt.MapFrom(src => src.DateReleased))
+           .ForMember(dest => dest.Rating, opt => opt.MapFrom(src => src.Rating));
 
             // CreateMap<RateMovieVM, AddMovieRating>().ReverseMap();
 

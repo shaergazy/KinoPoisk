@@ -103,7 +103,7 @@ $(document).ready(function () {
         "paging": true,
         "info": false,
         "ajax": {
-            "url": Urls.Movie.LoadComments + `/${movieId}`,
+            "url": Urls.Movie.LoadComments,
             "type": "POST",
             "data": function (d) {
                 d.movieId = movieId;

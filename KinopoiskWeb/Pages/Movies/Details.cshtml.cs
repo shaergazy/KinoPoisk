@@ -5,6 +5,7 @@ using BLL.Services.Interfaces;
 using KinopoiskWeb.DataTables;
 using KinopoiskWeb.ViewModels.Movie;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Security.Claims;
@@ -46,7 +47,8 @@ namespace KinopoiskWeb.Pages.Movies
 
         public async Task<DetailsMovieVM> GetMovieDetailsAsync(Guid id)
         {
-            var movieDto = await _movieService.GetByIdAsync(id);
+            var language = Request.HttpContext.Features.Get<IRequestCultureFeature>().RequestCulture.Culture.TwoLetterISOLanguageName;
+            var movieDto = await _movieService.GetByIdAsync(id,language);
 
             if (movieDto == null)
             {
@@ -85,7 +87,6 @@ namespace KinopoiskWeb.Pages.Movies
         {
             try
             {
-                Movie = await GetMovieDetailsAsync(id);
                 var response = await _movieService.GetCommentsAsync(id, _mapper.Map<DataTablesRequestDto>(request));
                 var viewModel = _mapper.Map<DataTablesResponseVM<GetCommentDto>>(response);
 
@@ -99,7 +100,6 @@ namespace KinopoiskWeb.Pages.Movies
             }
         }
 
-        [Authorize]
         public async Task<IActionResult> OnPostAddCommentAsync([FromBody] AddCommentVM model)
         {
             try

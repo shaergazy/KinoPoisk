@@ -33,9 +33,9 @@ namespace BLL.DTO.Movie
     public class GetMovieDto : ListMovieDto
     {
         public DateTime DateReleased { get; set; }
-        public GetCountryDto? Country { get; set; }
+        public string? Country { get; set; }
         public float? IMDBRating { get; set; }
-        public ICollection<GetGenreDto> Genres { get; set; }
+        public string[] Genres { get; set; }
         public ICollection<GetCommentDto>? Comments { get; set; }
     }
     public class ListMovieDto : Base

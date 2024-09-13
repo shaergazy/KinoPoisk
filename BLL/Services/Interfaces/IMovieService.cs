@@ -11,6 +11,7 @@ namespace BLL.Services.Interfaces
         Task AddRatingAsync(AddMovieRating dto);
         Task AddCommentAsync(AddCommentDto dto);
         public Task ImportMovieAsync(ExternalMovieDto dto);
+        Task<GetMovieDto> GetByIdAsync(Guid id, string language = "en");
 
         Task<DataTablesResponse<GetCommentDto>> GetCommentsAsync(Guid id, DataTablesRequestDto request);
         Task DeleteCommentAsync(int commentId);
@@ -20,8 +21,8 @@ namespace BLL.Services.Interfaces
         //Task<IEnumerable<Movie>> GetMoviesFromExternalSourceAsync(string titleOrIMDBId);
         //Task ImportMovieFromExternalSourceAsync(Movie movie);
 
-        Task<IEnumerable<ListMovieDto>> GetTopRatedMoviesAsync(int count);
-        Task<IEnumerable<ListMovieDto>> GetNewestMoviesAsync(int count);
+        Task<IEnumerable<ListMovieDto>> GetTopRatedMoviesAsync(int count, string language = "en");
+        Task<IEnumerable<ListMovieDto>> GetNewestMoviesAsync(int count, string language = "en");
         Task UpdateImdbRatings();
     }
 }

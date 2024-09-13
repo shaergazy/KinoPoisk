@@ -17,6 +17,8 @@ namespace BLL.Infrastructure
     {
         public AutoMapperProfile()
         {
+            var currentCulture = CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
+
             CreateMap<ListGenreDto, Genre>()
            .ForMember(dest => dest.Translations, opt => opt.MapFrom(src => src.Translations)).ReverseMap();
 
@@ -63,20 +65,42 @@ namespace BLL.Infrastructure
             CreateMap<DeletePersonDto, Person>().ReverseMap();
 
             CreateMap<Movie, ListMovieDto>()
-            .ForMember(dest => dest.Director, opt => opt.MapFrom(src =>
+            .ForMember(dest => dest.Director, opt => opt.MapFrom((src, dest, destMember, context) =>
                 src.People.FirstOrDefault(p => p.PersonType.ToString() == "Director") != null
                     ? TranslatableFieldExtensions.GetFullName(
                         src.People.First(p => p.PersonType.ToString() == "Director").Person.Translations,
-                        CultureInfo.CurrentCulture.TwoLetterISOLanguageName)
+                        (string)context.Items["Culture"])
                     : null))
-            .ForMember(dest => dest.Actors, opt => opt.MapFrom(src => src.People
-                .OrderBy(p => p.Order)
-                .Where(p => p.PersonType.ToString() == "Actor")
-                .Select(a => TranslatableFieldExtensions.GetFullName(
-                    a.Person.Translations,
-                    CultureInfo.CurrentCulture.TwoLetterISOLanguageName))
-                .ToList()))
+            .ForMember(dest => dest.Actors, opt => opt.MapFrom((src, dest, destMember, context) =>
+                src.People
+                    .OrderBy(p => p.Order)
+                    .Where(p => p.PersonType.ToString() == "Actor")
+                    .Select(a => TranslatableFieldExtensions.GetFullName(
+                        a.Person.Translations,
+                        (string)context.Items["Culture"]))
+                    .ToList()))
             .ForMember(dest => dest.Translations, opt => opt.MapFrom(src => src.Translations));
+
+            CreateMap<Movie, GetMovieDto>()
+                       .ForMember(dest => dest.Director, opt => opt.MapFrom((src, dest, destMember, context) =>
+                           src.People.FirstOrDefault(p => p.PersonType.ToString() == "Director") != null
+                               ? TranslatableFieldExtensions.GetFullName(
+                                   src.People.First(p => p.PersonType.ToString() == "Director").Person.Translations,
+                                   (string)context.Items["Culture"])
+                               : null))
+                       .ForMember(dest => dest.Actors, opt => opt.MapFrom((src, dest, destMember, context) =>
+                           src.People
+                               .OrderBy(p => p.Order)
+                               .Where(p => p.PersonType.ToString() == "Actor")
+                               .Select(a => TranslatableFieldExtensions.GetFullName(
+                                   a.Person.Translations,
+                                   (string)context.Items["Culture"]))
+                               .ToList()))
+                       .ForMember(dest => dest.Translations, opt => opt.MapFrom(src => src.Translations))
+                       .ForMember(dest => dest.Country, opt => opt.MapFrom((src, dest, destMember, context) =>
+                           src.Country.Translations.GetTranslatedField(TranslatableFieldType.Name, (string)context.Items["Culture"])))
+                       .ForMember(dest => dest.Genres, opt => opt.MapFrom((src, dest, destMember, context) =>
+                           src.Genres.Select(x => x.Genre.Translations.GetTranslatedFields(TranslatableFieldType.Name, (string)context.Items["Culture"]))));
 
 
             //CreateMap<Genre, AddGenreDto>().ReverseMap();
@@ -105,8 +129,8 @@ namespace BLL.Infrastructure
             //      CreateMap<SubscriptionPlan, DeleteSubscriptionPlanDto>().ReverseMap();
 
             //      CreateMap<Comment, AddCommentDto>().ReverseMap();
-            //      CreateMap<Comment, GetCommentDto>()
-            //      .ForMember(x => x.UserName, opt => opt.MapFrom(src => src.User.Email)).ReverseMap();
+            CreateMap<Comment, GetCommentDto>()
+            .ForMember(x => x.UserName, opt => opt.MapFrom(src => src.User.Email)).ReverseMap();
 
             //      CreateMap<MovieRating, AddMovieRating>().ReverseMap();
             //      CreateMap<AddMovieDto, Movie>().ReverseMap();
