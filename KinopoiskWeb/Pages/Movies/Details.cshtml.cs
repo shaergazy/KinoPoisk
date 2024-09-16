@@ -4,7 +4,6 @@ using BLL.DTO.Movie;
 using BLL.Services.Interfaces;
 using KinopoiskWeb.DataTables;
 using KinopoiskWeb.ViewModels.Movie;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -71,6 +70,7 @@ namespace KinopoiskWeb.Pages.Movies
                 }
 
                 model.UserId = parsedUserId;
+                var a = _mapper.Map<AddMovieRating>(model);
                 await _movieService.AddRatingAsync(_mapper.Map<AddMovieRating>(model));
 
                 _logger.LogInformation("User {UserId} rated movie {MovieId} with rating {Rating}", userId, model.MovieId, model.StarCount);
@@ -113,6 +113,13 @@ namespace KinopoiskWeb.Pages.Movies
                 }
 
                 model.UserId = userId;
+
+                if (string.IsNullOrWhiteSpace(model.CommentText))
+                {
+                    _logger.LogWarning("Attempt to submit an empty comment by user {UserId} for movie {MovieId}", userId, model.MovieId);
+                    return BadRequest(new { success = false, message = "Comment cannot be empty." });
+                }
+
                 await _movieService.AddCommentAsync(_mapper.Map<AddCommentDto>(model));
 
                 _logger.LogInformation("User {UserId} added a comment to movie {MovieId}", userId, model.MovieId);
@@ -124,5 +131,6 @@ namespace KinopoiskWeb.Pages.Movies
                 return StatusCode(500, "Internal server error");
             }
         }
+
     }
 }

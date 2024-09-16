@@ -51,35 +51,32 @@ namespace KinopoiskWeb.Infrastructure
 
             CreateMap(typeof(DataTablesResponseVM<>), typeof(BLL.DTO.DataTablesResponse<>)).ReverseMap();
 
-            // CreateMap<CreateMovieVM, AddMovieDto>()
-            // .ForMember(dest => dest.Actors, opt => opt.MapFrom(src => src.Actors))
-            // .ForMember(dest => dest.GenreIds, opt => opt.MapFrom(src => src.GenreIds ?? new List<int>()));
+            CreateMap<CreateMovieVM, AddMovieDto>()
+            .ForMember(dest => dest.Actors, opt => opt.MapFrom(src => src.Actors))
+            .ForMember(dest => dest.GenreIds, opt => opt.MapFrom(src => src.GenreIds ?? new List<Guid>()));
 
-            // CreateMap<ActorVM, MoviePersonDto>()
-            // .ForMember(dest => dest.PersonId, opt => opt.MapFrom(src => src.PersonId))
-            // .ForMember(dest => dest.Order, opt => opt.MapFrom(src => src.Order));
+            //TODO: Fix mapping
+            CreateMap<ActorVM, MoviePersonDto>()
+            .ForMember(dest => dest.PersonId, opt => opt.MapFrom(src => src.PersonId))
+            .ForMember(dest => dest.Order, opt => opt.MapFrom(src => src.Order));
             CreateMap<ListMovieDto, IndexMovieVM>()
            .ForMember(dest => dest.Director, opt => opt.MapFrom(src => src.Director != null ? src.Director : string.Empty))
            .ForMember(dest => dest.Actors, opt => opt.MapFrom(src => src.Actors))
            .ForMember(dest => dest.Rating, opt => opt.MapFrom(src => src.Rating));
 
             CreateMap<GetMovieDto, DetailsMovieVM>()
-           //.ForMember(dest => dest.Director, opt => opt.MapFrom(src => src.Director != null ? $"{src.Director.FirstName} {src.Director.LastName}" : string.Empty))
-           //.ForMember(dest => dest.Actors, opt => opt.MapFrom(src => src.Actors != null ? src.Actors.Select(a => $"{a.FirstName} {a.LastName}").ToArray() : new string[0]))
-           //.ForMember(dest => dest.Country, opt => opt.MapFrom(src => src.Country != null ? src.Country.Name : string.Empty))
-           ////.ForMember(dest => dest.Genres, opt => opt.MapFrom(src => src.Genres != null ? src.Genres.Select(g => g.Name).ToArray() : new string[0]))
            .ForMember(dest => dest.Comments, opt => opt.MapFrom(src => src.Comments != null ? src.Comments.Select(c => c.Text).ToArray() : new string[0]))
            .ForMember(dest => dest.ReleasedDate, opt => opt.MapFrom(src => src.DateReleased))
            .ForMember(dest => dest.Rating, opt => opt.MapFrom(src => src.Rating));
 
-            // CreateMap<RateMovieVM, AddMovieRating>().ReverseMap();
+            CreateMap<RateMovieVM, AddMovieRating>().ReverseMap();
 
             // CreateMap<PaymentDetailsDto, PaymentDetailsVM>().ReverseMap();
 
             // CreateMap<GetSubscriptionDto, SubscriptionVM>().ReverseMap();
 
-            // CreateMap<AddCommentVM, AddCommentDto>()
-            // .ForMember(dest => dest.Text, opt => opt.MapFrom(src => src.CommentText)).ReverseMap();
+            CreateMap<AddCommentVM, AddCommentDto>()
+            .ForMember(dest => dest.Text, opt => opt.MapFrom(src => src.CommentText)).ReverseMap();
 
         }
     }

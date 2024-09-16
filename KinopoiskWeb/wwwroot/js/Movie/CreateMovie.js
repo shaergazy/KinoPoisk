@@ -64,11 +64,13 @@
                 },
                 processResults: function (data) {
                     return {
-                        results: $.map(data, function (item) {
-                            var translatedName = getTranslatedValue(item.translations.$values, currentCulture);       
+                        results: $.map(data.$values, function (item) {
+                            // Получаем переведённое значение в зависимости от текущей культуры
+                            var translatedName = getTranslatedValue(item.translations.$values, currentCulture) || item.name;
+
                             return {
                                 id: item.id,
-                                text: translatedName || item.name                      
+                                text: translatedName
                             };
                         })
                     };

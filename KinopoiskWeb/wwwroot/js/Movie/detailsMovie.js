@@ -53,36 +53,38 @@ $(document).ready(function () {
 
     const token = $('input[name="__RequestVerificationToken"]').val();
 
-    $('.rating span').on('click', function () {
-        const movieId = $(this).closest('.rating').data('movie-id');
-        const ratingValue = $(this).data('value');
+        $('.rating span').on('click', function () {
+            const $ratingElement = $(this);          
+            const movieId = $ratingElement.closest('.rating').data('movie-id');
+            const ratingValue = $ratingElement.data('value');
 
-        const formData = {
-            MovieId: movieId,
-            StarCount: ratingValue
-        };
+            const formData = {
+                MovieId: movieId,
+                StarCount: ratingValue
+            };
 
-        $.ajax({
-            url: Urls.Movie.Rate + `/${movieId}`,
-            type: 'POST',
-            headers: {
-                "RequestVerificationToken": token
-            },
-            contentType: 'application/json; charset=utf-8',
-            data: JSON.stringify(formData),
-            success: function (response) {
-                if (response.success) {
-                    toastr.success(getTranslation('notification.rating_success'));
-                    updateStars($(this).closest('.rating').data('rating', ratingValue));
-                } else if (response.redirect) {
-                    window.location.href = response.redirect;
+            $.ajax({
+                url: Urls.Movie.Rate,
+                type: 'POST',
+                headers: {
+                    "RequestVerificationToken": token
+                },
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify(formData),
+                success: function (response) {
+                    if (response.success) {
+                        toastr.success(getTranslation('notification.rating_success'));
+                        updateStars($ratingElement.closest('.rating').data('rating', ratingValue));
+                    } else if (response.redirect) {
+                        window.location.href = response.redirect;
+                    }
+                },
+                error: function (xhr, status, error) {
+                    toastr.error(getTranslation('error.rating') + ': ' + error);
                 }
-            },
-            error: function (xhr, status, error) {
-                toastr.error(getTranslation('error.rating') + ': ' + error);
-            }
+            });
         });
-    });
+
 
     $('.rating span').hover(
         function () {
@@ -107,6 +109,10 @@ $(document).ready(function () {
             "type": "POST",
             "data": function (d) {
                 d.movieId = movieId;
+            },
+            headers: { 'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val() },
+            dataSrc: function (json) {
+                return json.data.$values;
             }
         },
         "scrollY": "200px",
@@ -122,41 +128,42 @@ $(document).ready(function () {
         ]
     });
 
-    $('#add-comment-form').on('submit', function (event) {
-        event.preventDefault();
-        const comment = $('#comment').val();
+        $('#add-comment-form').on('submit', function (event) {
+            event.preventDefault();
+            const comment = $('#comment').val().trim();
 
-        if (comment.trim() === '') {
-            toastr.error(getTranslation('error.empty_comment'));
-            return;
-        }
-
-        const formData = {
-            MovieId: movieId,
-            CommentText: comment
-        };
-
-        $.ajax({
-            url: Urls.Movie.AddComment + `/${movieId}`,
-            type: 'POST',
-            headers: {
-                "RequestVerificationToken": token
-            },
-            contentType: 'application/json; charset=utf-8',
-            data: JSON.stringify(formData),
-            success: function (response) {
-                if (response.success) {
-                    $('#comments-list').append(`<li>${comment}</li>`);
-                    $('#comment').val('');
-                    toastr.success(getTranslation('notification.comment_added'));
-                } else if (response.redirect) {
-                    window.location.href = response.redirect;
-                }
-            },
-            error: function (xhr, status, error) {
-                toastr.error(getTranslation('error.adding_comment') + ': ' + error);
+            if (comment === '') {
+                toastr.error(getTranslation('error.empty_comment'));
+                return;
             }
+
+            const formData = {
+                MovieId: movieId,                                
+                CommentText: comment
+            };
+
+            $.ajax({
+                url: Urls.Movie.AddComment,                    
+                type: 'POST',
+                headers: {
+                    "RequestVerificationToken": $('input[name="__RequestVerificationToken"]').val()             
+                },
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify(formData),
+                success: function (response) {
+                    if (response.success) {
+                        $('#comments-list').append(`<li>${comment}</li>`);
+                        $('#comment').val('');                 
+                        toastr.success(getTranslation('notification.comment_added'));
+                    } else if (response.redirect) {
+                        window.location.href = response.redirect;              
+                    }
+                },
+                error: function (xhr, status, error) {
+                    toastr.error(getTranslation('error.adding_comment') + ': ' + error);        
+                }
+            });
         });
     });
-    });
+
 });

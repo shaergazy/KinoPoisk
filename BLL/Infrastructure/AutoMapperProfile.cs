@@ -128,11 +128,11 @@ namespace BLL.Infrastructure
             //      CreateMap<SubscriptionPlan, ListSubscriptionPlanDto>().ReverseMap();
             //      CreateMap<SubscriptionPlan, DeleteSubscriptionPlanDto>().ReverseMap();
 
-            //      CreateMap<Comment, AddCommentDto>().ReverseMap();
+            CreateMap<Comment, AddCommentDto>().ReverseMap();
             CreateMap<Comment, GetCommentDto>()
             .ForMember(x => x.UserName, opt => opt.MapFrom(src => src.User.Email)).ReverseMap();
 
-            //      CreateMap<MovieRating, AddMovieRating>().ReverseMap();
+            CreateMap<MovieRating, AddMovieRating>().ReverseMap();
             //      CreateMap<AddMovieDto, Movie>().ReverseMap();
 
             //      CreateMap<Movie, GetMovieDto>()
