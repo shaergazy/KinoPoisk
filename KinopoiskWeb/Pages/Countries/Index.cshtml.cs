@@ -93,11 +93,10 @@ namespace KinopoiskWeb.Pages.Countries
         public JsonResult OnGetCountries(string searchTerm)
         {
             _logger.LogInformation("Fetching countries with search term: {SearchTerm}.", searchTerm);
-            var entities = _service.GetAll();
+            var entities = _service.GetAllWithTranslations();
             if (!string.IsNullOrWhiteSpace(searchTerm))
             {
-                //entities = entities.Where(s => s.Name.ToUpper()
-                //                   .Contains(searchTerm.ToUpper()));
+                entities = entities.Where(c => c.Translations.Any(t => t.Value.ToUpper().Contains(searchTerm.ToUpper())));
             }
             return new JsonResult(entities);
         }

@@ -1,6 +1,23 @@
 ﻿$(document).ready(function () {
     loadTranslations(currentCulture).done(function () {
 
+        function getLanguageCode(culture) {
+            var cultureToLanguageCode = {
+                'en': 0,    
+                'ru': 1,              
+            };
+
+            return cultureToLanguageCode[culture] || 0;                      
+        }
+
+        function getTranslatedValue(translations, currentCulture) {
+            var languageCode = getLanguageCode(currentCulture);                
+            var translation = translations.find(function (t) {
+                return t.languageCode === languageCode;
+            });
+            return translation ? translation.value : null;
+        }
+
         $('#countrySelect').select2({
             ajax: {
                 url: Urls.Country.GetCountries,
@@ -8,19 +25,20 @@
                 delay: 250,
                 data: function (params) {
                     if (!params.term || params.term.length < 3) {
-                        return null; 
+                        return null;
                     } else {
                         return {
-                            searchTerm: params.term 
+                            searchTerm: params.term
                         };
                     }
                 },
                 processResults: function (data) {
                     return {
                         results: $.map(data, function (item) {
+                            var translatedName = getTranslatedValue(item.translations.$values, currentCulture);       
                             return {
                                 id: item.id,
-                                text: item.name,
+                                text: translatedName || item.shortName,                      
                                 flag: item.flagLink
                             };
                         })
@@ -30,7 +48,7 @@
             allowClear: true,
             templateResult: formatCountry,
             templateSelection: formatCountrySelection,
-            minimumInputLength: 3, 
+            minimumInputLength: 3,
             placeholder: getTranslation('select.country')
         });
 
@@ -38,18 +56,19 @@
             ajax: {
                 url: Urls.Genre.GetGenres,
                 dataType: 'json',
-                delay: 250, 
+                delay: 250,
                 data: function (params) {
                     return {
-                        searchTerm: params.term 
+                        searchTerm: params.term
                     };
                 },
                 processResults: function (data) {
                     return {
                         results: $.map(data, function (item) {
+                            var translatedName = getTranslatedValue(item.translations.$values, currentCulture);       
                             return {
                                 id: item.id,
-                                text: item.name
+                                text: translatedName || item.name                      
                             };
                         })
                     };
@@ -58,7 +77,6 @@
             placeholder: getTranslation('select.genre'),
             allowClear: true
         });
-
         $('#addActorModal').on('shown.bs.modal', function () {
             $('#actorSelect').select2({
                 ajax: {
@@ -76,17 +94,22 @@
                     },
                     processResults: function (data) {
                         return {
-                            results: $.map(data, function (item) {
+                            results: $.map(data.$values, function (item) {
+                                var firstNameTranslation = item.translations.$values.find(t => t.fieldType === 3 && t.languageCode === getLanguageCode(currentCulture));
+                                var lastNameTranslation = item.translations.$values.find(t => t.fieldType === 4 && t.languageCode === getLanguageCode(currentCulture));
+
+                                var firstName = firstNameTranslation ? firstNameTranslation.value : '';
+                                var lastName = lastNameTranslation ? lastNameTranslation.value : '';
+
                                 return {
                                     id: item.id,
-                                    text: item.firstName + " " + item.lastName
+                                    text: firstName + " " + lastName
                                 };
                             })
                         };
-                    },
-                    minimumInputLength: 3, 
+                    }
                 },
-                dropdownParent: $('#addActorModal') 
+                dropdownParent: $('#addActorModal')
             });
         });
 
@@ -182,16 +205,22 @@
                 },
                 processResults: function (data) {
                     return {
-                        results: $.map(data, function (item) {
+                        results: $.map(data.$values, function (item) {
+                            var firstNameTranslation = item.translations.$values.find(t => t.fieldType === 3 && t.languageCode === getLanguageCode(currentCulture));
+                            var lastNameTranslation = item.translations.$values.find(t => t.fieldType === 4 && t.languageCode === getLanguageCode(currentCulture));
+
+                            var firstName = firstNameTranslation ? firstNameTranslation.value : '';
+                            var lastName = lastNameTranslation ? lastNameTranslation.value : '';
+
                             return {
                                 id: item.id,
-                                text: item.firstName + ' ' + item.lastName
+                                text: firstName + " " + lastName
                             };
                         })
                     };
                 }
             },
-            minimumInputLength: 3, 
+            minimumInputLength: 3,
             placeholder: getTranslation('select.director')
         });
 
@@ -203,7 +232,6 @@
             $('#select2-countrySelect-container').html($selected);
         });
 
-        // Toastr
         if (successMessage) {
             toastr.success(getTranslation(successMessage));
         }

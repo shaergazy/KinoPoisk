@@ -115,7 +115,8 @@ namespace BLL.Services.Implementation
                 _logger.LogInformation("Fetching all actors");
                 var actors = _uow.Repository.GetAll()
                                             .Include(p => p.Movies)
-                                            .ThenInclude(mp => mp.Movie)
+                                                .ThenInclude(mp => mp.Movie)
+                                            .Include(p => p.Translations)
                                             .Where(p => p.Movies.Any(mp => mp.PersonType == PersonType.Actor))
                                             .ToList();
                 return _mapper.Map<List<ListPersonDto>>(actors);
@@ -134,7 +135,8 @@ namespace BLL.Services.Implementation
                 _logger.LogInformation("Fetching all directors");
                 var directors = _uow.Repository.GetAll()
                                                .Include(p => p.Movies)
-                                               .ThenInclude(mp => mp.Movie)
+                                                   .ThenInclude(mp => mp.Movie)
+                                               .Include(p => p.Translations)
                                                .Where(p => p.Movies.Any(mp => mp.PersonType == PersonType.Director))
                                                .ToList();
                 return _mapper.Map<List<ListPersonDto>>(directors);

@@ -1,4 +1,8 @@
 ﻿const DATE_FORMAT = 'DD/MM/YYYY';
+const supportedLanguages = [
+    { code: 0, label: 'EN', fieldTypeFirstName: 3, fieldTypeLastName: 4 },
+    { code: 1, label: 'RU', fieldTypeFirstName: 3, fieldTypeLastName: 4 }
+];
 
 $(document).ready(function () {
     loadTranslations(currentCulture);
@@ -21,29 +25,19 @@ $(document).ready(function () {
             {
                 "name": "FirstName",
                 "data": function (row) {
-                    const englishFirstName = row.translations.$values.find(t => t.languageCode === 0 && t.fieldType === 3);
-                    const russianFirstName = row.translations.$values.find(t => t.languageCode === 1 && t.fieldType === 3);
-
-                    return `
-                        <div>
-                            <strong>EN:</strong> ${englishFirstName ? englishFirstName.value : 'N/A'}
-                            <br/>
-                            <strong>RU:</strong> ${russianFirstName ? russianFirstName.value : 'N/A'}
-                        </div>`;
+                    return supportedLanguages.map(lang => {
+                        const firstName = getTranslationValue(row.translations, lang.code, lang.fieldTypeFirstName);
+                        return `<div><strong>${lang.label}:</strong> ${firstName ? firstName.value : 'N/A'}</div>`;
+                    }).join('<br/>');
                 }
             },
             {
                 "name": "LastName",
                 "data": function (row) {
-                    const englishLastName = row.translations.$values.find(t => t.languageCode === 0 && t.fieldType === 4);
-                    const russianLastName = row.translations.$values.find(t => t.languageCode === 1 && t.fieldType === 4);
-
-                    return `
-                        <div>
-                            <strong>EN:</strong> ${englishLastName ? englishLastName.value : 'N/A'}
-                            <br/>
-                            <strong>RU:</strong> ${russianLastName ? russianLastName.value : 'N/A'}
-                        </div>`;
+                    return supportedLanguages.map(lang => {
+                        const lastName = getTranslationValue(row.translations, lang.code, lang.fieldTypeLastName);
+                        return `<div><strong>${lang.label}:</strong> ${lastName ? lastName.value : 'N/A'}</div>`;
+                    }).join('<br/>');
                 }
             },
             {
@@ -121,3 +115,8 @@ $(document).ready(function () {
         toastr.error(getTranslation('notification.error'));
     }
 });
+
+// Универсальная функция для получения значения перевода
+function getTranslationValue(translations, languageCode, fieldType) {
+    return translations.$values.find(t => t.languageCode === languageCode && t.fieldType === fieldType);
+}

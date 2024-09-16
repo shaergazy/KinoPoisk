@@ -4,7 +4,7 @@ using DAL.Models;
 
 namespace BLL.Services.Interfaces
 {
-    public interface IPersonService : ISearchableService<ListPersonDto, AddPersonDto, EditPersonDto, GetPersonDto, Person, Guid, DataTablesRequestDto>, IService
+    public interface IPersonService : ITranslatableService<ListPersonDto, AddPersonDto, EditPersonDto, GetPersonDto, Person, Guid, DataTablesRequestDto>, IService
     {
         IEnumerable<ListPersonDto> GetActors();
         IEnumerable<ListPersonDto> GetDirectors();

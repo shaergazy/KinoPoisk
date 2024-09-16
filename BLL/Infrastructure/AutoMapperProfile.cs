@@ -100,7 +100,7 @@ namespace BLL.Infrastructure
                        .ForMember(dest => dest.Country, opt => opt.MapFrom((src, dest, destMember, context) =>
                            src.Country.Translations.GetTranslatedField(TranslatableFieldType.Name, (string)context.Items["Culture"])))
                        .ForMember(dest => dest.Genres, opt => opt.MapFrom((src, dest, destMember, context) =>
-                           src.Genres.Select(x => x.Genre.Translations.GetTranslatedFields(TranslatableFieldType.Name, (string)context.Items["Culture"]))));
+                           src.Genres.Select(x => x.Genre.Translations.GetTranslatedField(TranslatableFieldType.Name, (string)context.Items["Culture"]))));
 
 
             //CreateMap<Genre, AddGenreDto>().ReverseMap();

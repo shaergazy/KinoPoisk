@@ -4,7 +4,7 @@ using DAL.Models;
 
 namespace BLL.Services.Interfaces
 {
-    public interface IMovieService : ISearchableService<ListMovieDto, AddMovieDto, EditMovieDto, GetMovieDto, Movie, Guid, MovieDataTablesRequestDto>, IService
+    public interface IMovieService : ITranslatableService<ListMovieDto, AddMovieDto, EditMovieDto, GetMovieDto, Movie, Guid, MovieDataTablesRequestDto>, IService
     {
         Task<byte[]> GeneratePdfAsync(MovieDataTablesRequestDto dto);
         Task<byte[]> GenerateExcelAsync(MovieDataTablesRequestDto dto);

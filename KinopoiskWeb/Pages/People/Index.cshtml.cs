@@ -114,7 +114,7 @@ namespace KinopoiskWeb.Pages.People
         {
             try
             {
-                People = _mapper.Map<List<IndexPersonVM>>(_service.GetAll());
+                People = _mapper.Map<List<IndexPersonVM>>(_service.GetAllWithTranslations());
                 if (!string.IsNullOrWhiteSpace(searchTerm))
                 {
                     People = People.Where(m => (m.Translations.Any(t => t.Value.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)))).ToList();

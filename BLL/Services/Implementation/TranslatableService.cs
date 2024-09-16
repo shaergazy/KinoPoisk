@@ -8,7 +8,7 @@ using System.Linq.Dynamic.Core;
 
 namespace BLL.Services.Implementation
 {
-    public class TranslatableService<TListDto, TAddDto, TEditDTo, TGetDto, TEntity, TKey, TDataTableRequest> : TranslatableGenericService
+    public class TranslatableService<TListDto, TAddDto, TEditDTo, TGetDto, TEntity, TKey, TDataTableRequest> : GenericService
         <TListDto, TAddDto, TEditDTo, TGetDto, TEntity, TKey>
     where TAddDto : class
     where TEditDTo : class
@@ -18,14 +18,14 @@ namespace BLL.Services.Implementation
     where TDataTableRequest : DataTablesRequestDto
     {
         private readonly IMapper _mapper;
-        private readonly IUnitOfWork<TEntity, TKey> _unitOfWork;
-        private readonly ILogger<TranslatableGenericService<TListDto, TAddDto, TEditDTo, TGetDto, TEntity, TKey>> _logger;
+        private readonly IUnitOfWork<TEntity, TKey> _uow;
+        private readonly ILogger<GenericService<TListDto, TAddDto, TEditDTo, TGetDto, TEntity, TKey>> _logger;
 
-        public TranslatableService(IMapper mapper, IUnitOfWork<TEntity, TKey> unitOfWork, ILogger<TranslatableGenericService<TListDto, TAddDto, TEditDTo, TGetDto, TEntity, TKey>> logger)
+        public TranslatableService(IMapper mapper, IUnitOfWork<TEntity, TKey> unitOfWork, ILogger<GenericService<TListDto, TAddDto, TEditDTo, TGetDto, TEntity, TKey>> logger)
             : base(mapper, unitOfWork, logger)
         {
             _mapper = mapper;
-            _unitOfWork = unitOfWork;
+            _uow = unitOfWork;
             _logger = logger;
         }
 
@@ -100,6 +100,45 @@ namespace BLL.Services.Implementation
             }
 
             return entities;
+        }
+
+        public virtual IQueryable<TEntity> GetAllWithTranslations()
+        {
+            return _uow.Repository
+                .GetAll().Include("Translations");
+        }
+
+        public override async Task<TGetDto> GetByIdAsync(TKey id)
+        {
+            try
+            {
+                var entity = await GetWithTranslationsByIdAsync(id);
+                return _mapper.Map<TGetDto>(entity);
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+
+        }
+
+        public virtual async Task<TEntity> GetWithTranslationsByIdAsync(TKey id)
+        {
+            var entity = await _uow.Repository.FindAsync(id);
+            await _uow.Repository
+              .Entry(entity)
+              .Collection(e => e.Translations)
+              .LoadAsync();
+
+            return entity;
+        }
+
+        public override async Task<TEntity> BuildEntityForDelete(TKey id)
+        {
+            var entity = await GetWithTranslationsByIdAsync(id);
+
+            return entity;
         }
     }
 }
