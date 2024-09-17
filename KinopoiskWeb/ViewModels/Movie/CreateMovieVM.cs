@@ -3,8 +3,7 @@
     public class CreateMovieVM
     {
         public IFormFile Poster { get; set; }
-        public string Title { get; set; }
-        public string Description { get; set; }
+        public ICollection<TranslationVM> Translations { get; set; }
         public DateTime ReleasedDate { get; set; } = DateTime.Now;
         public Guid? CountryId { get; set; }
         public List<Guid>? GenreIds { get; set; }

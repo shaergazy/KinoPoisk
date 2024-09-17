@@ -1,9 +1,12 @@
 ﻿@page
+@using DAL.Enums
 @using Microsoft.Extensions.Localization
+@using System.ComponentModel
 @inject IStringLocalizer<Pages.Movies.CreateModel> Localizer
 @model CreateModel
 @{
     ViewData["Title"] = "CreateMovie.Title";
+    var languages = Enum.GetValues(typeof(LanguageCode)).Cast<LanguageCode>();
 }
 <head>
 </head>
@@ -16,16 +19,29 @@
             <input asp-for="Movie.Poster" type="file" class="form-control" />
             <span asp-validation-for="Movie.Poster" class="text-danger"></span>
         </div>
-        <div class="form-group">
-            <label asp-for="Movie.Title" class="control-label">@Localizer["CreateMovie.TitleLabel"]</label>
-            <input asp-for="Movie.Title" class="form-control" />
-            <span asp-validation-for="Movie.Title" class="text-danger"></span>
-        </div>
-        <div class="form-group">
-            <label asp-for="Movie.Description" class="control-label">@Localizer["CreateMovie.DescriptionLabel"]</label>
-            <textarea asp-for="Movie.Description" class="form-control"></textarea>
-            <span asp-validation-for="Movie.Description" class="text-danger"></span>
-        </div>
+        @{
+            int index = 0;
+            foreach (var lang in languages)
+            {
+                var langCode = (int)lang;
+                var langDesc = lang.ToString(); 
+                <div class="form-group">
+                    <label class="control-label">@Localizer["CreateMovie.TitleLabel"] (@langDesc)</label>
+                    <input type="text" name="Movie.Translations[@index].Value" class="form-control" placeholder="@Localizer[$"EnterTitleIn{langDesc}"]" required />
+                    <input type="hidden" name="Movie.Translations[@index].LanguageCode" value="@langCode" />
+                    <input type="hidden" name="Movie.Translations[@index].FieldType" value="2" />
+                </div>
+                index ++;
+                <div class="form-group">
+                    <label class="control-label">@Localizer["CreateMovie.DescriptionLabel"] (@langDesc)</label>
+                    <textarea name="Movie.Translations[@index].Value" class="form-control" placeholder="@Localizer[$"EnterDescriptionIn{langDesc}"]" required></textarea>
+                    <input type="hidden" name="Movie.Translations[@index].LanguageCode" value="@langCode" />
+                    <input type="hidden" name="Movie.Translations[@index].FieldType" value="1" />
+                </div>
+                index++;
+            }
+        }
+
         <div class="form-group">
             <label asp-for="Movie.ReleasedDate" class="control-label">@Localizer["CreateMovie.ReleasedDateLabel"]</label>
             <input asp-for="Movie.ReleasedDate" class="form-control" type="date" />

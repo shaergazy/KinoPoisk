@@ -1,5 +1,4 @@
 ﻿using Data.Models;
-using System.ComponentModel.DataAnnotations;
 
 namespace DAL.Models
 {

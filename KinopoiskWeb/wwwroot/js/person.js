@@ -90,7 +90,7 @@ $(document).ready(function () {
                 $('#ruLastNameId').val(russianLastName ? russianLastName.id : '');
 
                 var birthDate = moment(data.birthDate);
-                $('#editPersonBirthDate').val(birthDate.format(DATE_FORMAT));
+                $('#editPersonBirthDate').val(birthDate.format("mm/dd/yyyy"));
             },
             error: function (error) {
                 console.error('Error:', error);

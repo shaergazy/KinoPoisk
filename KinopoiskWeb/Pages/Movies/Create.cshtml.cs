@@ -1,8 +1,8 @@
 using AutoMapper;
 using BLL.DTO.Movie;
 using BLL.Services.Interfaces;
+using DAL.Enums;
 using KinopoiskWeb.ViewModels.Movie;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 namespace KinopoiskWeb.Pages.Movies
@@ -38,13 +38,17 @@ namespace KinopoiskWeb.Pages.Movies
             {
                 await _movieService.CreateAsync(_mapper.Map<AddMovieDto>(Movie));
                 TempData["SuccessMessage"] = "Movie created successfully!";
-                _logger.LogInformation("Movie '{Title}' created successfully by user {UserId}", Movie.Title, User.Identity.Name);
+                _logger.LogInformation("Movie '{Title}' created successfully by user {UserId}", 
+                                        Movie.Translations.FirstOrDefault(x => x.FieldType == TranslatableFieldType.Title), 
+                                        User.Identity.Name);
                 return RedirectToPage("Create");
             }
             catch (Exception ex)
             {
                 TempData["ErrorMessage"] = "Failed to create the movie.";
-                _logger.LogError(ex, "Failed to create movie '{Title}' by user {UserId}", Movie.Title, User.Identity.Name);
+                _logger.LogError(ex, "Failed to create movie '{Title}' by user {UserId}",
+                                        Movie.Translations.FirstOrDefault(x => x.FieldType == TranslatableFieldType.Title),
+                                        User.Identity.Name);
                 return Page();
             }
         }

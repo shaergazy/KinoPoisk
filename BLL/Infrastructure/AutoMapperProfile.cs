@@ -133,7 +133,7 @@ namespace BLL.Infrastructure
             .ForMember(x => x.UserName, opt => opt.MapFrom(src => src.User.Email)).ReverseMap();
 
             CreateMap<MovieRating, AddMovieRating>().ReverseMap();
-            //      CreateMap<AddMovieDto, Movie>().ReverseMap();
+            CreateMap<AddMovieDto, Movie>().ReverseMap();
 
             //      CreateMap<Movie, GetMovieDto>()
             //.ForMember(dest => dest.Poster, opt => opt.MapFrom(src => src.Poster.Replace("\\", "/")))

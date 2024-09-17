@@ -30,8 +30,6 @@ namespace KinopoiskWeb.Pages.Account
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
-            returnUrl ??= Url.Content("~/");
-
             if (ModelState.IsValid)
             {
                 _logger.LogInformation("User {Email} attempting to log in.", Input.Email);
@@ -40,8 +38,9 @@ namespace KinopoiskWeb.Pages.Account
 
                 if (result.Succeeded)
                 {
+                    ReturnUrl = returnUrl ?? Url.Page("/Index");
                     _logger.LogInformation("User {Email} logged in successfully.", Input.Email);
-                    return LocalRedirect(returnUrl);
+                    return LocalRedirect(ReturnUrl);
                 }
                 else
                 {

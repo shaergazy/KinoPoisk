@@ -1,6 +1,4 @@
-﻿using BLL.DTO.Country;
-using BLL.DTO.Genre;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 
 namespace BLL.DTO.Movie
 {
