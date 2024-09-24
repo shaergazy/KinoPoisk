@@ -6,6 +6,7 @@ $(document).ready(function () {
         console.error(getTranslation("errors.csrf_token_not_found"));
         return;
     }
+    loadTranslations(currentCulture);
 
     $('#countryFilter').select2({
         ajax: {

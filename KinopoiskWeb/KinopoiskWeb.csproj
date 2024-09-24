@@ -14,6 +14,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="Pages\Maps.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="Pages\Countries\Index.html" />
     <None Remove="Pages\Index1.html" />
   </ItemGroup>
@@ -66,6 +70,18 @@
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>IndexModel.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Pages\Maps.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="Pages\Maps.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Pages\Movies\Maps.cshtml" />
   </ItemGroup>
 
 </Project>

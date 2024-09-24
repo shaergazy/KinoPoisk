@@ -138,6 +138,7 @@ internal class Program
             options.SupportedCultures = supportedCultures;
             options.SupportedUICultures = supportedCultures;
             options.SetDefaultCulture("ru");
+            options.RequestCultureProviders.Insert(0, new CookieRequestCultureProvider());
             var culture = CultureInfo.CurrentCulture;
             Log.Information("Current culture: {Culture}", culture);
 

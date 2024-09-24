@@ -78,12 +78,12 @@ namespace BLL.Services.Implementation
             }
         }
 
-        public async Task<byte[]> GeneratePdfAsync(MovieDataTablesRequestDto dto)
+        public async Task<byte[]> GeneratePdfAsync(MovieDataTablesRequestDto dto, string languageCode = "en")
         {
             var response = await SearchAsync(dto);
             var movies = response.Data;
 
-            var document = new ListMoviePdfDocument(movies.ToList(), CultureInfo.CurrentCulture.TwoLetterISOLanguageName);
+            var document = new ListMoviePdfDocument(movies.ToList(), languageCode);
             using (var ms = new MemoryStream())
             {
                 document.GeneratePdf(ms);
@@ -91,7 +91,7 @@ namespace BLL.Services.Implementation
             }
         }
 
-        public async Task<byte[]> GenerateExcelAsync(MovieDataTablesRequestDto dto)
+        public async Task<byte[]> GenerateExcelAsync(MovieDataTablesRequestDto dto, string languageCode = "en")
         {
             var response = await SearchAsync(dto);
             var movies = response.Data;
@@ -114,8 +114,10 @@ namespace BLL.Services.Implementation
                     for (int i = 0; i < movies.Count; i++)
                     {
                         var movie = movies[i];
-                        worksheet.Cells[i + 2, 1].Value = movie.Translations.FirstOrDefault(x => x.FieldType == TranslatableFieldType.Title).Value;
-                        worksheet.Cells[i + 2, 2].Value = movie.Translations.FirstOrDefault(x => x.FieldType == TranslatableFieldType.Description).Value;
+                        worksheet.Cells[i + 2, 1].Value = movie.Translations.FirstOrDefault(x => x.FieldType == TranslatableFieldType.Title
+                                                                                            && x.LanguageCode.ToString() == languageCode).Value;
+                        worksheet.Cells[i + 2, 2].Value = movie.Translations.FirstOrDefault(x => x.FieldType == TranslatableFieldType.Description
+                                                                                            && x.LanguageCode.ToString() == languageCode).Value;
                         worksheet.Cells[i + 2, 3].Value = movie.ReleasedDate.ToString("dd-MM-yyyy");
                         worksheet.Cells[i + 2, 4].Value = movie.Duration;
                         worksheet.Cells[i + 2, 5].Value = movie.IMDBRating;

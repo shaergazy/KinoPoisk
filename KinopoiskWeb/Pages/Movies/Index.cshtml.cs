@@ -3,6 +3,7 @@ using BLL.DTO;
 using BLL.Services.Interfaces;
 using DAL.Models;
 using KinopoiskWeb.DataTables;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -53,8 +54,9 @@ namespace KinopoiskWeb.Pages.Movies
         {
             try
             {
+                var language = Request.HttpContext.Features.Get<IRequestCultureFeature>().RequestCulture.Culture.TwoLetterISOLanguageName;
                 var dto = _mapper.Map<MovieDataTablesRequestDto>(DataTablesRequest);
-                var pdfData = await _service.GeneratePdfAsync(dto);
+                var pdfData = await _service.GeneratePdfAsync(dto, language);
                 return File(pdfData, "application/pdf");
             }
             catch (Exception ex)
@@ -69,8 +71,9 @@ namespace KinopoiskWeb.Pages.Movies
         {
             try
             {
+                var language = Request.HttpContext.Features.Get<IRequestCultureFeature>().RequestCulture.Culture.TwoLetterISOLanguageName;
                 var dto = _mapper.Map<MovieDataTablesRequestDto>(DataTablesRequest);
-                var excelData = await _service.GenerateExcelAsync(dto);
+                var excelData = await _service.GenerateExcelAsync(dto, language);
                 return File(excelData, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
             }
             catch (Exception ex)
